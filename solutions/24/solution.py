@@ -111,5 +111,6 @@ class Node(Generic[T]):
         return f'Node(payload={self.payload},left={self.left},right={self.right},\
             traversal_strategy={repr(self.traversal_strategy)})'
         
+        
 
 
