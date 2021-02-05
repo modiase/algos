@@ -1,4 +1,8 @@
 .vscode/
-
+.venv/
 scratch/
 
+
+.pytest_cache
+*.pyc 
+*__pycache__*

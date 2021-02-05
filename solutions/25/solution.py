@@ -1,48 +1,64 @@
+from __future__ import annotations
 
-from collections import deque
 import logging
-from typing import Deque, NamedTuple, Optional, Union
+from collections import deque
+from typing import Deque, List,NamedTuple, Optional, Union
 
 logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(levelname)s - %(name)s - %(funcName)s - %(lineno)d : %(message)s")
 
 class Attempt(NamedTuple):
     matched_string : str
     remaining_string : str
-    remaining_pattern : str
+    remaining_tokens : List[Token]
 
 class DecisionPoint(NamedTuple):
     greedy : Attempt
     non_greedy : Attempt
 
-def advance_attempt(attempt: Attempt, greedy = False) -> Attempt:
-        char = attempt.remaining_pattern[0]
+class Token(NamedTuple):
+    character : str
+    is_wildcarded : bool = False
 
-        if greedy and char!= '*':
-            raise RuntimeError("Can't perform a greedy advancement on a non wildcard char.")
+def tokenize(pattern : str) -> List[Token]:
+    tokens = []
+    while pattern:
+        if len(pattern) == 1:
+            tokens.append(Token(character=pattern))
+            pattern = ''
+        else:
+            head = pattern[0]
+            pattern = pattern[1:]
+            if pattern[0] == '*':
+                pattern = pattern[1:]
+                tokens.append(Token(character=head,
+                                    is_wildcarded=True))
+            else:
+                tokens.append(Token(character=head))
+    return tokens
+
+def advance_attempt(attempt: Attempt, greedy = False) -> Attempt:
+        next_token = attempt.remaining_tokens[0]
+        char = next_token.character
 
         new_matched_string = attempt.matched_string + char
         if greedy:
-            new_remaining_pattern = attempt.remaining_pattern
+            new_remaining_tokens = attempt.remaining_tokens
         else:
-            new_remaining_pattern = attempt.remaining_pattern[1:]
+            new_remaining_tokens = attempt.remaining_tokens[1:]
         new_remaining_string = attempt.remaining_string[1:]
 
         return Attempt(matched_string=new_matched_string,
-                        remaining_pattern=new_remaining_pattern,
+                        remaining_tokens=new_remaining_tokens,
                         remaining_string=new_remaining_string)
 
-def next_char_is_match(next_char : str, string : str) -> bool:
+def next_token_is_match(next_token : Token, string : str) -> bool:
     """Returns true if the supplied next_char in the pattern matches the 
     head of the string. Next char is expected to be a single char or an 
     empty string."""
 
-    if next_char == '':
-        return False
-    if next_char == '*':
+    if next_token.character == '.':
         return True
-    if next_char == '.' and len(string) != 0:
-        return True
-    return next_char == string[0]
+    return next_token.character == string[0]
     
 
 def take_next_greedy(attempt: Attempt) -> Attempt:
@@ -58,18 +74,18 @@ def take_next(attempt : Attempt) -> Optional[Union[DecisionPoint,Attempt]]:
     both the greedy and non-greedy next possibilities."""
 
 
-    if (len(attempt.remaining_string) == 0 \
-        or len(attempt.remaining_pattern) == 0):
+    if (len(attempt.remaining_string) == 0 
+        or len(attempt.remaining_tokens) == 0):
         return None
-    next_char_to_match_in_pattern = attempt.remaining_pattern[0]
+    next_token_to_match_in_pattern = attempt.remaining_tokens[0]
     next_char_to_match_in_string = attempt.remaining_string[0]
     
-    if next_char_to_match_in_pattern == '*':
+    if next_token_to_match_in_pattern.is_wildcarded:
         return DecisionPoint(greedy=take_next_greedy(attempt),
                              non_greedy=take_next_non_greedy(attempt))
 
-    if (next_char_to_match_in_pattern == next_char_to_match_in_string\
-        or next_char_to_match_in_pattern == '.'):
+    if (next_token_to_match_in_pattern.character == next_char_to_match_in_string
+        or next_token_to_match_in_pattern.character == '.'):
         return advance_attempt(attempt)
     
     
@@ -81,8 +97,8 @@ def main_loop(queue : Deque[Attempt]) -> bool:
         attempt = queue.popleft()
         logging.info(attempt)
 
-        if attempt.remaining_pattern == ''\
-            and attempt.remaining_string == '':
+        if (attempt.remaining_tokens == []
+            and attempt.remaining_string == ''):
             return True
 
         next_step = take_next(attempt)
@@ -101,7 +117,7 @@ def main(pattern : str, string : str) -> bool:
     q = deque()
     q.append(Attempt(matched_string='',
                      remaining_string=string,
-                     remaining_pattern=pattern))
+                     remaining_tokens=tokenize(pattern)))
     match_found = False
     while len(q) != 0 and not match_found:
         match_found = main_loop(q)
@@ -110,7 +126,7 @@ def main(pattern : str, string : str) -> bool:
     return match_found
 
 if __name__ == '__main__':
-    main('.*at*.rq','chatsdafrzafafrq')
+    main('.*at.*rq','chatsdatfrzafafrq')
     
     
 
