@@ -4,7 +4,6 @@ import logging
 from collections import deque
 from typing import Deque, List,NamedTuple, Optional, Union
 
-logging.basicConfig(level=logging.INFO,format="%(asctime)s - %(levelname)s - %(name)s - %(funcName)s - %(lineno)d : %(message)s")
 
 class Attempt(NamedTuple):
     matched_string : str
@@ -19,7 +18,7 @@ class Token(NamedTuple):
     character : str
     is_wildcarded : bool = False
 
-def tokenize(pattern : str) -> List[Token]:
+def tokenize(pattern: str) -> List[Token]:
     tokens = []
     while pattern:
         if len(pattern) == 1:
@@ -36,7 +35,7 @@ def tokenize(pattern : str) -> List[Token]:
                 tokens.append(Token(character=head))
     return tokens
 
-def advance_attempt(attempt: Attempt, greedy = False) -> Attempt:
+def advance_attempt(attempt: Attempt, greedy: bool = False) -> Attempt:
         next_token = attempt.remaining_tokens[0]
         char = next_token.character
 
@@ -51,7 +50,7 @@ def advance_attempt(attempt: Attempt, greedy = False) -> Attempt:
                         remaining_tokens=new_remaining_tokens,
                         remaining_string=new_remaining_string)
 
-def next_token_is_match(next_token : Token, string : str) -> bool:
+def next_token_is_match(next_token: Token, string: str) -> bool:
     """Returns true if the supplied next_char in the pattern matches the 
     head of the string. Next char is expected to be a single char or an 
     empty string."""
@@ -64,7 +63,7 @@ def next_token_is_match(next_token : Token, string : str) -> bool:
 def take_next_greedy(attempt: Attempt) -> Attempt:
     return advance_attempt(attempt=attempt,greedy=True)
 
-def take_next_non_greedy(attempt : Attempt) -> Attempt:
+def take_next_non_greedy(attempt: Attempt) -> Attempt:
     return advance_attempt(attempt)
 
 def take_next(attempt : Attempt) -> Optional[Union[DecisionPoint,Attempt]]:
@@ -90,7 +89,7 @@ def take_next(attempt : Attempt) -> Optional[Union[DecisionPoint,Attempt]]:
     
     
     
-def main_loop(queue : Deque[Attempt]) -> bool:
+def main_loop(queue: Deque[Attempt]) -> bool:
         logging.debug(queue)
         logging.info(len(queue))
 
@@ -113,7 +112,7 @@ def main_loop(queue : Deque[Attempt]) -> bool:
             queue.appendleft(next_step)
             return False
 
-def main(pattern : str, string : str) -> bool:
+def main(pattern: str, string : str) -> bool:
     q = deque()
     q.append(Attempt(matched_string='',
                      remaining_string=string,
@@ -124,6 +123,10 @@ def main(pattern : str, string : str) -> bool:
         
     logging.info(match_found) 
     return match_found
+
+logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)s - %(levelname)s - %(name)s - %(funcName)s\
+                        - %(lineno)d : %(message)s")
 
 if __name__ == '__main__':
     main('.*at.*rq','chatsdatfrzafafrq')
