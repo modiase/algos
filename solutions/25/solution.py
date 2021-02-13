@@ -69,14 +69,6 @@ def advance_attempt(attempt: Attempt, greedy: bool = False) -> Attempt:
                    remaining_string=new_remaining_string)
 
 
-def next_token_is_match_for_next_character_in_string(next_token: Token,
-                                                     string: str) -> bool:
-
-    if next_token.character == '.':
-        return True
-    return next_token.character == string[0]
-
-
 def take_next_greedy(attempt: Attempt) -> Attempt:
     return advance_attempt_starred(attempt, greedy=True)
 
