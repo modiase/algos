@@ -18,7 +18,7 @@ class DecisionPoint(NamedTuple):
 
 class Token(NamedTuple):
     character: str
-    is_wildcarded: bool = False
+    is_starred: bool = False
 
 
 def tokenize(pattern: str) -> List[Token]:
@@ -33,21 +33,35 @@ def tokenize(pattern: str) -> List[Token]:
             if pattern[0] == '*':
                 pattern = pattern[1:]
                 tokens.append(Token(character=head,
-                                    is_wildcarded=True))
+                                    is_starred=True))
             else:
                 tokens.append(Token(character=head))
     return tokens
 
 
-def advance_attempt(attempt: Attempt, greedy: bool = False) -> Attempt:
+def advance_attempt_starred(attempt: Attempt, greedy: bool = False) -> Attempt:
     next_token = attempt.remaining_tokens[0]
-    char = next_token.character
+    next_token_char = next_token.character
 
-    new_matched_string = attempt.matched_string + char
+    new_matched_string = attempt.matched_string + next_token_char
     if greedy:
         new_remaining_tokens = attempt.remaining_tokens
+        new_remaining_string = attempt.remaining_string[1:]
     else:
         new_remaining_tokens = attempt.remaining_tokens[1:]
+        new_remaining_string = attempt.remaining_string
+
+    return Attempt(matched_string=new_matched_string,
+                   remaining_tokens=new_remaining_tokens,
+                   remaining_string=new_remaining_string)
+
+
+def advance_attempt(attempt: Attempt, greedy: bool = False) -> Attempt:
+    next_token = attempt.remaining_tokens[0]
+    next_token_char = next_token.character
+
+    new_matched_string = attempt.matched_string + next_token_char
+    new_remaining_tokens = attempt.remaining_tokens[1:]
     new_remaining_string = attempt.remaining_string[1:]
 
     return Attempt(matched_string=new_matched_string,
@@ -55,10 +69,8 @@ def advance_attempt(attempt: Attempt, greedy: bool = False) -> Attempt:
                    remaining_string=new_remaining_string)
 
 
-def next_token_is_match(next_token: Token, string: str) -> bool:
-    """Returns true if the supplied next_char in the pattern matches the 
-    head of the string. Next char is expected to be a single char or an 
-    empty string."""
+def next_token_is_match_for_next_character_in_string(next_token: Token,
+                                                     string: str) -> bool:
 
     if next_token.character == '.':
         return True
@@ -66,10 +78,12 @@ def next_token_is_match(next_token: Token, string: str) -> bool:
 
 
 def take_next_greedy(attempt: Attempt) -> Attempt:
-    return advance_attempt(attempt=attempt, greedy=True)
+    return advance_attempt_starred(attempt, greedy=True)
 
 
-def take_next_non_greedy(attempt: Attempt) -> Attempt:
+def take_next_non_greedy(attempt: Attempt, starred: bool = False) -> Attempt:
+    if starred:
+        return advance_attempt_starred(attempt)
     return advance_attempt(attempt)
 
 
@@ -85,13 +99,14 @@ def take_next(attempt: Attempt) -> Optional[Union[DecisionPoint, Attempt]]:
     next_token_to_match_in_pattern = attempt.remaining_tokens[0]
     next_char_to_match_in_string = attempt.remaining_string[0]
 
-    if next_token_to_match_in_pattern.is_wildcarded:
+    if next_token_to_match_in_pattern.is_starred:
         return DecisionPoint(greedy=take_next_greedy(attempt),
-                             non_greedy=take_next_non_greedy(attempt))
+                             non_greedy=take_next_non_greedy(attempt,
+                                                             starred=True))
 
     if (next_token_to_match_in_pattern.character == next_char_to_match_in_string
             or next_token_to_match_in_pattern.character == '.'):
-        return advance_attempt(attempt)
+        return take_next_non_greedy(attempt)
 
 
 def main_loop(queue: Deque[Attempt]) -> bool:

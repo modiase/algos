@@ -4,5 +4,5 @@ scratch/
 
 
 .pytest_cache
-*.pyc 
-*__pycache__*
+**/*.pyc 
+**/__pycache__/

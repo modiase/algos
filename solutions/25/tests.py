@@ -36,6 +36,10 @@ class TestSolution(unittest.TestCase):
         computed_result = main('.*jk*.wee.*weqr','jkhkh;llkjkljklkjljl;weeklsfdjdsfj;weqtjhuafjs')
         self.assertFalse(computed_result)
 
+    def test_starred_consumes_none_or_many(self):
+        computed_result = main('.*chat','chat')
+        self.assertTrue(computed_result)
+
 
 if __name__ == '__main__':
     unittest.main()
