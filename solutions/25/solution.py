@@ -139,8 +139,8 @@ def main(pattern: str, string: str) -> bool:
 
 
 logging.basicConfig(level=logging.INFO,
-                    format="%(asctime)s - %(levelname)s - %(name)s - %(funcName)s\
-                        - %(lineno)d : %(message)s")
+                    format="%(asctime)s - %(levelname)s - %(name)s - %(funcName)s"
+                    "- %(lineno)d : %(message)s")
 
 if __name__ == '__main__':
     main('.*at.*rq', 'chatsdatfrzafafrq')
