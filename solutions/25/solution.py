@@ -114,15 +114,12 @@ def main_loop(queue: Deque[Attempt]) -> bool:
 
     next_step = take_next(attempt)
 
-    if next_step is None:
-        return False
-    elif isinstance(next_step, DecisionPoint):
+    if isinstance(next_step, DecisionPoint):
         queue.appendleft(next_step.non_greedy)
         queue.appendleft(next_step.greedy)
-        return False
-    else:
+    elif next_step:
         queue.appendleft(next_step)
-        return False
+    return False
 
 
 def main(pattern: str, string: str) -> bool:
