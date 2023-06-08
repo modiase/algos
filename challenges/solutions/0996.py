@@ -78,7 +78,7 @@ def is_connected(g):
     return True
 
 
-def is_tree(g):
+def is_spanning_tree(g):
     return is_connected(g) and is_acyclic(g) is None
 
 
@@ -99,10 +99,10 @@ for i in range(1, ecount(g1)):
         cp = copy_graph(g1)
         for edge in combination:
             cp = rm_edge(cp, edge[0], edge[1])
-        if is_tree(cp) and gsum(cp) > maxweight:
+        if is_spanning_tree(cp) and gsum(cp) > maxweight:
             maxg = cp
             maxweight = gsum(cp)
-        if is_tree(cp) and gsum(cp) < minweight:
+        if is_spanning_tree(cp) and gsum(cp) < minweight:
             ming = cp
             minweight = gsum(cp)
 
