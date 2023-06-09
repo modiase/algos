@@ -15,7 +15,8 @@ def d_to_l(a, i):
     sorted_i = [t[0] for t in xs].index(i)
     if sorted_i == len(a) - 1:
         return None
-    seq = [abs(xs[sorted_i][0] - xs[q][0]) for q in range(sorted_i+1, len(xs))]
+    seq = [abs(xs[sorted_i][0] - xs[q][0])
+           for q in range(sorted_i+1, len(xs)) if xs[sorted_i][1] != xs[q][1]]
     if len(seq) == 0:
         return None
     return min(seq)
@@ -25,4 +26,6 @@ assert (d_to_l([4, 1, 3, 5, 6], 0)) == 3
 assert (d_to_l([4, 1, 3, 5, 6], 1)) == 1
 assert (d_to_l([4, 1, 3, 5, 6], 2)) == 1
 assert (d_to_l([4, 1, 3, 5, 6], 3)) == 1
+assert (d_to_l([4, 1, 3, 5, 5, 6], 3)) == 2
+assert (d_to_l([4, 1, 3, 5, 5, 6], 4)) == 1
 assert (d_to_l([4, 1, 3, 5, 6], 4)) == None
