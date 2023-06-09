@@ -22,5 +22,4 @@ def find_all(n):
 
 
 print(find_all(4))
-print()
 print(find_all(3))
