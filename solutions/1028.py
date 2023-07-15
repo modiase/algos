@@ -10,6 +10,7 @@ For example, this algorithm terminates in three steps when starting from 1234:
 8532 - 2358 = 6174
 Write a function that returns how many steps this will take for a given input N.
 
+Solved in <10m
 """
 
 
