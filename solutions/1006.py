@@ -1,21 +1,21 @@
 """
-Suppose you are given two lists of n points, one list p1, p2, ..., pn on the line
+Suppose you are given two lists of n points, one list p1, p2, ..., pn on the line 
 y = 0 and the other list q1, q2, ..., qn on the line y = 1. Imagine a set of n line 
 segments connecting each point pi to qi. Write an algorithm to determine how many 
 pairs of the line segments intersect.
 """
 
-def grad(a, b):
-    (b[1] - a[1]) / (b[0] - a[0])
 
-def intersect(p1, p2, q1, q2):
-    mp = grad(p1, p2)
-    mq = grad(q1, q2)
+def solution(ps, qs):
+    n = len(ps)
+    count = 0
+    for i in range(n):
+        for j in range(n):
+            if ps[j] < ps[i] and qs[i] < qs[j]:
+                count += 1
 
-def solution(p, q) -> int:
-    pass
+    return count
 
 
-
-if __name__ == '__main__':
-    pass
+assert solution((5, 1, 2), (0, 2, 4)) == 2
+assert solution((1, 2, 3), (1, 2, 3)) == 0
