@@ -63,3 +63,19 @@ assert compute_h_index([1, 1, 1, 1, 5, 5]) == 2
 assert compute_h_index([1, 1, 1, 5, 5, 5]) == 3
 assert compute_h_index([1, 1, 5, 5, 5, 5]) == 4
 assert compute_h_index([1, 5, 5, 5, 5, 5]) == 5
+
+
+"""
+Better solution
+"""
+
+
+def h_index(citations):
+    n = len(citations)
+    citations.sort(reverse=True)
+
+    h = 0
+    while h < n and citations[h] >= h + 1:
+        h += 1
+
+    return h
