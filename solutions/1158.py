@@ -6,7 +6,12 @@ For example, the linked list 4 -> 1 -> -3 -> 99 should become -3 -> 1 -> 4 -> 99
 
 Notes
 ==========
-Completed in about 1h - 1h 30m.
+C: N
+T: 30,60
+PD: 5
+
+Completed after looking at example solution method, but not code, 
+in about 1h - 1h 30m.
 I sketched a solution in one session and then implemented in another.
 
 I looked at the solution notes but did not copy the implementation.
