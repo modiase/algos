@@ -36,14 +36,24 @@ import re
 
 
 def canonical_path(path: str) -> str:
-    parent_re = re.compile(r'/[^/]+?/\.\.')
-    current_re = re.compile(r'(/[^/]+?)(/\.)/')
+    stack = []
+    parts = re.split('[/]', path) 
+    for part in parts:
+        if part == '.':
+            continue
+        elif part == '..' and stack:
+            stack.pop()
+        else:
+            stack.append(part)
 
-    def rep(mo):
-        print(mo.group(1))
-        return mo.group(2)
-    print(current_re.sub(rep, path))
-    return current_re.sub(lambda mo: mo.group(2), path)
+    if not stack or stack == ['']:
+        return '/'
+    if stack[0] != '':
+        stack = [''] + stack
+    return '/'.join(stack)
 
 
-assert canonical_path('/usr/bin/.././scripts/../') == '/usr/bin/'
+assert canonical_path('/usr/bin/../bin/./scripts/../') == '/usr/bin/'
+assert canonical_path('/../../../') == '/'
+assert canonical_path('/usr/bin/env/../env/./../../') == '/usr/'
+assert canonical_path('/../../../usr/bin/env/') == '/usr/bin/env/'
