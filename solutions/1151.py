@@ -7,6 +7,10 @@ while 1 -> 4 returns False.
 
 Notes:
 ======
+C: Y
+T: 5
+PD: 1
+
 Loop forward then backward in the doubly linked case.
 
 In the singly linked case, build a reverse linked list one
