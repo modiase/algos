@@ -32,6 +32,8 @@ My main take away is to take time to sketch out a solution before trying
 to implement it - this is advice that should be obvious but I frequently
 do not adhere to due to impatience to start tackling the problem. Sketching
 a solution more than paid for itself in time in this case.
+
+EDIT: I'm not sure my solution isn't N^2 * log (N)
 """
 from __future__ import annotations
 
