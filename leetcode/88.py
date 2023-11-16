@@ -15,7 +15,7 @@ are set to 0 and should be ignored. nums2 has a length of n.
 
 ## Review
 C: N
-T: 90
+T: 90,
 PD: 5
 
 ## Comments
@@ -58,7 +58,7 @@ def merge_sorted_list(nums1: List[int], n: int, nums2: List[int], m: int):
     i = n - 1
     j = m - 1
 
-    while j >= 0 and i >= 0 and p2 >= 0:
+    while j >= 0 and i >= 0:
         if nums1[i] >  nums2[j]:
             nums1[p2] = nums1[i]
             i -= 1
@@ -68,7 +68,6 @@ def merge_sorted_list(nums1: List[int], n: int, nums2: List[int], m: int):
         p2 -= 1
 
     while j >= 0:
-        print(p2)
         nums1[p2] = nums2[j]
         p2 -= 1
         j -= 1
@@ -105,3 +104,7 @@ merge_sorted_list(a4, len(a4)-len(b4), b4, len(b4))
 assert a4 == [8,13]
 
 
+a5 = [0,0]
+b5 = [8,13]
+merge_sorted_list(a5, len(a5)-len(b5), b5, len(b5))
+assert a5 == [8,13]
