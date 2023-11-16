@@ -7,6 +7,7 @@ Improve my competence and confidence with algorithmic coding questions.
 ## Review Notes
 
 Every question should include a comment with a notes section.
+
 The review section should include:
 
 - C - Completed: Yes (Y) or No (N) depending on whether I was able to complete the question
@@ -16,3 +17,5 @@ The review section should include:
   be given - e.g., 5,15,5 means I worked on it for 25 minutes total in 3 sessions.
 - PD - Personal Difficulty - How difficult I found the problem from 1 (easy) - 5 (very hard).
 - Obviously, any question not completed without assistance is automatically a 5.
+
+  Some additional comments or workings can be included
