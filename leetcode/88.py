@@ -15,15 +15,22 @@ are set to 0 and should be ignored. nums2 has a length of n.
 
 ## Review
 C: N
-T: 90,
+T: 90,30
 PD: 5
 
 ## Comments
 
 I don't know why I found this so hard. Even when I looked up the answer
-I still struggled to get an implementation. I think eventually I slowed 
+I still struggled to get an implementation. 
+
+I think eventually I slowed 
 down and looked properly at what I was trying to do, but it was a comedy
 of errors until that point.
+
+EDIT: I then had to put in some more time to fix my solution. I made
+it more complicated than necessary by not paying attention to my limits.
+Eventually, I simplified it down. This is one I should return to because 
+it is fundamental and really shouldn't have taken this long.
 
 ## Workings
 
@@ -44,22 +51,20 @@ of errors until that point.
 
 *[1,2,2,3,5,6]
 *[2,5,6]
+
+tags: limits, arrays, sorted-arrays, off-by-one
 """
 
 from typing import List
 
-def merge_sorted_list(nums1: List[int], n: int, nums2: List[int], m: int):
-    if n == 0:
-        j = m - 1
-        while j > - 1:
-            nums1[j] = nums2[j]
 
-    p2 = m + n - 1
-    i = n - 1
-    j = m - 1
+def merge_sorted_list(nums1: List[int], m: int, nums2: List[int], n: int):
+    p2 = n + m - 1
+    i = m - 1
+    j = n - 1
 
-    while j >= 0 and i >= 0:
-        if nums1[i] >  nums2[j]:
+    while j >= 0:
+        if i >= 0 and nums1[i] > nums2[j]:
             nums1[p2] = nums1[i]
             i -= 1
         else:
@@ -67,44 +72,47 @@ def merge_sorted_list(nums1: List[int], n: int, nums2: List[int], m: int):
             j -= 1
         p2 -= 1
 
-    while j >= 0:
-        nums1[p2] = nums2[j]
-        p2 -= 1
-        j -= 1
+
+def make_test_case(a, b):
+    expected = sorted(a[:len(a)-len(b)] + b)
+    acpy = a[:]
+    bcpy = b[:]
+    merge_sorted_list(a, len(a)-len(b), b, len(b))
+    print(f'a: {acpy}, m: {len(a)-len(b)}, b: {bcpy}, n: {len(b)}, expected: {expected}, result: {a}')
+    assert a == expected
 
 
+def test_case_one():
+    a = [1, 2, 3, 0, 0, 0]
+    b = [2, 5, 6]
+    make_test_case(a, b)
 
 
+def test_case_two():
+    a = [2, 5, 6, 0, 0, 0]
+    b = [1, 2, 3]
+    make_test_case(a, b)
 
 
-a0 = [1,2,3,0,0,0]
-b0 = [2,5,6]
-merge_sorted_list(a0, len(a0)-len(b0), b0, len(b0))
-assert a0 == [1,2,2,3,5,6]
-
-a1 = [2,5,6,0,0,0]
-b1 = [1,2,3]
-merge_sorted_list(a1, len(a1)-len(b1), b1, len(b1))
-assert a1 == [1,2,2,3,5,6]
+def test_case_three():
+    a = [1, 1, 1, 0, 0, 0]
+    b = [7, 8, 9]
+    make_test_case(a, b)
 
 
-a2 = [1,1,1,0,0,0]
-b2 = [7,8,9]
-merge_sorted_list(a2, len(a2)-len(b2), b2, len(b2))
-assert a2 == [1,1,1,7,8,9]
-
-a3 = [8,13,0]
-b3 = [1]
-merge_sorted_list(a3, len(a3)-len(b3), b3, len(b3))
-assert a3 == [1,8,13]
-
-a4 = [8,13]
-b4 = []
-merge_sorted_list(a4, len(a4)-len(b4), b4, len(b4))
-assert a4 == [8,13]
+def test_case_four():
+    a = [8, 13, 0]
+    b = [1]
+    make_test_case(a, b)
 
 
-a5 = [0,0]
-b5 = [8,13]
-merge_sorted_list(a5, len(a5)-len(b5), b5, len(b5))
-assert a5 == [8,13]
+def test_case_five():
+    a = [8, 13]
+    b = []
+    make_test_case(a, b)
+
+
+def test_case_six():
+    a = [0, 0]
+    b = [8, 13]
+    make_test_case(a, b)
