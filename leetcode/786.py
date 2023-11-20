@@ -13,7 +13,7 @@ PD: 1
 
 Fundamental algorithm
 
-tags: trees
+tags: trees, b-trees, traversal
 """
 
 
