@@ -1,7 +1,7 @@
 """
 Remove duplicates from a sorted array in place such that the first
-k numbers are an ordered sequence of non-decreasing numbers. The
-solution function should modify the array in place and return k.
+k numbers are a unique ordered sequence of non-decreasing numbers. 
+The solution function should modify the array in place and return k.
 
 Notes
 =====
@@ -35,7 +35,7 @@ def remove_duplicates(nums: List[int]) -> int:
         while a < N and nums[a] == curr:
             a += 1
         b += 1
-        if a < N and b < N:
+        if a < N and b < N:  # EDIT: b <= N so if a < N then b < N necessarily
             nums[b] = nums[a]
 
     return b
