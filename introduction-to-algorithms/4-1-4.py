@@ -6,6 +6,7 @@ algorithm? Then, change the base case of the recursive algorithm to use
 the brute-force algorithm whenever the problem size is below n_0. Does
 that change the crossover point?
 """
+import math as m
 import random as rn
 import time
 from typing import List, Tuple
@@ -141,6 +142,8 @@ if __name__ == '__main__':
     powers = [ x / 4 for x in range(1, 17) ]
     test_arrays = [ [ rn.randint(-127,127) for _ in range(0,int(pow(10, p))) ] for p in powers  ]
 
+    brutes = []
+    quads = []
     for input in test_arrays:
         result = []
         brute = []
@@ -150,6 +153,7 @@ if __name__ == '__main__':
             end = time.perf_counter()
             brute.append(end-start)
         brute = sum(brute) / 3
+        brutes.append(m.log(brute, 10))
 
         quad = []
         for i in range(0,3):
@@ -158,8 +162,14 @@ if __name__ == '__main__':
             end = time.perf_counter()
             quad.append(end-start)
         quad = sum(quad) / 3
+        quads.append(m.log(quad, 10))
+
 
         print(f'N: {len(input)} , brute: {brute:.3E}s , quad: {quad:.3E}s')
+
+    print(f'Brute force slope: {(brutes[15] - brutes[0]) / 2}')
+    print(f'Quadratic slope: {(quads[15] - quads[0])/ 2}')
+
 
 
             
