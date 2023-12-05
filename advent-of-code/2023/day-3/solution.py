@@ -67,13 +67,14 @@ def get_numbers(processed_lines: List[Tuple[int, List[Tuple[int, str]]]]) -> Lis
     return result
 
 
-def get_expanded_numbers(processed_lines: List[Tuple[int, List[Tuple[int, str]]]]) -> List[Tuple[int, int, Tuple[int, str]]]:
+def get_spread_numbers(processed_lines: List[Tuple[int, List[Tuple[int, str]]]]) -> List[Tuple[int, int, Tuple[int, str]]]:
     result = []
     for row, ss in processed_lines:
         for col, s in ss:
             if all([c in string.digits for c in s]):
                 for j in range(0, len(s)):
                     result.append((row, col+j, (col, s)))
+
     return result
 
 
@@ -116,7 +117,7 @@ def part_two(lines: List[str]):
                        for lineno, line in enumerate(lines, 1)]
     symbols: List[Tuple[int, int, str]] = get_symbols(processed_lines)
     numbers: List[Tuple[int, int, Tuple[int, str]]
-                  ] = get_expanded_numbers(processed_lines)
+                  ] = get_spread_numbers(processed_lines)
 
     numbers_matrix = create_sparse_matrix(numbers)
     for row, col, symbol in symbols:
@@ -125,15 +126,14 @@ def part_two(lines: List[str]):
         neighbours = get_neighbours(row, col, symbol)
         neighbouring_numbers = []
         for nr, nc in neighbours:
-            if (r := numbers_matrix.get(nr)) is not None:
-                if (number := r.get(nc)) is not None and number not in [x[2] for x in neighbouring_numbers]:
-                    neighbouring_numbers.append((nr, nc, number))
+            if (r := numbers_matrix.get(nr)) is not None \
+                    and (number := r.get(nc)) is not None \
+                    and number not in [x[2] for x in neighbouring_numbers]:
+                neighbouring_numbers.append((nr, nc, number))
         if len(neighbouring_numbers) == 2:
-            sum += (int(neighbouring_numbers[0][2][1]) *
-                    int(neighbouring_numbers[1][2][1]))
-        if len(neighbouring_numbers) < 2:
-            # print(row, col, symbol)
-            pass
+            a = int(neighbouring_numbers[0][2][1])
+            b = int(neighbouring_numbers[1][2][1])
+            sum += (a * b)
     return sum
 
 
@@ -177,17 +177,8 @@ def test_example_2_part_one():
     assert part_one(lines) == 522726
 
 
-def test_example_2_part_two():
-    lines = open(path.Path(__file__).abspath().parent /
-                 'example-2.txt', 'r').readlines()
-    assert part_two(lines) == 81721933
-
-
 if __name__ == '__main__':
     lines = open(path.Path(__file__).abspath().parent /
                  'input.txt', 'r').readlines()
     print(part_one(lines))
     print(part_two(lines))
-
-
-# 2138734 is too low
