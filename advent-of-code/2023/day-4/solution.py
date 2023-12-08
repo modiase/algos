@@ -50,51 +50,55 @@ Once all of the originals and copies have been processed, you end up with 1 inst
 Process all of the original and copied scratchcards until no more scratchcards are won. Including the original set of scratchcards, how many total scratchcards do you end up with?
 """
 import path
+import functools
 import re
 from typing import List, Tuple
 
 LINE_REGEX = re.compile(
-    r'Card\s*(\d+):\s*((?:\d+\s*)+)\|\s*((?:\d+(\s|l)*)+)')
+    r'Card\s*?(\d+):\s*((?:\d+\s+)+)\|\s*((?:\d+(\s)*)+)')
+
+
+@functools.lru_cache(maxsize=256)
+def parse_line(line: str) -> Tuple[int, str, str]:
+    parsed = LINE_REGEX.match(line)
+    if parsed is None or len(parsed.groups()) != 4:
+        raise ValueError(f"Failed to parse line: '{line}'")
+    return (int(parsed.group(1)), parsed.group(2), parsed.group(3))
 
 
 def parse_card_value(line: str) -> int:
-    parsed = LINE_REGEX.match(line)
-    if parsed is None:
-        raise ValueError(f"Failed to parse line: '{line}'")
+    _, w, s = parse_line(line)
     winning_numbers = set((int(n)
-                          for n in re.findall(r'\d+', parsed.group(2))))
-    selected_numbers = list(int(n)
-                            for n in re.findall(r'\d+', parsed.group(3)))
+                           for n in re.findall(r'\d+', w)))
+    selected_numbers = (int(n)
+                        for n in re.findall(r'\d+', s))
 
-    sum = 0
-    for n in selected_numbers:
-        if n in winning_numbers:
-            if sum == 0:
-                sum = 1
-            else:
-                sum *= 2
+    selected_winning_numbers = [
+        n for n in selected_numbers if n in winning_numbers]
+    if not selected_winning_numbers:
+        return 0
+
+    sum = 1
+    for _ in selected_winning_numbers[1:]:
+        sum *= 2
     return sum
 
 
 def parse_card_count(line: str) -> Tuple[int, List[int]]:
-    parsed = LINE_REGEX.match(line)
-    if parsed is None:
-        raise ValueError(f"Failed to parse line: '{line}'")
+    cardno, w, s = parse_line(line)
     winning_numbers = set((int(n)
-                          for n in re.findall(r'\d+', parsed.group(2))))
-    selected_numbers = list(int(n)
-                            for n in re.findall(r'\d+', parsed.group(3)))
-    cardno = int(parsed.group(1))
-    sum = 0
-    for n in selected_numbers:
-        if n in winning_numbers:
-            sum += 1
+                           for n in re.findall(r'\d+', w)))
+    selected_numbers = (int(n)
+                        for n in re.findall(r'\d+', s))
+
+    sum = len([
+        n for n in selected_numbers if n in winning_numbers])
+
     return (cardno, list(range(cardno+1, cardno+sum+1)))
 
 
 def part_one(lines: List[str]) -> int:
-    values = [parse_card_value(line) for line in lines]
-    return sum(values)
+    return sum(parse_card_value(line) for line in lines)
 
 
 def part_two(lines: List[str]) -> int:
