@@ -53,7 +53,8 @@ import path
 import re
 from typing import List, Tuple
 
-LINE_REGEX = re.compile(r'Card\s*(\d+):\s*((?:\d+\s*)+)\|\s*((?:\d+\s*)+)')
+LINE_REGEX = re.compile(
+    r'Card\s*(\d+):\s*((?:\d+\s*)+)\|\s*((?:\d+(\s|l)*)+)')
 
 
 def parse_card_value(line: str) -> int:
@@ -62,8 +63,9 @@ def parse_card_value(line: str) -> int:
         raise ValueError(f"Failed to parse line: '{line}'")
     winning_numbers = set((int(n)
                           for n in re.findall(r'\d+', parsed.group(2))))
-    selected_numbers = (int(n)
-                        for n in re.findall(r'\d+', parsed.group(3)))
+    selected_numbers = list(int(n)
+                            for n in re.findall(r'\d+', parsed.group(3)))
+
     sum = 0
     for n in selected_numbers:
         if n in winning_numbers:
@@ -80,13 +82,14 @@ def parse_card_count(line: str) -> Tuple[int, List[int]]:
         raise ValueError(f"Failed to parse line: '{line}'")
     winning_numbers = set((int(n)
                           for n in re.findall(r'\d+', parsed.group(2))))
-    selected_numbers = (int(n)
-                        for n in re.findall(r'\d+', parsed.group(3)))
+    selected_numbers = list(int(n)
+                            for n in re.findall(r'\d+', parsed.group(3)))
+    cardno = int(parsed.group(1))
     sum = 0
     for n in selected_numbers:
         if n in winning_numbers:
             sum += 1
-    return (int(parsed.group(1)), list(range(int(parsed.group(1))+1, int(parsed.group(1))+sum+1)))
+    return (cardno, list(range(cardno+1, cardno+sum+1)))
 
 
 def part_one(lines: List[str]) -> int:
@@ -98,7 +101,6 @@ def part_two(lines: List[str]) -> int:
     copies = {}
     for line in lines:
         cardno, winnings = parse_card_count(line)
-        print(cardno, copies.setdefault(cardno, 1), winnings)
         for _ in range(0, copies.setdefault(cardno, 1)):
             for winning in winnings:
                 c = copies.setdefault(winning, 1)
@@ -111,6 +113,12 @@ def test_part_one():
     lines = open(path.Path(__file__).abspath().parent /
                  ('example.txt'), 'r').readlines()
     assert part_one(lines) == 13
+
+
+def test_part_two():
+    lines = open(path.Path(__file__).abspath().parent /
+                 ('example.txt'), 'r').readlines()
+    assert part_two(lines) == 30
 
 
 if __name__ == '__main__':
