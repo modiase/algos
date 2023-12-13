@@ -135,40 +135,68 @@ What is the lowest location number that corresponds to any of the initial seed n
 import re
 import sys
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 
 class Mapper:
     def __init__(self, ranges: List[Tuple[int, int, int]]):
         self._ranges: List[Tuple[int, int, int]] = []
-        for rng in ranges:
-            self._ranges.append(rng)
+        for dst, src, rng in ranges:
+            self._add_range(dst, src, rng)
 
-    def _add_range(self, dst: str, src: str, rng: str):
-        self._ranges.append((int(dst), int(src), int(rng)))
 
-    def get(self, src: int) -> int:
+    def _add_range(self, dst: int, src: int, rng: int):
+        self._ranges.append((dst, src, rng))
+        self._normalize()
+
+    def _normalize(self):
+        self._ranges = sorted(self._ranges, key=lambda t: t[1])
+
+    def map(self, src: int) -> int:
         for _dst, _src, _rng in self._ranges:
             if  src >=_src and src < _src + _rng:
                 return _dst + (src - _src)
         return src
 
-    def map_range(self, src: int) -> int:
-        for _dst, _src, _rng in self._ranges:
-            if  src >=_src and src < _src + _rng:
-                return _dst + (src - _src)
-        return src
+    def map_range(self, src_rng: range) -> List[range]:
+        mapped_ranges : List[range] = []
+        i = 0
+        """
+        TODO:
+            1. src_rng.start -> self._ranges[0][1]: noop: append as is
+            2. self._range[0][1] -> self._range[-1][1]:
+                a) between self._ranges[i][1] and self._ranges[i][1] + self._ranges[i][2] : map to dest range
+                b) self._ranges[i][1] + self._ranges[i][2] and self._ranges[i+1][1]: noop : map as is
+            3. self._range[-1][1] -> src_rng.stop: noop : append as is
+        """
+
+
+
+
+            
+        return mapped_ranges
+
+            
+    @staticmethod
+    def _range_intersection(src_range: range, rng_map: Tuple[int, int, int]) -> Optional[Tuple[int, int]]:
+        if src_range.stop <= rng_map[1] or src_range.start >= rng_map[1] + rng_map[2]:
+            return None
+        return (max(src_range.start, rng_map[1]), min(src_range.stop, rng_map[1] + rng_map[2]))
+
+
+
+
 
 class MapperChainer:
-    _maps : List[Mapper] = []
+    _mappers : List[Mapper] = []
 
     def __init__(self, maps: List[Mapper]):
-        self._maps = maps
+        self._mappers = maps
     
     def get(self, src: int) -> int:
         dst = src
-        for map in self._maps:
-            dst = map.get(dst)
+        for mapper in self._mappers:
+            dst = mapper.map(dst)
         return dst
 
 
