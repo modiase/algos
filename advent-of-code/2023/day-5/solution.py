@@ -139,13 +139,21 @@ from typing import List, Tuple
 
 
 class Mapper:
-    def __init__(self):
+    def __init__(self, ranges: List[Tuple[int, int, int]]):
         self._ranges: List[Tuple[int, int, int]] = []
+        for rng in ranges:
+            self._ranges.append(rng)
 
-    def add_range(self, dst: str, src: str, rng: str):
+    def _add_range(self, dst: str, src: str, rng: str):
         self._ranges.append((int(dst), int(src), int(rng)))
 
     def get(self, src: int) -> int:
+        for _dst, _src, _rng in self._ranges:
+            if  src >=_src and src < _src + _rng:
+                return _dst + (src - _src)
+        return src
+
+    def map_range(self, src: int) -> int:
         for _dst, _src, _rng in self._ranges:
             if  src >=_src and src < _src + _rng:
                 return _dst + (src - _src)
@@ -184,12 +192,12 @@ def parse_maps(lines: List[str]) -> MapperChainer:
             stack.append(lines[i])
             i+= 1
 
-        map = Mapper()
+        rngs = []
         while stack:
             mapping = stack.pop()
             dst, src, rng = re.match(r'(\d+) (\d+) (\d+)', mapping).groups()
-            map.add_range(dst, src, rng)
-        maps.append(map)
+            rngs.append((int(dst), int(src), int(rng)))
+        maps.append(Mapper(rngs))
 
         i += 1
 
