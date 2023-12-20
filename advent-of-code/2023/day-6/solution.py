@@ -77,8 +77,8 @@ together, you get 288 (4 * 8 * 9).
 Determine the number of ways you could beat the record in each race. What do you
 get if you multiply these numbers together?
 """
-from functools import reduce
 import re
+from functools import reduce
 from pathlib import Path
 from typing import List
 
