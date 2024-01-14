@@ -1,4 +1,7 @@
 import math
+import json
+import sys
+from pathlib import Path
 from typing import List
 
 
@@ -6,19 +9,20 @@ class NeverException(RuntimeError):
     def __init__(self):
         super().__init__('This should never occur')
 
-def findMedianSortedArrays(nums1: List[int], nums2: List[int]) -> float:
+def find_median_sorted_arrays(nums1: List[int], nums2: List[int]) -> float:
     if len(nums1) < len(nums2):
-        return findMedianSortedArrays(nums2, nums1)
+        return find_median_sorted_arrays(nums2, nums1)
 
     m = len(nums1)
     n = len(nums2)
     s = m+n
-    M = nums1
-    N = nums2
     c = (s//2)+1
     step = (n//2)+1
     nn = n
     nm = c - nn
+
+    M = nums1
+    N = nums2
 
 
     if m == 0:
@@ -35,7 +39,6 @@ def findMedianSortedArrays(nums1: List[int], nums2: List[int]) -> float:
             pm = nm - 1
             pn = nn - 1
             
-
             a = True
             if pn != 0:
                 a = (N[pn-1] <= M[pm])
@@ -83,7 +86,7 @@ def findMedianSortedArrays(nums1: List[int], nums2: List[int]) -> float:
 
                         lower_median = min(l, M[pm])
                         if lower_median == M[pm]:
-                            upper_median = min(M[pm+1], N[0])
+                            upper_median = min(M[pm+1], N[n-1])
                         else:
                             upper_median = M[pm]
 
@@ -111,7 +114,7 @@ def make_test_case(arr1: List[int], arr2: List[int]):
     else:
         expected = float(l[m])
 
-    result = findMedianSortedArrays(
+    result = find_median_sorted_arrays(
         arr1, arr2)
     message = f'arr1: {arr1}, arr2: {arr2}, expected: {expected}, result: {result}'
     assert result == expected, f'FAILED: {message}' 
@@ -136,4 +139,15 @@ def test_cases():
         make_test_case(*d)
 
 
-test_cases()
+def s_to_l(s):
+    return [ int(x) for x in s.split(' ')]
+
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        print('<script> <nums1_filepath> <nums2_filepath>')
+        sys.exit(1)
+    else:
+        m = (Path(sys.argv[1]).is_file() and s_to_l(Path(sys.argv[1]).read_text())) or s_to_l(sys.argv[1])
+        n = (Path(sys.argv[2]).is_file() and s_to_l(Path(sys.argv[2]).read_text())) or s_to_l(sys.argv[2])
+        print(find_median_sorted_arrays(m, n))
+    
