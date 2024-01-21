@@ -1,18 +1,45 @@
+#include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <cmath>
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <vector>
 
-#define __ABSURD std::cout << "Absurd state reached" << std::endl; exit(1);
+#include "median-two-sorted-arrays.hpp"
 
-template <typename  T> 
-using Vector = std::vector<T>;
-using Int = std::uint32_t;
+float find_median_sorted_arrays_On(const Vector<Int> &a, const Vector<Int> &b){
+	auto m = Vector<Int>({});
+	const Int s = static_cast<Int>(a.size() + b.size());
+	Int pa = 0;
+	Int pb = 0;
 
-float find_median_sorted_arrays(const Vector<Int> &a, const Vector<Int> &b){
-	if (a.size() < b.size()) return find_median_sorted_arrays(b, a);
+	while (pa < a.size() && pb < b.size()){
+		if (a[pa] < b[pb]) {
+			m.push_back(a[pa]);
+			pa++;
+		}else{
+			m.push_back(b[pb]);
+			pb++;
+		}
+	}
+	while (pa < a.size()){
+			m.push_back(a[pa]);
+			pa++;
+	}
+	while (pb < b.size()){
+			m.push_back(b[pb]);
+			pb++;
+	}
+	if (s % 2 == 0){
+		return (m[s/2] + m[(s/2)-1])/2.0;
+	}else{
+		return static_cast<float>(m[std::floor(s / 2)]);
+	}
+
+}
+
+float find_median_sorted_arrays_Ologn(const Vector<Int> &a, const Vector<Int> &b){
+	if (a.size() < b.size()) return find_median_sorted_arrays_Ologn(b, a);
 
 	const Int m = static_cast<Int>(a.size());
 	const Int n = static_cast<Int>(b.size());
@@ -112,32 +139,3 @@ float find_median_sorted_arrays(const Vector<Int> &a, const Vector<Int> &b){
 	__ABSURD
 }
 
-int main(const int argc, const char* argv[]){
-
-	if (argc < 3){
-		std::cout << "program <nums1> <nums2>" << std::endl;
-		return 1;
-	}
-	auto a = Vector<Int>({});
-	auto b = Vector<Int>({});
-	{
-		std::string token;
-		auto ss = std::stringstream(argv[1]);
-		while (getline(ss, token,  ' ')){
-			a.push_back(std::stoi(token));
-		}
-	}
-	{
-		std::string token;
-		auto ss = std::stringstream(argv[2]);
-		while (getline(ss, token,  ' ')){
-			b.push_back(std::stoi(token));
-		}
-	}
-
-
-	auto result = find_median_sorted_arrays(a, b);
-	std::cout << result << std::endl;
-	
-	return 0;
-}

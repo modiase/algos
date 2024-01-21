@@ -1,4 +1,5 @@
 .vscode/
+.vim/
 .venv/
 scratch/
 
@@ -7,3 +8,5 @@ scratch/
 **/*.pyc 
 **/__pycache__/.bin
 .bin/
+.tmp/
+
