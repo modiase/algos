@@ -23,7 +23,7 @@ def counting(A: Sequence[int], k: int) -> Sequence[int]:
 
     R = [0] * len(A)
 
-    for elem in A:
+    for elem in reversed(A):
         R[C[elem] - 1] = elem
         C[elem] -= 1
 
