@@ -22,6 +22,7 @@ def test_partition():
     I = 100
     N = 10
     for _ in range(I):
+        rn.seed(0)
         A = [rn.randint(-10, 10) for _ in range(N)]
         for i in range(N):
             A_cpy = A[:]
