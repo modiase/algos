@@ -1,11 +1,7 @@
-from collections.abc import MutableSequence
 import random as rn
+from collections.abc import MutableSequence
 
-
-def swap(A, i, j):
-    tmp = A[i]
-    A[i] = A[j]
-    A[j] = tmp
+from statistics.sorting.memory import swap
 
 
 def partition(A: MutableSequence, i: int, l: int, r: int) -> int:
