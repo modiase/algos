@@ -28,8 +28,10 @@ void HashMap__show(struct HashMap *hm);
 struct HashMapNode *HashMapNode();
 void HashMapNode__del(struct HashMapNode *n);
 void HashMapNode__show(struct HashMapNode *n);
+struct HashMapNode *HashMapNode__prepend(struct HashMapNode *n);
+void HashMapNode__remove(struct HashMapNode *n, int key);
 
-struct HashMapData *HashMapData();
+struct HashMapData *HashMapData(const int key, const int data);
 void HashMapData__del(struct HashMapData *d);
 int HashMapData__hash(struct HashMapData *d);
 void HashMapData__show(struct HashMapData *d);

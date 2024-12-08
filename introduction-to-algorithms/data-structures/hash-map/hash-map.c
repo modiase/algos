@@ -4,11 +4,32 @@
 #include "hash-map.h"
 
 const size_t HASH_MAP_DEFAULT_SIZE = 16;
+const char TAB[] = "    ";
+#define INDENT_WIDTH 4
+#define INDENT(n)                                                              \
+  do {                                                                         \
+    for (size_t _i = 0; _i < (n); _i++) {                                      \
+      printf("%*s", INDENT_WIDTH, "");                                         \
+    }                                                                          \
+  } while (0)
 
-struct HashMapData *HashMapData();
-void HashMapData__del(struct HashMapData *d);
-int HashMapData__hash(struct HashMapData *d);
-void HashMapData__show(struct HashMapData *d){};
+struct HashMapData *HashMapData(const int key, const int data) {
+  struct HashMapData *d =
+      (struct HashMapData *)malloc(sizeof(struct HashMapData));
+  d->key = key;
+  d->data = data;
+  return d;
+};
+
+void HashMapData__del(struct HashMapData *d) { free(d); };
+int HashMapData__hash(struct HashMapData *d) {
+  // Naive hash function
+  return d->key % HASH_MAP_DEFAULT_SIZE;
+};
+void HashMapData__show(struct HashMapData *d) {
+  INDENT(3);
+  printf("<HashMapData key=%d, data=%d />\n", d->key, d->data);
+};
 
 struct HashMapNode *HashMapNode() {
   struct HashMapNode *n =
@@ -19,6 +40,12 @@ struct HashMapNode *HashMapNode() {
   return n;
 }
 
+struct HashMapNode *HashMapNode__prepend(struct HashMapNode *n) {
+  struct HashMapNode *prepended = HashMapNode();
+  n->prev = prepended;
+  prepended->next = n;
+  return prepended;
+}
 void HashMapNode__del(struct HashMapNode *n) {
   if (n == NULL)
     return;
@@ -27,9 +54,13 @@ void HashMapNode__del(struct HashMapNode *n) {
   free(n);
 }
 void HashMapNode__show(struct HashMapNode *n) {
+  if (n == NULL)
+    return;
+  INDENT(2);
   puts("<HashMapNode>");
   if (n->data != NULL)
     HashMapData__show(n->data);
+  INDENT(2);
   puts("</HashMapNode>");
   if (n->next != NULL)
     HashMapNode__show(n->next);
@@ -41,7 +72,7 @@ struct HashMap *HashMap() {
                                              sizeof(struct HashMapNode *));
   hm->_current_size = HASH_MAP_DEFAULT_SIZE;
   for (size_t i = 0; i < hm->_current_size; i++) {
-    *(hm->_slots + i) = HashMapNode();
+    *(hm->_slots + i) = NULL;
   }
   return hm;
 }
@@ -57,9 +88,23 @@ void HashMap__del(struct HashMap *hm) {
 void HashMap__show(struct HashMap *hm) {
   puts("<HashMap>");
   for (size_t i = 0; i < hm->_current_size; i++) {
-    puts("<HashMapSlot>");
+    INDENT(1);
+    printf("<HashMapSlot slot=%p>\n", hm->_slots + i);
     HashMapNode__show(*(hm->_slots + i));
+    INDENT(1);
     puts("</HashMapSlot>");
   }
   puts("</HashMap>");
+}
+
+void HashMap__insert(struct HashMap *hm, struct HashMapData *d) {
+  const int h = (size_t)HashMapData__hash(d);
+  struct HashMapNode **slot = hm->_slots + h;
+  struct HashMapNode *prependedNode;
+  if (*slot == NULL)
+    prependedNode = HashMapNode();
+  else
+    prependedNode = HashMapNode__prepend(*slot);
+  *slot = prependedNode;
+  prependedNode->data = d;
 }
