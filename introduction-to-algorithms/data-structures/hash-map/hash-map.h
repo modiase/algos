@@ -21,19 +21,21 @@ struct HashMap {
 
 struct HashMap *HashMap();
 void HashMap__del(struct HashMap *hm);
-void HashMap__insert(struct HashMap *hm, struct HashMapData *d);
-void HashMap__remove(struct HashMap *hm, int key);
-void HashMap__show(struct HashMap *hm);
+void HashMap__insert(struct HashMap *const hm, struct HashMapData *d);
+void HashMap__remove(struct HashMap *const hm, int key);
+void HashMap__show(const struct HashMap *const hm);
 
 struct HashMapNode *HashMapNode();
-void HashMapNode__del(struct HashMapNode *n);
-void HashMapNode__show(struct HashMapNode *n);
-struct HashMapNode *HashMapNode__prepend(struct HashMapNode *n);
-void HashMapNode__remove(struct HashMapNode *n, int key);
+void HashMapNode__del(struct HashMapNode *const n);
+void HashMapNode__show(const struct HashMapNode *const n);
+struct HashMapNode *HashMapNode__prepend(struct HashMapNode *const n);
+int HashMapNode__find(const struct HashMapNode *const n, int key,
+                      const struct HashMapData *d);
+void HashMapNode__remove(struct HashMapNode *const n, int key);
 
 struct HashMapData *HashMapData(const int key, const int data);
 void HashMapData__del(struct HashMapData *d);
-int HashMapData__hash(struct HashMapData *d);
-void HashMapData__show(struct HashMapData *d);
+int HashMapData__hash(const struct HashMapData *const d);
+void HashMapData__show(const struct HashMapData *const d);
 
 #endif
