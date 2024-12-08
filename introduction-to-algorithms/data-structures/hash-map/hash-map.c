@@ -86,11 +86,15 @@ void HashMap__del(struct HashMap *hm) {
 }
 
 void HashMap__show(struct HashMap *hm) {
+  struct HashMapNode **slot;
   puts("<HashMap>");
   for (size_t i = 0; i < hm->_current_size; i++) {
+    slot = (hm->_slots + i);
+    if (*slot == NULL)
+      continue;
     INDENT(1);
-    printf("<HashMapSlot slot=%p>\n", hm->_slots + i);
-    HashMapNode__show(*(hm->_slots + i));
+    printf("<HashMapSlot idx=%ld slot=%p>\n", i, hm->_slots + i);
+    HashMapNode__show(*slot);
     INDENT(1);
     puts("</HashMapSlot>");
   }

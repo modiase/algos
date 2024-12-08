@@ -10,3 +10,5 @@ scratch/
 .bin/
 .tmp/
 a.out
+*.o
+main
