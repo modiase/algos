@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "hash-map.h"
 
 int main() {
@@ -11,6 +13,17 @@ int main() {
   HashMap__insert(hm, d3);
   HashMap__insert(hm, d4);
   HashMap__show(hm);
+
+  const int search_key = 17;
+  struct HashMapData *d5;
+  int found = HashMap__find(hm, search_key, d5);
+  if (found != HASH_MAP_DATA_NOT_FOUND) {
+    printf("Found key=%d at loc=%p\n", search_key, d5);
+    HashMapData__show(d5);
+  } else {
+    printf("Could not find item with key=%d\n", 17);
+  }
+
   HashMap__del(hm);
   return 0;
 }

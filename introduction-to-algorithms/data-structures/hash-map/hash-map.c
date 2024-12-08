@@ -4,6 +4,7 @@
 #include "hash-map.h"
 
 const size_t HASH_MAP_DEFAULT_SIZE = 16;
+const int HASH_MAP_DATA_NOT_FOUND = -1;
 const char TAB[] = "    ";
 #define INDENT_WIDTH 4
 #define INDENT(n)                                                              \
@@ -22,9 +23,9 @@ struct HashMapData *HashMapData(const int key, const int data) {
 };
 
 void HashMapData__del(struct HashMapData *d) { free(d); };
-int HashMapData__hash(const struct HashMapData *const d) {
+int HashMapData__hash(const int key) {
   // Naive hash function
-  return d->key % HASH_MAP_DEFAULT_SIZE;
+  return key % HASH_MAP_DEFAULT_SIZE;
 };
 void HashMapData__show(const struct HashMapData *const d) {
   INDENT(3);
@@ -46,6 +47,7 @@ struct HashMapNode *HashMapNode__prepend(struct HashMapNode *const n) {
   prepended->next = n;
   return prepended;
 }
+
 void HashMapNode__del(struct HashMapNode *n) {
   if (n == NULL)
     return;
@@ -53,6 +55,24 @@ void HashMapNode__del(struct HashMapNode *n) {
     free(n->data);
   free(n);
 }
+
+int HashMapNode__find(const struct HashMapNode *const n, int key,
+                      const struct HashMapData *d) {
+  if (n == NULL)
+    return HASH_MAP_DATA_NOT_FOUND;
+  const struct HashMapNode *current = n;
+  int i = 0;
+  do {
+    if (current->data->key == key) {
+      d = current->data;
+      return i;
+    }
+    current = current->next;
+    i++;
+  } while (current != NULL);
+  return HASH_MAP_DATA_NOT_FOUND;
+}
+
 void HashMapNode__show(const struct HashMapNode *const n) {
   if (n == NULL)
     return;
@@ -102,7 +122,7 @@ void HashMap__show(const struct HashMap *const hm) {
 }
 
 void HashMap__insert(struct HashMap *const hm, struct HashMapData *d) {
-  const int h = (size_t)HashMapData__hash(d);
+  const int h = (size_t)HashMapData__hash(d->key);
   struct HashMapNode **slot = hm->_slots + h;
   struct HashMapNode *prependedNode;
   if (*slot == NULL)
@@ -111,4 +131,12 @@ void HashMap__insert(struct HashMap *const hm, struct HashMapData *d) {
     prependedNode = HashMapNode__prepend(*slot);
   *slot = prependedNode;
   prependedNode->data = d;
+}
+
+int HashMap__find(const struct HashMap *const hm, int key,
+                  const struct HashMapData *d) {
+  size_t h = HashMapData__hash(key);
+  printf("h=%ld\n", h);
+  struct HashMapNode **slot = hm->_slots + h;
+  return HashMapNode__find(*slot, key, d);
 }

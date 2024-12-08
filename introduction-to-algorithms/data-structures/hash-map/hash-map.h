@@ -4,6 +4,7 @@
 #define HASH_MAP_H
 
 const extern size_t HASH_MAP_DEFAULT_SIZE;
+const extern int HASH_MAP_DATA_NOT_FOUND;
 
 struct HashMapData {
   int key;
@@ -35,7 +36,10 @@ void HashMapNode__remove(struct HashMapNode *const n, int key);
 
 struct HashMapData *HashMapData(const int key, const int data);
 void HashMapData__del(struct HashMapData *d);
-int HashMapData__hash(const struct HashMapData *const d);
+int HashMapData__hash(const int k);
 void HashMapData__show(const struct HashMapData *const d);
+
+int HashMap__find(const struct HashMap *const hm, int key,
+                  const struct HashMapData *d);
 
 #endif
