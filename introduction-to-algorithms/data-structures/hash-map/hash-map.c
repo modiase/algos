@@ -1,9 +1,11 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "hash-map.h"
 
 const size_t HASH_MAP_DEFAULT_SIZE = 771;
+const float A = 0.6180339887;
 const int HASH_MAP_DATA_NOT_FOUND = -1;
 const int HASH_MAP_DATA_REMOVED = 1;
 const char TAB[] = "    ";
@@ -34,7 +36,9 @@ void HashMapData__del(struct HashMapData *d) {
   free(d);
   d = NULL;
 };
-int HashMapData__hash(const int key) { return key % HASH_MAP_DEFAULT_SIZE; };
+int HashMapData__hash(const int key) {
+  return floor(fmod(key * A, 1.0) * HASH_MAP_DEFAULT_SIZE);
+};
 void HashMapData__show(const struct HashMapData *const d) {
   INDENT(3);
   printf("<HashMapData key=%d, data=%d />\n", d->key, d->data);

@@ -6,7 +6,7 @@ int main() {
 
   struct HashMap *hm = HashMap();
 
-  const size_t ndata = 10;
+  const size_t ndata = 1000;
   struct HashMapData *data =
       (struct HashMapData *)malloc(ndata * sizeof(struct HashMapData));
   for (size_t i = 0; i < ndata; i++) {
