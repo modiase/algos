@@ -3,7 +3,7 @@
 
 #include "hash-map.h"
 
-const size_t HASH_MAP_DEFAULT_SIZE = 16;
+const size_t HASH_MAP_DEFAULT_SIZE = 771;
 const int HASH_MAP_DATA_NOT_FOUND = -1;
 const int HASH_MAP_DATA_REMOVED = 1;
 const char TAB[] = "    ";
