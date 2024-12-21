@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,8 +7,11 @@
 
 const size_t HASH_MAP_DEFAULT_SIZE = 771;
 const float A = 0.6180339887;
+const float A_2 = 1 - (1 / 0.6180339887);
 const int HASH_MAP_DATA_NOT_FOUND = -1;
 const int HASH_MAP_DATA_REMOVED = 1;
+const int HASH_MAP_NODE_SENTINEL_KEY = 1;
+const int HASH_MAP_SLOT_FULL = -1;
 const char TAB[] = "    ";
 #define INDENT_WIDTH 4
 #define INDENT(n)                                                              \
@@ -36,13 +40,35 @@ void HashMapData__del(struct HashMapData *d) {
   free(d);
   d = NULL;
 };
+
 int HashMapData__hash(const int key) {
   return floor(fmod(key * A, 1.0) * HASH_MAP_DEFAULT_SIZE);
 };
+
+int _HashMapData2__hash(const int key) {
+  return floor(fmod(key * A_2, 1.0) * HASH_MAP_DEFAULT_SIZE);
+};
+
+int HashMapData2__hash(const int key, const int i, const size_t m) {
+  return (HashMapData__hash(key) + i * _HashMapData2__hash(key)) % m;
+};
+
 void HashMapData__show(const struct HashMapData *const d) {
   INDENT(3);
   printf("<HashMapData key=%d, data=%d />\n", d->key, d->data);
 };
+
+void HashMapData__makeNil(struct HashMapData *const d) {
+  if (d == NULL)
+    return;
+  d->key = HASH_MAP_NODE_SENTINEL_KEY;
+}
+
+bool HashMapData__isNil(const struct HashMapData *const d) {
+  if (d == NULL)
+    return false;
+  return d->key == HASH_MAP_NODE_SENTINEL_KEY;
+}
 
 void HashMapNode__init(struct HashMapNode *const n) {
   n->next = NULL;
@@ -87,6 +113,18 @@ int HashMapNode__find(const struct HashMapNode *const n, int key,
     i++;
   } while (current != NULL);
   return HASH_MAP_DATA_NOT_FOUND;
+}
+
+int HashMapNode__size(const struct HashMapNode *const n) {
+  int i = 0;
+  if (n == NULL)
+    return i;
+  const struct HashMapNode *current = n;
+  do {
+    i++;
+    current = current->next;
+  } while (current != NULL);
+  return i;
 }
 
 struct HashMapNode *HashMapNode__remove(struct HashMapNode *n, int idx) {
@@ -192,3 +230,50 @@ void HashMap__remove(const struct HashMap *const hm, int key) {
   struct HashMapNode **slot = hm->_slots + h;
   *slot = HashMapNode__remove(*slot, HashMapNode__find(*slot, key, d));
 }
+
+void HashMap2__show(const struct HashMap2 *const hm) {
+  puts("<HashMap>");
+  for (size_t i = 0; i < hm->_current_size; i++) {
+    struct HashMapData *d = hm->_slotsHead + i;
+    if (HashMapData__isNil(d))
+      continue;
+    INDENT(1);
+    HashMapData__show(d);
+    INDENT(1);
+    puts("</HashMapSlot>");
+  }
+  puts("</HashMap>");
+}
+
+void HashMap2__insert(struct HashMap2 *const hm, struct HashMapData *d) {
+  int i = 0;
+  size_t slot = 0;
+  while (HashMapData__hash2(d->key, i) == HASH_MAP_SLOT_FULL) {
+    i++;
+    if (i >= hm->_current_size) {
+    }
+  }
+}
+
+int HashMap2__find(const struct HashMap2 *const hm, int key,
+                   const struct HashMapData *d) {
+  const size_t hash_map_size = hm->_current_size;
+  const struct HashMapData *const head = hm->_slotsHead;
+
+  int i = 0;
+  int h = HashMapData2__hash(key, i, hm->_current_size);
+  const struct HashMapData *p;
+
+  while (i < hash_map_size) {
+    i++;
+    h = HashMapData2__hash(key, i, hash_map_size);
+    p = head + h;
+    if (p != NULL && p->key == key) {
+      d = p;
+      return 0;
+    }
+  }
+  return HASH_MAP_DATA_NOT_FOUND;
+}
+
+void HashMap2__remove(const struct HashMap2 *const hm, int key) {}

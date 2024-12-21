@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "hash-map.h"
@@ -6,7 +7,7 @@ int main() {
 
   struct HashMap *hm = HashMap();
 
-  const size_t ndata = 1000;
+  const size_t ndata = 10;
   struct HashMapData *data =
       (struct HashMapData *)malloc(ndata * sizeof(struct HashMapData));
   for (size_t i = 0; i < ndata; i++) {
@@ -15,7 +16,7 @@ int main() {
     d->key = i;
     HashMap__insert(hm, d);
   }
-
+  printf("Size of first slot: %d\n", HashMapNode__size(*(hm->_slots)));
   HashMap__show(hm);
 
   HashMap__del(hm);
