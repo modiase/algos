@@ -143,7 +143,7 @@ if __name__ == "__main__":
     N = 5
     x = list(TreeNode(i) for i in range(N))
     root = x[N // 2]
-    for node in itemgetter(*((i + N // 2) for i in zigzag(range(1, N))))(x):
+    for node in itemgetter(*((i + N // 2) for i in zigzag(range(N))))(x):
         root.insert(node)
 
     print(repr(root))
