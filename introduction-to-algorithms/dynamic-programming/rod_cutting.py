@@ -1,7 +1,7 @@
 import random as rn
 import sys
 import time
-from typing import Annotated
+from typing import Annotated, Literal
 from collections.abc import Mapping, Sequence
 
 
@@ -21,17 +21,18 @@ def generate_prices(
 
 def solve(
     prices: Mapping[PositiveInt, PositiveInt],
-) -> Mapping[PositiveInt, Sequence[PositiveInt]]:
+    c: Literal[0] | PositiveInt,
+) -> Mapping[PositiveInt, Sequence[tuple[PositiveInt, PositiveInt]]]:
     solution = {}
     _cache = {}
     N = max(prices.keys())
     for i in range(1, N + 1):
         _cache[i] = prices[i]
-        solution[i] = [i]
+        solution[i] = ([i], prices[i])
         for j in range(1, i):
-            if (new_price := _cache[i - j] + _cache[j]) > _cache[i]:
+            if (new_price := _cache[i - j] + _cache[j] - c) > _cache[i]:
                 _cache[i] = new_price
-                solution[i] = solution[i - j] + solution[j]
+                solution[i] = (solution[i - j][0] + solution[j][0], _cache[i])
 
     return solution
 
@@ -44,5 +45,6 @@ if __name__ == "__main__":
     prices = generate_prices(seed, N)
     print(prices)
 
-    solution = solve(prices)
-    print(solution)
+    for c in range(0, 11, 2):
+        solution = solve(prices, c)
+        print(c, solution)
