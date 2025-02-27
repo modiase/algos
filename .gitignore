@@ -4,11 +4,12 @@
 scratch/
 
 
-.pytest_cache
 **/*.pyc 
 **/__pycache__/.bin
+*.local*
+*.o
 .bin/
+.pytest_cache
 .tmp/
 a.out
-*.o
 main
