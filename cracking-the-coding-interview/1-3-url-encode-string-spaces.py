@@ -27,10 +27,10 @@ a string since it is easiest to add space to arrays at the end.
 
 tags: strings, in-place
 """
-from typing import List
+from collections.abc import MutableSequence
 
 
-def url_encode_spaces(input: List[str], n: int) -> None:
+def url_encode_spaces(input: MutableSequence[str], n: int) -> None:
     N = len(input)
     a = n - 1
     b = N - 1
@@ -54,22 +54,22 @@ def url_encode_spaces(input: List[str], n: int) -> None:
         a += 1
 
 
-def test_give_case():
-    input, n = list('Mr John Smith    '), 13
-    expected = 'Mr%20John%20Smith'
-    url_encode_spaces(input, n)
-    assert ''.join(input) == expected
-
-
-def test_edge_case_one():
-    input, n = list('   '), 1
-    expected = '%20'
-    url_encode_spaces(input, n)
-    assert ''.join(input) == expected
-
-
-def test_edge_case_two():
-    input, n = list('abc   '), 4
-    expected = 'abc%20'
-    url_encode_spaces(input, n)
-    assert ''.join(input) == expected
+if __name__ == '__main__':
+    test_cases = [
+        (list('Mr John Smith    '), 13, 'Mr%20John%20Smith'),
+        (list('   '), 1, '%20'),
+        (list(''), 0, ''),
+        (list('abc   '), 4, 'abc%20'),
+        (list('abc'), 3, 'abc'),
+        (list('abc def  '), 7, r'abc%20def'),
+        (list('abc def ghi    '), 11, 'abc%20def%20ghi'),
+        (list('abc def ghi jkl      '), 15, 'abc%20def%20ghi%20jkl'),
+        (list('abc def ghi jkl mno        '), 19, 'abc%20def%20ghi%20jkl%20mno'),
+        
+    ]
+    
+    for test_case in test_cases:
+        input, n, expected = test_case
+        og_input = input[:]
+        url_encode_spaces(input, n)
+        assert (got:=''.join(input)) == expected, f"{og_input=}: {got=} != {expected=}"
