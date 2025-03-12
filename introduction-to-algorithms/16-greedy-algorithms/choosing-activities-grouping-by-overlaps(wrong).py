@@ -1,8 +1,17 @@
+"""
+This solution is wrong because the greedy solution by least overlaps does not
+lead to a global optimal solution.  This is the case because this greedy
+strategy will sometimes choose an activity that has few overlaps but locks the
+solution into a suboptimal grouping.
+"""
+
 from __future__ import annotations
 
-from collections.abc import Collection, Mapping, Set as AbstractSet, Sequence
 import heapq
-from typing import NamedTuple, NewType
+from collections.abc import Collection, Mapping, Sequence
+from collections.abc import Set as AbstractSet
+from typing import NamedTuple
+
 
 class Activity(NamedTuple):
     def __hash__(self) -> int:
