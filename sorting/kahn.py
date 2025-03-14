@@ -1,5 +1,3 @@
-import pytest
-
 from collections import defaultdict
 from collections import deque
 from itertools import chain
@@ -11,6 +9,9 @@ from collections.abc import (
     MutableMapping,
 )
 
+import pytest
+
+
 _T = TypeVar("_T")
 
 
@@ -21,7 +22,7 @@ def kahnsort(items: Mapping[_T, WeakSet[_T]]) -> Iterable[_T]:
 
     q = deque(items.keys() - indegree.keys())
     if not q:
-        raise RuntimeError(f"Cycle detected: no starting node found.")
+        raise RuntimeError("Cycle detected: no starting node found.")
 
     while q:
         head = q.popleft()
