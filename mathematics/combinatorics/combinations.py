@@ -1,5 +1,5 @@
+import math
 from collections.abc import Sequence
-from functools import lru_cache
 from itertools import chain
 from typing import Iterable, Iterator, Tuple, TypeVar
 
@@ -10,6 +10,7 @@ T = TypeVar("T")
 
 def combinations(it: Iterable[T], k: int) -> Iterator[Tuple[T, ...]]:
     seq = list(it) if not isinstance(it, Sequence) else it
+
     def _gen() -> Iterator[Sequence[int]]:
         if k == 0:
             yield ()
@@ -32,17 +33,8 @@ def combinations(it: Iterable[T], k: int) -> Iterator[Tuple[T, ...]]:
     yield from (tuple(seq[i] for i in vec) for vec in _gen())
 
 
-@lru_cache
-def fac(n: int) -> int:
-    if n < 0:
-        raise ValueError("Factorial not defined for negative numbers.")
-    if n == 0 or n == 1:
-        return 1
-    return n * fac(n - 1)
-
-
 def nCr(n: int, r: int) -> int:
-    return fac(n) / (fac(r) * fac(n - r))
+    return math.factorial(n) / (math.factorial(r) * math.factorial(n - r))
 
 
 if __name__ == "__main__":
