@@ -1,10 +1,22 @@
+import json
 from collections import Counter
+from collections.abc import Iterator
+from contextlib import ExitStack
 from heapq import heapify, heappop, heappush
+from itertools import chain
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-import networkx as nx
-from bidict import bidict
+import click
+import graphviz
+import numpy as np
+from loguru import logger
+from more_itertools import ilen
+
+
+def it_file_chars(path: Path) -> Iterator[str]:
+    yield from chain.from_iterable(
+        line.strip() for line in ExitStack().enter_context(path.open())
+    )
 
 
 class HuffmanNode:
@@ -24,48 +36,52 @@ class HuffmanNode:
 
 
 def visualize_huffman_tree(root: HuffmanNode):
-    G = nx.Graph()
-    pos = {}
-    labels = {}
+    dot = graphviz.Digraph()
+    dot.attr(rankdir="TB", size="24,20")
 
-    def add_nodes(node, x=0, y=0, layer=1):
+    def add_nodes(node):
         if node:
-            node_id = id(node)
-            G.add_node(node_id)
-            pos[node_id] = (x, y)
-            labels[node_id] = str(node.frequency)
+            node_id = str(id(node))
+            label = str(node.frequency)
             if node.symbol:
-                labels[node_id] = f"{node.symbol}\n{labels[node_id]}"
+                label = f"{node.symbol}\\n{label}"
+
+            dot.node(
+                node_id,
+                label=label,
+                shape="box",
+                style="filled",
+                fillcolor="lightblue",
+                fontsize="10",
+                fontweight="bold",
+            )
+
             if node.left:
-                left_id = id(node.left)
-                G.add_edge(node_id, left_id)
-                add_nodes(node.left, x - 5 / layer, y - 3, layer + 0.5)
+                left_id = str(id(node.left))
+                dot.edge(node_id, left_id, label="0")
+                add_nodes(node.left)
 
             if node.right:
-                right_id = id(node.right)
-                G.add_edge(node_id, right_id)
-                add_nodes(node.right, x + 5 / layer, y - 3, layer + 0.5)
+                right_id = str(id(node.right))
+                dot.edge(node_id, right_id, label="1")
+                add_nodes(node.right)
 
     add_nodes(root)
 
-    plt.figure(figsize=(20, 16))
-    nx.draw(
-        G,
-        pos=pos,
-        labels=labels,
-        with_labels=True,
-        node_color="lightblue",
-        node_size=2000,
-        font_size=8,
-        font_weight="bold",
-    )
-    plt.axis("off")
-    plt.show()
+    # Render the graph
+    dot.render("huffman_tree", format="png", cleanup=True)
+    dot.view()
 
 
-if __name__ == "__main__":
-    input_seq = Path(__file__).parent.joinpath("huffman_codes.txt").read_text().split()
-    input_symbols = Counter(input_seq)
+@click.group()
+def cli(): ...
+
+
+@cli.command()
+def compress():
+    input_path = Path(__file__).parent.joinpath("huffman_codes.txt")
+
+    input_symbols = Counter(it_file_chars(input_path))
     nodes = [
         HuffmanNode(symbol=symbol, frequency=frequency)
         for symbol, frequency in input_symbols.items()
@@ -81,17 +97,63 @@ if __name__ == "__main__":
         heappush(nodes, merged)
 
     stack = [("", nodes[0])]
-    symbol_to_code = bidict()
+    symbol_to_code = dict()
     while stack:
         prefix, node = stack.pop()
         if node.symbol:
-            symbol_to_code[node.symbol] = prefix.ljust(8, "0")
+            symbol_to_code[node.symbol] = prefix
         if node.left:
             stack.append((prefix + "0", node.left))
         if node.right:
             stack.append((prefix + "1", node.right))
 
-    output_seq = "".join(chr(int(symbol_to_code[symbol], 2)) for symbol in input_seq)
-    print(len(" ".join(input_seq)))
-    print(len(output_seq))
-    Path(__file__).parent.joinpath("huffman_codes_coded.txt").write_text(output_seq)
+    output_seq = "".join(symbol_to_code[symbol] for symbol in it_file_chars(input_path))
+    packed = np.packbits([int(c) for c in output_seq])
+    og_len = ilen(it_file_chars(input_path))
+    compressed_len = len(packed) + len(json.dumps(dict(symbol_to_code)))
+    logger.info(f"Original length: {og_len}")
+    logger.info(f"Compressed length: {compressed_len}")
+    logger.info(f"Compression ratio: {og_len / compressed_len}")
+    Path(__file__).parent.joinpath("huffman_codes_code.txt").write_text(
+        json.dumps(dict(symbol_to_code))
+    )
+    Path(__file__).parent.joinpath("huffman_codes_coded.txt").write_bytes(packed)
+
+
+@cli.command()
+def decompress():
+    input_path = Path(__file__).parent.joinpath("huffman_codes_coded.txt")
+    packed = np.array(list(input_path.read_bytes()), dtype=np.uint8)
+    code_path = Path(__file__).parent.joinpath("huffman_codes_code.txt")
+    code_to_symbol = {v: k for k, v in json.loads(code_path.read_text()).items()}
+    buffer = ""
+    raw_output_seq = []
+    for bit in np.unpackbits(packed):
+        buffer += str(bit)
+        if buffer in code_to_symbol:
+            raw_output_seq.append(code_to_symbol[buffer])
+            buffer = ""
+    print("".join(raw_output_seq))
+
+
+@cli.command()
+def visualize():
+    input_path = Path(__file__).parent.joinpath("huffman_codes.txt")
+    input_symbols = Counter(it_file_chars(input_path))
+    nodes = [
+        HuffmanNode(symbol=symbol, frequency=frequency)
+        for symbol, frequency in input_symbols.items()
+    ]
+    heapify(nodes)
+    while len(nodes) > 1:
+        left = heappop(nodes)
+        right = heappop(nodes)
+        merged = HuffmanNode(frequency=left.frequency + right.frequency)
+        merged.left = left
+        merged.right = right
+        heappush(nodes, merged)
+    visualize_huffman_tree(nodes[0])
+
+
+if __name__ == "__main__":
+    cli()
