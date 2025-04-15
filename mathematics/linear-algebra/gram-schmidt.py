@@ -1,4 +1,5 @@
 from collections.abc import Sequence
+from functools import reduce
 from itertools import combinations
 
 import numpy as np
@@ -8,15 +9,13 @@ Vector = np.ndarray
 
 
 def gram_schmidt(vs: Sequence[Vector]) -> Sequence[Vector]:
-    if len(vs) == 0:
-        return ()
-    d = len(first(vs))
-    if not all(len(v) == d for v in vs):
+    if not all(len(v) == len(first(vs)) for v in vs):
         raise ValueError("All vectors must have the same dimension.")
-    basis = []
-    for v in vs:
-        w = v - sum(np.dot(u, v) / np.dot(u, u) * u for u in basis)
-        basis.append(w)
+
+    basis = reduce(
+        lambda b, v: b + [v - sum(np.dot(u, v) / np.dot(u, u) * u for u in b)], vs, []
+    )
+
     return tuple(e / np.linalg.norm(e) for e in basis)
 
 
