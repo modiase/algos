@@ -13,3 +13,4 @@ scratch/
 .tmp/
 a.out
 main
+*.egg-info
