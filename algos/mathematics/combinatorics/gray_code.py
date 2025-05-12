@@ -1,11 +1,19 @@
-from typing import Final
+import itertools
+from collections.abc import Iterable, Iterator
+from typing import Final, TypeVar
 
-from more_itertools import pairwise
 from tabulate import tabulate
 
 MAX_BITS: Final[int] = 5
 MAX_INT: Final[int] = 2**MAX_BITS - 1
-BitArray = tuple[int, int, int, int]
+type BitArray = tuple[int, int, int, int]
+
+
+T = TypeVar("T")
+
+
+def pairwise(iterable: Iterable[T]) -> zip:
+    return zip(iterable, itertools.islice(iterable, 1, None))
 
 
 def int_to_bitarray(n: int) -> BitArray:
@@ -33,7 +41,7 @@ def gray_to_bin(bitarray: BitArray) -> BitArray:
     """
     Converts a gray code bitarray into a binary bitarray.
     """
-    return tuple(i ^ j for i, j in pairwise(bitarray))
+    return tuple([bitarray[0], *(i ^ j for i, j in pairwise(bitarray))])
 
 
 def bitarray_to_str(bitarray: BitArray) -> str:
@@ -43,18 +51,42 @@ def bitarray_to_str(bitarray: BitArray) -> str:
     return "".join(str(i) for i in bitarray)
 
 
+def bitarray_to_int(bitarray: BitArray) -> int:
+    """
+    Converts a bitarray into an integer.
+    """
+    return int("".join(str(i) for i in bitarray), 2)
+
+
+def gray_code_generator(n: int) -> Iterator[int, None, None]:
+    current = 0
+    for _ in range(1 << n):
+        yield current
+        parity = 0
+        temp = current
+        while temp:
+            parity ^= temp & 1
+            temp >>= 1
+
+        if parity == 0:
+            current ^= 1
+        else:
+            rightmost_one_pos = (current & -current).bit_length() - 1
+            current ^= 1 << (rightmost_one_pos + 1)
+
+
 if __name__ == "__main__":
     print(
         tabulate(
             [
                 [
+                    idx,
                     i,
-                    bitarray_to_str(bits := int_to_bitarray(i)),
-                    bitarray_to_str(bin_to_gray(bits)),
+                    bitarray_to_str(int_to_bitarray(i)),
                 ]
-                for i in range(MAX_INT + 1)
+                for idx, i in enumerate(gray_code_generator(MAX_BITS))
             ],
-            headers=["int", "bin", "gray"],
+            headers=["idx", "gray", "gray_bits"],
             tablefmt="grid",
         )
     )
