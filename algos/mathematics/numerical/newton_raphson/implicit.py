@@ -1,6 +1,7 @@
 from collections.abc import Callable, Mapping, Sequence
 from functools import reduce
 
+import jax
 import plotly
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -9,40 +10,28 @@ from plotly.subplots import make_subplots
 def f(x: float) -> float:
     """
     f(x) = x^3 - 2x - 5
-    """
-    return x**3 - 2 * x - 5
-
-
-def df_dx(x: float) -> float:
-    """
     f'(x) = 3x^2 - 2
     """
-    return 3 * x**2 - 2
+    return x**3 - 2 * x - 5
 
 
 def problematic_f(x: float) -> float:
     """
     f(x) = x^4 - 10x^2 + 9
+    f'(x) = 4x^3 - 20x
     """
     return x**4 - 10 * x**2 + 9
 
 
-def problematic_df_dx(x: float) -> float:
-    """
-    f'(x) = 4x^3 - 20x
-    """
-    return 4 * x**3 - 20 * x
-
-
 def newton_explicit(
     f: Callable[[float], float],
-    df_dx: Callable[[float], float],
     x0: float,
     iterations: int = 100,
 ) -> Sequence[float]:
     """
     Explicit Newton-Raphson method for finding roots
     """
+    df_dx = jax.grad(f)
     return reduce(
         lambda acc, _: acc + [(x := acc[-1]) - f(x) / df_dx(x)],
         range(iterations),
@@ -52,7 +41,6 @@ def newton_explicit(
 
 def newton_implicit(
     f: Callable[[float], float],
-    df_dx: Callable[[float], float],
     x0: float,
     eta: float = 0.5,
     iterations: int = 100,
@@ -76,7 +64,12 @@ def newton_implicit(
     $x_{n+1} = x_n - \\frac{g(x_{n+1})}{g'(x_{n+1})}$
 
     until convergence.
+
+    The *key difference* is that we are solving a different optimization problem on each iteration due to the changing g(x).
     """
+    df_dx = jax.grad(f)
+    d2f_dx2 = jax.grad(df_dx)
+
     return reduce(
         lambda acc, _: acc
         + [
@@ -84,9 +77,9 @@ def newton_implicit(
                 lambda x_inner, _: (
                     fx := f(x_inner),
                     dfx := df_dx(x_inner),
-                    g_x := x_inner - acc[-1] + eta * fx / dfx,
-                    dg_dx := 1 + eta * (dfx**2 - fx * (6 * x_inner)) / (dfx**2),
-                    x_inner - g_x / dg_dx,
+                    g_x := x_inner - acc[-1] + (eta * fx / dfx),
+                    dg_dx := 1 + eta * (dfx**2 - fx * d2f_dx2(x_inner)) / (dfx**2),
+                    x_inner - (g_x / dg_dx),
                 )[-1],
                 range(inner_iterations),
                 acc[-1],
@@ -230,17 +223,13 @@ def plot_convergence(
 
 
 if __name__ == "__main__":
-    x0 = 5
+    x0 = 5.0
     exact_root = 1.0
     plot_convergence(
         {
-            "explicit": newton_explicit(problematic_f, problematic_df_dx, x0),
-            "implicit eta 0.1": newton_implicit(
-                problematic_f, problematic_df_dx, x0, eta=0.1
-            ),
-            "implicit eta 1000.0": newton_implicit(
-                problematic_f, problematic_df_dx, x0, eta=1000.0
-            ),
+            "explicit": newton_explicit(problematic_f, x0),
+            "implicit eta 0.1": newton_implicit(problematic_f, x0, eta=0.1),
+            "implicit eta 1000.0": newton_implicit(problematic_f, x0, eta=1000.0),
         },
         exact_root,
     )
@@ -249,11 +238,11 @@ if __name__ == "__main__":
     exact_root = 2.09455148154233
     plot_convergence(
         {
-            "explicit": newton_explicit(f, df_dx, x0),
-            "implicit eta 0.5": newton_implicit(f, df_dx, x0, eta=0.5),
-            "implicit eta 1.0": newton_implicit(f, df_dx, x0, eta=1.0),
-            "implicit eta 10.0": newton_implicit(f, df_dx, x0, eta=10.0),
-            "implicit eta 100.0": newton_implicit(f, df_dx, x0, eta=100.0),
+            "explicit": newton_explicit(f, x0),
+            "implicit eta 0.5": newton_implicit(f, x0, eta=0.5),
+            "implicit eta 1.0": newton_implicit(f, x0, eta=1.0),
+            "implicit eta 10.0": newton_implicit(f, x0, eta=10.0),
+            "implicit eta 100.0": newton_implicit(f, x0, eta=100.0),
         },
         exact_root,
     )
