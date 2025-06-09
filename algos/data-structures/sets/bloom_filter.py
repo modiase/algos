@@ -1,4 +1,5 @@
 import hashlib
+from array import array
 from collections.abc import Collection
 
 import pytest
@@ -6,9 +7,9 @@ import pytest
 
 class BloomFilter:
     def __init__(self, size: int):
-        self.size = size
-        self.bit_array = [0] * size
-        self.hash_functions = [
+        self._size = size
+        self._bit_array = array("B", [0] * size)
+        self._hash_functions = [
             hashlib.sha256,
             hashlib.sha512,
             hashlib.sha3_256,
@@ -17,16 +18,16 @@ class BloomFilter:
 
     def _hash(self, item: str) -> Collection[int]:
         return tuple(
-            int(hash_function(item.encode()).hexdigest(), 16) % self.size
-            for hash_function in self.hash_functions
+            int(hash_function(item.encode()).hexdigest(), 16) % self._size
+            for hash_function in self._hash_functions
         )
 
     def add(self, item: str) -> None:
         for value in self._hash(item):
-            self.bit_array[value] = 1
+            self._bit_array[value] = 1
 
     def contains(self, item: str) -> bool:
-        return all(self.bit_array[value] for value in self._hash(item))
+        return all(self._bit_array[value] for value in self._hash(item))
 
     def __contains__(self, item: str) -> bool:
         return self.contains(item)
