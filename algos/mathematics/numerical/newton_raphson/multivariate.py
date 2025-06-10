@@ -10,6 +10,9 @@ EPSILON: Final[float] = 1e-4
 
 @jit
 def f(x: jnp.ndarray) -> float:
+    """
+    This function is quadratic, so the Newton-Raphson method should converge in one iteration.
+    """
     _x, _y = x
     return _x**2 + _y**2
 
