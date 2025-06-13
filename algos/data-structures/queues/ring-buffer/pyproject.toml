@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ring_buffer"
+version = "1.0.0"
+description = "High-performance ring buffer for Python objects"
+requires-python = ">=3.6"
+dependencies = []
+
+[project.optional-dependencies]
+test = [
+    "pytest>=6.0",
+]
+dev = [
+    "ring_buffer[test]",
+]
+
+[tool.pytest.ini_options]
+addopts = ["-v", "--tb=short"]
+testpaths = ["tests.py"]
+markers = [
+    "slow: marks tests as slow",
+    "performance: marks tests as performance tests",
+]

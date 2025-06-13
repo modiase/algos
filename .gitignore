@@ -1,16 +1,26 @@
+# Editor and IDE files
 .vscode/
 .vim/
+
+# Virtual environments
 .venv/
+
+# Development and scratch files
 scratch/
 
-
+# Python bytecode and cache
 **/*.pyc 
 **/__pycache__/.bin
-*.local*
-*.o
-.bin/
 .pytest_cache
-.tmp/
+*.egg-info
+
+# Compiled binaries and objects
+*.o
+*.so
 a.out
 main
-*.egg-info
+
+# Local and temporary files
+*.local*
+.bin/
+.tmp/
