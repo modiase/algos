@@ -1,16 +1,5 @@
 let
-  tree =
-    {
-      value,
-      left ? null,
-      right ? null,
-    }:
-    {
-      value = value;
-      left = left;
-      right = right;
-    };
-
+  tree = import ./tree.nix;
   dfs =
     tree:
     with builtins;
