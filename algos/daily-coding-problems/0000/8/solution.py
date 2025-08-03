@@ -21,5 +21,10 @@ def count_univals(root):
     def _recursive_count_univals(node):
         if not node:
             return 0
-        return int(node.is_unival()) + _recursive_count_univals(node.left) + _recursive_count_univals(node.right)
+        return (
+            int(node.is_unival())
+            + _recursive_count_univals(node.left)
+            + _recursive_count_univals(node.right)
+        )
+
     return _recursive_count_univals(root)

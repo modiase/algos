@@ -18,12 +18,7 @@ The transitive closure of this graph would be:
 Given a graph, find its transitive closure.
 """
 
-graph = [
-    [0, 1, 3],
-    [1, 2],
-    [2],
-    [3]
-]
+graph = [[0, 1, 3], [1, 2], [2], [3]]
 
 
 def tclosure(g):

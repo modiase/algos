@@ -9,6 +9,7 @@ For example, 4 - 2 - 1 - 7 is a valid pattern, whereas 2 - 1 - 7 is not.
 
 Find the total number of valid unlock patterns of length N, where 1 <= N <= 9.
 """
+
 import itertools
 
 
@@ -25,13 +26,13 @@ g = [
     [2, 3, 5, 8, 9],
     [4, 5, 8],
     [4, 5, 6, 7, 9],
-    [5, 6, 8]
+    [5, 6, 8],
 ]
 
 
 def path_between(start, end):
     def _next_step(visited, current):
-        possible_moves = [p for p in g[current-1] if p not in visited]
+        possible_moves = [p for p in g[current - 1] if p not in visited]
         if end in possible_moves:
             return [[*visited, current, end]]
         if possible_moves == []:
@@ -42,14 +43,15 @@ def path_between(start, end):
             if r:
                 result += r
         return result
+
     return list(sorted(_next_step([], start), key=lambda x: len(x)))[0]
 
 
 def sequence_is_valid(s):
-    for i in range(0, len(s)-1):
+    for i in range(0, len(s) - 1):
         visited = s[:i]
         current = s[i]
-        nxt = s[i+1]
+        nxt = s[i + 1]
         p = path_between(current, nxt)
         if len(p) == 2:
             continue

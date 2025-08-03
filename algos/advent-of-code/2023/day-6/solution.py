@@ -77,27 +77,45 @@ together, you get 288 (4 * 8 * 9).
 Determine the number of ways you could beat the record in each race. What do you
 get if you multiply these numbers together?
 """
+
 import re
 from functools import reduce
 from pathlib import Path
 from typing import List
 
+
 def part_one(lines: List[str]) -> int:
-  return reduce(lambda x, y: x * y, 
-                [sum([1  for x in range(t[0]) if ((t[0] -x)*x) > t[1] ])
-                 for t in [ (int(t[0]), int(t[1])) 
-                for t in zip(re.findall(r'(\d+)', lines[0]), re.findall(r'(\d+)', lines[1])) ] 
-                ])
+    return reduce(
+        lambda x, y: x * y,
+        [
+            sum([1 for x in range(t[0]) if ((t[0] - x) * x) > t[1]])
+            for t in [
+                (int(t[0]), int(t[1]))
+                for t in zip(
+                    re.findall(r"(\d+)", lines[0]), re.findall(r"(\d+)", lines[1])
+                )
+            ]
+        ],
+    )
+
 
 def part_two(lines: List[str]) -> int:
-  return reduce(lambda x, y: x * y, 
-                [sum([1  for x in range(t[0]) if ((t[0] -x)*x) > t[1] ])
-                 for t in [ (int(t[0]), int(t[1])) 
-                for t in zip(re.findall(r'(\d+)', lines[0].replace(' ','')), re.findall(r'(\d+)', lines[1].replace(' ',''))) ] 
-                ])
+    return reduce(
+        lambda x, y: x * y,
+        [
+            sum([1 for x in range(t[0]) if ((t[0] - x) * x) > t[1]])
+            for t in [
+                (int(t[0]), int(t[1]))
+                for t in zip(
+                    re.findall(r"(\d+)", lines[0].replace(" ", "")),
+                    re.findall(r"(\d+)", lines[1].replace(" ", "")),
+                )
+            ]
+        ],
+    )
 
 
-if __name__ == '__main__':
-  lines = Path('./input.txt').read_text().split('\n')
-  print(part_one(lines))
-  print(part_two(lines))
+if __name__ == "__main__":
+    lines = Path("./input.txt").read_text().split("\n")
+    print(part_one(lines))
+    print(part_two(lines))

@@ -6,10 +6,11 @@ For example, given "/usr/bin/../bin/./scripts/../",
 return "/usr/bin/".
 Notes
 ======
-C: 
+C:
 T: 20,
-PD: 
+PD:
 """
+
 import re
 
 
@@ -37,23 +38,23 @@ import re
 
 def canonical_path(path: str) -> str:
     stack = []
-    parts = re.split('[/]', path) 
+    parts = re.split("[/]", path)
     for part in parts:
-        if part == '.':
+        if part == ".":
             continue
-        elif part == '..' and stack:
+        elif part == ".." and stack:
             stack.pop()
         else:
             stack.append(part)
 
-    if not stack or stack == ['']:
-        return '/'
-    if stack[0] != '':
-        stack = [''] + stack
-    return '/'.join(stack)
+    if not stack or stack == [""]:
+        return "/"
+    if stack[0] != "":
+        stack = [""] + stack
+    return "/".join(stack)
 
 
-assert canonical_path('/usr/bin/../bin/./scripts/../') == '/usr/bin/'
-assert canonical_path('/../../../') == '/'
-assert canonical_path('/usr/bin/env/../env/./../../') == '/usr/'
-assert canonical_path('/../../../usr/bin/env/') == '/usr/bin/env/'
+assert canonical_path("/usr/bin/../bin/./scripts/../") == "/usr/bin/"
+assert canonical_path("/../../../") == "/"
+assert canonical_path("/usr/bin/env/../env/./../../") == "/usr/"
+assert canonical_path("/../../../usr/bin/env/") == "/usr/bin/env/"

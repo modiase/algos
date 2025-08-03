@@ -1,6 +1,6 @@
 """
 Remove duplicates from a sorted array in place such that the first
-k numbers are a unique ordered sequence of non-decreasing numbers. 
+k numbers are a unique ordered sequence of non-decreasing numbers.
 The solution function should modify the array in place and return k.
 
 Notes
@@ -23,6 +23,7 @@ Need to be careful about the following things:
 
 tags: sorted-arrays, in-place
 """
+
 from typing import List
 
 

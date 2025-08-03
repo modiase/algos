@@ -12,8 +12,6 @@ def radixsort(A: Sequence[int], k: int) -> Sequence[int]:
     return A
 
 
-
 if __name__ == "__main__":
     A = [947, 90, 797, 147, 954, 44, 130, 357, 696, 22]
     print(A, radixsort(A, 2))
-

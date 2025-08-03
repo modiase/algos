@@ -19,6 +19,15 @@ repos:
         args:
           - -c
           - "nix-shell -p fd nixfmt-rfc-style --run 'fd -e nix -x nixfmt'"
+      - id: format-c
+        name: format C files
+        entry: bash
+        language: system
+        files: \.(c|h)$
+        pass_filenames: false
+        args:
+          - -c
+          - "nix-shell -p indent fd --run 'fd -e c -e h -x sh -c \"indent -linux -o {} {}\"'"
       - id: remove-trailing-whitespace
         name: remove trailing whitespace
         entry: bash

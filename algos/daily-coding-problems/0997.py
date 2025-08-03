@@ -13,13 +13,14 @@ The following test should pass:
 node = Node('root', Node('left', Node('left.left')), Node('right'))
 assert deserialize(serialize(node)).left.left.val == 'left.left'
 """
+
 import re
 
 
 def serialize(t):
     if t is None:
-        return 'None'
-    return f'Node(\'{t.val}\', {serialize(t.left)}, {serialize(t.right)})'
+        return "None"
+    return f"Node('{t.val}', {serialize(t.left)}, {serialize(t.right)})"
 
 
 class Node:
@@ -29,13 +30,13 @@ class Node:
         self.right = right
 
 
-node = Node('root', Node('left', Node('left.left')), Node('right'))
+node = Node("root", Node("left", Node("left.left")), Node("right"))
 
 
 def deserialize(s):
-    if s == 'None':
+    if s == "None":
         return None
-    pattern = r'Node\(\'(?P<value>.+?)\', (?P<left>(?:None|Node\(.*\))), (?P<right>(?:None|Node\(.*\)))\)'
+    pattern = r"Node\(\'(?P<value>.+?)\', (?P<left>(?:None|Node\(.*\))), (?P<right>(?:None|Node\(.*\)))\)"
     match = re.search(pattern, s)
     if match is None:
         raise Exception(s)
@@ -44,4 +45,4 @@ def deserialize(s):
 
 
 print(serialize(deserialize(serialize(node))))
-assert deserialize(serialize(node)).left.left.val == 'left.left'
+assert deserialize(serialize(node)).left.left.val == "left.left"

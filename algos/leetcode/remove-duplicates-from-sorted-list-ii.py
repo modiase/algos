@@ -16,16 +16,17 @@ PD: 1
 This was fairly straightforward after doing the first exercise
 since I was able to leverage that solution. Need to be careful
 about ensuring you know the state of a variable at each line
-- one issue I ran into was solved by ensuring I assigned a 
+- one issue I ran into was solved by ensuring I assigned a
 value before incrementing rather than after.
 
 Furthermore, I realised that there was an invariant where
-b <= a always such that if a < N then necessarily b < N 
+b <= a always such that if a < N then necessarily b < N
 so I can eliminate that duplicate check from the solution.
 Comment added to the previous solution.
 
 tags: sorted-arrays, in-place
 """
+
 from typing import List
 
 

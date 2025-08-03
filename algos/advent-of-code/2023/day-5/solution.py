@@ -132,6 +132,7 @@ So, the lowest location number in this example is 35.
 
 What is the lowest location number that corresponds to any of the initial seed numbers?
 """
+
 import re
 import sys
 from pathlib import Path
@@ -194,7 +195,7 @@ class Mapper:
             o = 0 if rng.src_start >= src_rng.start else src_rng.start - rng.src_start
             s = min(rng.src_end, src_rng.stop)
             w = s - rng.src_start
-            mapped_ranges.append(range(rng.dest_start+o, rng.dest_start+w))
+            mapped_ranges.append(range(rng.dest_start + o, rng.dest_start + w))
 
         else:
             # map from the last stopping point to the end of the src_rng
@@ -202,7 +203,8 @@ class Mapper:
             mapped_ranges.append(range(s, src_rng.stop))
 
         mapped_ranges = sorted(
-            [r for r in mapped_ranges if not r.start >= r.stop], key=lambda r: r.start)
+            [r for r in mapped_ranges if not r.start >= r.stop], key=lambda r: r.start
+        )
 
         return mapped_ranges
 
@@ -230,8 +232,7 @@ class MapperChainer:
 
 
 def parse_seeds_one(line: str) -> List[int]:
-    seeds = [int(x)
-             for x in re.match(r'seeds: (.*)', line).group(1).split(" ")]
+    seeds = [int(x) for x in re.match(r"seeds: (.*)", line).group(1).split(" ")]
     return seeds
 
 
@@ -241,18 +242,18 @@ def parse_maps(lines: List[str]) -> MapperChainer:
 
     i = 0
     stack = []
-    while not re.match(r'.*map', lines[i]):
+    while not re.match(r".*map", lines[i]):
         i += 1
     while i < N:
         i += 1
-        while lines[i] != '' and i < N:
+        while lines[i] != "" and i < N:
             stack.append(lines[i])
             i += 1
 
         rngs: List[RangeMap] = []
         while stack:
             mapping = stack.pop()
-            dst, src, rng = re.match(r'(\d+) (\d+) (\d+)', mapping).groups()
+            dst, src, rng = re.match(r"(\d+) (\d+) (\d+)", mapping).groups()
             rngs.append(RangeMap(int(dst), int(src), int(rng)))
         maps.append(Mapper(rngs))
 
@@ -280,7 +281,7 @@ def parse_seeds_two(line: str) -> List[range]:
     while _seeds:
         rng = _seeds.pop()
         start = _seeds.pop()
-        seeds.append(range(start, start+rng))
+        seeds.append(range(start, start + rng))
     return seeds
 
 
@@ -296,7 +297,7 @@ def part_two(lines: List[str]) -> int:
     return min_loc
 
 
-if __name__ == '__main__':
-    lines = Path('./input.txt').read_text().split('\n')
+if __name__ == "__main__":
+    lines = Path("./input.txt").read_text().split("\n")
     # print(part_one(lines))
     print(part_two(lines))

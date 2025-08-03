@@ -11,7 +11,7 @@ def all_of_len(s: str) -> Iterator[str]:
     l = len(s)
     for k in range(l, 0, -1):
         for j in range(0, l - k + 1):
-            yield (s[j:j + k])
+            yield (s[j : j + k])
 
 
 def main(s: str, k: int):
@@ -21,6 +21,6 @@ def main(s: str, k: int):
             return sub
 
 
-if __name__ == '__main__':
-    res = main('abcba', 2)
+if __name__ == "__main__":
+    res = main("abcba", 2)
     print(res)

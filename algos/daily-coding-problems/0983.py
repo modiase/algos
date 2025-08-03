@@ -30,11 +30,11 @@ def all_paths(t0):
             return
         _all_paths([*acc, t.val], t.left)
         _all_paths([*acc, t.val], t.right)
+
     _all_paths([], t0)
 
     return paths
 
 
 t1 = Node(1, Node(2), Node(3, Node(4), Node(5)))
-assert list(sorted(all_paths(t1))) == list(
-    sorted([[1, 2], [1, 3, 4], [1, 3, 5]]))
+assert list(sorted(all_paths(t1))) == list(sorted([[1, 2], [1, 3, 4], [1, 3, 5]]))

@@ -45,6 +45,7 @@ Determine which games would have been possible if the bag had been loaded with
 only 12 red cubes, 13 green cubes, and 14 blue cubes. What is the sum of the
 IDs of those games?
 """
+
 from typing import List, Tuple
 import path
 import re
@@ -53,9 +54,9 @@ MAX_GREENS = 13
 MAX_REDS = 12
 MAX_BLUES = 14
 
-red_regex = re.compile(r'(\d+) red')
-blue_regex = re.compile(r'(\d+) blue')
-green_regex = re.compile(r'(\d+) green')
+red_regex = re.compile(r"(\d+) red")
+blue_regex = re.compile(r"(\d+) blue")
+green_regex = re.compile(r"(\d+) green")
 
 
 def get_games_from_lines(lines) -> List[Tuple[int, List[str]]]:
@@ -77,15 +78,15 @@ def part_one(lines):
     for id, game in games:
         flag = False
         for shown in game:
-            red = int((red_regex.search(shown) or [None, '0'])[1])
+            red = int((red_regex.search(shown) or [None, "0"])[1])
             if red > MAX_REDS:
                 flag = True
                 break
-            blue = int((blue_regex.search(shown) or [None, '0'])[1])
+            blue = int((blue_regex.search(shown) or [None, "0"])[1])
             if blue > MAX_BLUES:
                 flag = True
                 break
-            green = int((green_regex.search(shown) or [None, '0'])[1])
+            green = int((green_regex.search(shown) or [None, "0"])[1])
             if green > MAX_GREENS:
                 flag = True
                 break
@@ -102,20 +103,19 @@ def part_two(lines):
         max_green = 0
         max_blue = 0
         for shown in game:
-            red = int((red_regex.search(shown) or [None, '0'])[1])
+            red = int((red_regex.search(shown) or [None, "0"])[1])
             max_red = max(red, max_red)
-            blue = int((blue_regex.search(shown) or [None, '0'])[1])
+            blue = int((blue_regex.search(shown) or [None, "0"])[1])
             max_blue = max(blue, max_blue)
-            blue = int((blue_regex.search(shown) or [None, '0'])[1])
-            green = int((green_regex.search(shown) or [None, '0'])[1])
+            blue = int((blue_regex.search(shown) or [None, "0"])[1])
+            green = int((green_regex.search(shown) or [None, "0"])[1])
             max_green = max(green, max_green)
         power_sets.append(max_red * max_blue * max_green)
     return sum(power_sets)
 
 
-if __name__ == '__main__':
-    gameRegex = re.compile(r'Game (\d+):(.*)$')
-    lines = open(path.Path(__file__).abspath().parent /
-                 'input.txt', 'r').readlines()
+if __name__ == "__main__":
+    gameRegex = re.compile(r"Game (\d+):(.*)$")
+    lines = open(path.Path(__file__).abspath().parent / "input.txt", "r").readlines()
     print(part_one(lines))
     print(part_two(lines))

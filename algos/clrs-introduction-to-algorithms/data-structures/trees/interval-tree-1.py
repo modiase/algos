@@ -101,7 +101,6 @@ class Node:
             if current.right is not None:
                 stack.append(current.right)
 
-
     def yield_dfs(self) -> Iterator[Self]:
         stack: MutableSequence[Self] = []
         current = self

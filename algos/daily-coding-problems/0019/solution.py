@@ -11,7 +11,6 @@ goal.
 """
 
 
-
 # Original solution (unoptimized)
 # def calc(vec, m):
 #     return sum([m[i][vec[i][0]] for i in range(0, len(m))])
@@ -65,53 +64,41 @@ goal.
 #                 vec = r
 #     print(m, " ", [v[0] for v in vec], " ",  calc(vec, m))
 
+
 # DP solution (optimized)
 def solve(m):
-    n = len(m) # number of houses
-    k = len(m[0]) # number of colors
-    dp = [[0] * k for _ in range(n)] # dp[i][j] = minimum cost to build the ith house with the jth color
+    n = len(m)  # number of houses
+    k = len(m[0])  # number of colors
+    dp = [
+        [0] * k for _ in range(n)
+    ]  # dp[i][j] = minimum cost to build the ith house with the jth color
     for i in range(n):
         for j in range(k):
             dp[i][j] = m[i][j]
             if i > 0:
-                dp[i][j] += min(dp[i-1][:j] + dp[i-1][j+1:])
+                dp[i][j] += min(dp[i - 1][:j] + dp[i - 1][j + 1 :])
     return min(dp[-1])
+
 
 # Example cases
 # Test case 1: Simple case with clear minimal path
 m1 = [
     [1, 2, 3, 4, 5],  # House 1
     [5, 1, 2, 3, 4],  # House 2
-    [4, 5, 1, 2, 3]   # House 3
+    [4, 5, 1, 2, 3],  # House 3
 ]
 
 # Test case 2: Multiple houses have same minimal color cost
-m2 = [
-    [5, 1, 5, 5, 5],
-    [5, 1, 5, 5, 5],
-    [5, 5, 1, 5, 5]
-]
+m2 = [[5, 1, 5, 5, 5], [5, 1, 5, 5, 5], [5, 5, 1, 5, 5]]
 
 # Test case 3: All costs are equal
-m3 = [
-    [2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2]
-]
+m3 = [[2, 2, 2, 2, 2], [2, 2, 2, 2, 2], [2, 2, 2, 2, 2]]
 
 # Test case 4: Large cost differences
-m4 = [
-    [1, 100, 100, 100, 100],
-    [100, 1, 100, 100, 100],
-    [100, 100, 1, 100, 100]
-]
+m4 = [[1, 100, 100, 100, 100], [100, 1, 100, 100, 100], [100, 100, 1, 100, 100]]
 
 # Test case 5: Random but reasonable costs
-m5 = [
-    [4, 7, 3, 6, 2],
-    [2, 5, 3, 4, 7],
-    [3, 4, 6, 2, 5]
-]
+m5 = [[4, 7, 3, 6, 2], [2, 5, 3, 4, 7], [3, 4, 6, 2, 5]]
 
 print(solve(m1))
 print(solve(m2))

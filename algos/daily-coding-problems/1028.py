@@ -15,12 +15,10 @@ Solved in <10m
 
 
 def compute_n(num):
-    n = int(''.join(sorted(str(num), reverse=True))) - \
-        int(''.join(sorted(str(num))))
+    n = int("".join(sorted(str(num), reverse=True))) - int("".join(sorted(str(num))))
     count = 1
     while n != 6174:
-        n = int(''.join(sorted(str(n), reverse=True))) - \
-            int(''.join(sorted(str(n))))
+        n = int("".join(sorted(str(n), reverse=True))) - int("".join(sorted(str(n))))
         count += 1
     return count
 

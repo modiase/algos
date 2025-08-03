@@ -5,18 +5,17 @@ that there is only one way to make 0, 2, or 3 units, and two ways of making 4 un
 Given such an array, determine the denominations that must be in use. In the case
 above, for example, there must be coins with value 2, 3, and 4.
 """
+
 import itertools
 
 
 def get_denominations(w):
-    known = [list(itertools.dropwhile(
-        lambda x: w[x] == 0, range(1, len(w))))[0]]
-    possible = [i for i, c in enumerate(
-        w, 0) if c >= 1 and i != 0 and i != known[0]]
+    known = [list(itertools.dropwhile(lambda x: w[x] == 0, range(1, len(w))))[0]]
+    possible = [i for i, c in enumerate(w, 0) if c >= 1 and i != 0 and i != known[0]]
     for p in possible:
         max_n = p // known[0]
         count = 0
-        for i in range(1, max_n+1):
+        for i in range(1, max_n + 1):
             ways = itertools.combinations_with_replacement(known, i)
             for way in ways:
                 if sum(way) == p:

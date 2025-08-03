@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 def take_first(s: str) -> Tuple[str, str]:
     if len(s) == 1:
-        return (s, '')
+        return (s, "")
     return (s[0], s[1:])
 
 
@@ -27,12 +27,13 @@ def prepare_tree(strings: List[str]) -> Dict[str, Union[Dict]]:
 def return_endings(tree: Dict[str, Dict]) -> List[str]:
     def _return_endings(sub_tree: Dict[str, Dict]) -> List[str]:
         if not sub_tree.keys():
-            return ['']
+            return [""]
         res = []
         for k in sub_tree.keys():
             endings = _return_endings(sub_tree[k])
             res = res + [k + ending for ending in endings]
         return res
+
     return _return_endings(tree)
 
 
@@ -43,6 +44,7 @@ def walk_tree(string: str, tree: Dict[str, Dict]) -> List[str]:
         if not string[index] in sub_tree.keys():
             return (string, [])
         return _walk_tree(sub_tree[string[index]], index + 1)
+
     return _walk_tree(tree, 0)[1]
 
 
@@ -52,7 +54,7 @@ def main(partial_s: str, strings: List[str]) -> List[str]:
     return [partial_s + res for res in result]
 
 
-if __name__ == '__main__':
-    t = 'de'
-    s = ['deer', 'deal', 'love']
+if __name__ == "__main__":
+    t = "de"
+    s = ["deer", "deal", "love"]
     main(t, s)

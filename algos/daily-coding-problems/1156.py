@@ -1,5 +1,5 @@
 """
-Print the nodes in a binary tree level-wise. For example, the following should print 
+Print the nodes in a binary tree level-wise. For example, the following should print
 1, 2, 3, 4, 5.
 
   1
@@ -13,6 +13,7 @@ Notes
 ========
 Completed in 2m
 """
+
 from __future__ import annotations
 
 from typing import Optional
@@ -20,8 +21,9 @@ from collections import deque
 
 
 class Node:
-
-    def __init__(self, value: int, left: Optional[Node] = None, right: Optional[Node] = None):
+    def __init__(
+        self, value: int, left: Optional[Node] = None, right: Optional[Node] = None
+    ):
         self._value = value
         self._left = left
         self._right = right

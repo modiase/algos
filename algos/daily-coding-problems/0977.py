@@ -9,7 +9,10 @@ Implement a URL shortener with the following methods:
 
 Hint: What if we enter the same URL twice?
 """
+
 import hashlib
+
+
 class UrlShortener:
     def __init__(self):
         self._d = {}
@@ -33,14 +36,5 @@ class UrlShortener:
 
 
 shortener = UrlShortener()
-assert shortener.restore(shortener.shorten('google.com')) == 'google.com'
-assert shortener.shorten('google.co.uk') != shortener.shorten('google.co.uk')
-
-
-
-
-
-        
-
-
-
+assert shortener.restore(shortener.shorten("google.com")) == "google.com"
+assert shortener.shorten("google.co.uk") != shortener.shorten("google.co.uk")

@@ -29,6 +29,7 @@ in size and the insertion of a new element is therefore O(log n)
 and not O(1) as was my erroneous assumption in assuming O(n)
 overall complexity.
 """
+
 from typing import List
 from collections import deque
 from heapq import heapify, heappop, heappush
@@ -43,7 +44,6 @@ def subarray_max(arr: List[int], k: int) -> List[int]:
     subarr_max_size = k
 
     for idx, elem in enumerate(arr[k:N], k):
-
         subarr_max_size = max(k, len(subarr))
         heappush(subarr, (-elem, idx))
         max_item = subarr[0]
@@ -85,9 +85,9 @@ def correct_solution(arr, k):
 
     """
     The key idea here is the loop invariants
-    which are that the largest valid 
-    value seen is the first value in the 
-    queue and that only values which are 
+    which are that the largest valid
+    value seen is the first value in the
+    queue and that only values which are
     relevant for evaluation are kept to the
     right of this. Doing this ensures that
     indices are in increasing order which allows
@@ -96,13 +96,13 @@ def correct_solution(arr, k):
 
     To maintain this invariant
     all invalid (out of window) values are first
-    removed from the head of the queue at the 
-    start of each iteration, and then 
+    removed from the head of the queue at the
+    start of each iteration, and then
     from the right the new value is compared
     with values until all that are less than it
     are removed (since they cannot be max with
     this new value in the valid window).
-    Think of it as new large values bubbling up 
+    Think of it as new large values bubbling up
     from the back of the queue and removing older
     smaller values which can never be the max again.
     """

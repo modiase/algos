@@ -1,4 +1,3 @@
-
 class OrderStore:
     def __init__(self):
         self._q = []
@@ -10,9 +9,8 @@ class OrderStore:
         return self._q[-i]
 
 
-def main():
-    ...
+def main(): ...
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

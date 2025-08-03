@@ -31,6 +31,6 @@ def main(window_size_seconds=10):
     return choice
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     res = main()
     print(res)

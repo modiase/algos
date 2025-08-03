@@ -7,7 +7,7 @@ Each element nums[i] represents the maximum length of a forward jump from index 
 i + j < n
 Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1].
 
- 
+
 
 Example 1:
 
@@ -18,7 +18,7 @@ Example 2:
 
 Input: nums = [2,3,0,1,4]
 Output: 2
- 
+
 
 Constraints:
 
@@ -35,11 +35,12 @@ PD: 3
 
 ## Comments
 
-This was  satisfying to solve because I was initially quite daunted but by taking a step back and thinking about jump game i 
+This was  satisfying to solve because I was initially quite daunted but by taking a step back and thinking about jump game i
 which I had already solved and what I knew about greedy algorithms I was able to come up with a solution.
 
 tags: greedy-algorithms, optimisation
 """
+
 from typing import List
 
 
@@ -48,21 +49,23 @@ class Solution:
         p = 0
         N = len(nums)
         jump_indices = []
-        while p < N-1:
+        while p < N - 1:
             jump_indices.append(p)
-            l = [ (i, x+i) for (i,x) in enumerate([ nums[i] for i in range(p+1, min(p+nums[p]+1,N)) ], 1) ]
+            l = [
+                (i, x + i)
+                for (i, x) in enumerate(
+                    [nums[i] for i in range(p + 1, min(p + nums[p] + 1, N))], 1
+                )
+            ]
             max_v = 0
             next_idx = p
             for i, v in l:
-                if p+i == N-1:
+                if p + i == N - 1:
                     return len(jump_indices)
                 elif max_v <= v:
                     max_v = v
-                    next_idx = p+i
+                    next_idx = p + i
             p = next_idx
-        jump_indices.append(N-1)
+        jump_indices.append(N - 1)
 
-        return len(jump_indices)-1
-
-
-
+        return len(jump_indices) - 1

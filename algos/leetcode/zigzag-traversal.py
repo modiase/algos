@@ -40,33 +40,34 @@ class TreeNode:
 def zigzag_traverse(root: Optional[TreeNode]) -> List[List[int]]:
     if root is None:
         return []
-        
+
     result = []
     q = deque([root])  # Start with just the root node
     leftToRight = True  # Start with left-to-right for first level
-    
+
     while q:
         level = []
         level_size = len(q)  # Process nodes level by level
-        
+
         # Process all nodes at current level
         for _ in range(level_size):
             node = q.popleft()
             level.append(node.val)
-            
+
             if node.left:
                 q.append(node.left)
             if node.right:
                 q.append(node.right)
-        
+
         # Add level to result (reverse if needed)
         if not leftToRight:
             level.reverse()
         result.append(level)
-        
+
         leftToRight = not leftToRight
-    
+
     return result
+
 
 if __name__ == "__main__":
     # Test cases
@@ -78,37 +79,30 @@ if __name__ == "__main__":
 
     # Two elements per level
     assert zigzag_traverse(
-        TreeNode(1, 
+        TreeNode(
+            1,
             TreeNode(2, TreeNode(4), TreeNode(5)),
-            TreeNode(3, TreeNode(6), TreeNode(7)))
+            TreeNode(3, TreeNode(6), TreeNode(7)),
+        )
     ) == [[1], [3, 2], [4, 5, 6, 7]]
 
     # Left-skewed tree
-    assert zigzag_traverse(
-        TreeNode(1,
-            TreeNode(2,
-                TreeNode(3,
-                    TreeNode(4))))
-    ) == [[1], [2], [3], [4]]
+    assert zigzag_traverse(TreeNode(1, TreeNode(2, TreeNode(3, TreeNode(4))))) == [
+        [1],
+        [2],
+        [3],
+        [4],
+    ]
 
     # Right-skewed tree
     assert zigzag_traverse(
-        TreeNode(1,
-            right=TreeNode(2,
-                right=TreeNode(3,
-                    right=TreeNode(4))))
+        TreeNode(1, right=TreeNode(2, right=TreeNode(3, right=TreeNode(4))))
     ) == [[1], [2], [3], [4]]
 
     # Two elements per level only
-    assert zigzag_traverse(
-        TreeNode(1,
-            TreeNode(2),
-            TreeNode(3))
-    ) == [[1], [3, 2]]
+    assert zigzag_traverse(TreeNode(1, TreeNode(2), TreeNode(3))) == [[1], [3, 2]]
 
     # Unbalanced tree with gaps
     assert zigzag_traverse(
-        TreeNode(1,
-            TreeNode(2, right=TreeNode(4)),
-            TreeNode(3, left=TreeNode(5)))
+        TreeNode(1, TreeNode(2, right=TreeNode(4)), TreeNode(3, left=TreeNode(5)))
     ) == [[1], [3, 2], [4, 5]]

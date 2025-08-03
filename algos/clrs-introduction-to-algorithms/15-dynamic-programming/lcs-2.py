@@ -23,7 +23,7 @@ def solve(seq_a: str, seq_b: str) -> str:
                 # - value from previous row, same column (i-1, j) stored in dp_prev[j]
                 # - value from current row, previous column (i, j-1) stored in dp_curr[j-1]
                 dp_curr[j] = max(dp_prev[j], dp_curr[j - 1])
-        
+
         # After completing row i, current row becomes previous row for next iteration
         # We swap references instead of copying values for efficiency
         dp_prev, dp_curr = dp_curr, dp_prev
@@ -32,7 +32,7 @@ def solve(seq_a: str, seq_b: str) -> str:
     # After the final swap, dp_prev contains the values from the last computed row
     # dp_curr contains the values from the second-to-last row
     # This is why we use dp_prev[j] > dp_curr[j-1] in the backtracking comparison
-    
+
     # Backtracking (with two rows)
     lcs = ""
     i = m
@@ -49,13 +49,12 @@ def solve(seq_a: str, seq_b: str) -> str:
                 j -= 1
         # Important: Handle cases where dp_prev might not be fully updated
         if i > 0 and j > 0 and dp_prev[j] == 0 and dp_curr[j] > 0:
-          i -=1
-          
+            i -= 1
+
     return lcs
 
 
-
-if __name__ == '__main__':
-    seq_a = '001010101000010101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-    seq_b = '10101010000010100'
+if __name__ == "__main__":
+    seq_a = "001010101000010101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    seq_b = "10101010000010100"
     print(solve(seq_a, seq_b))

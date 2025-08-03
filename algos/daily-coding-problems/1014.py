@@ -11,7 +11,9 @@ For example, given start = "dog", end = "cat", and dictionary = {"dot", "dop", "
 Given start = "dog", end = "cat", and dictionary = {"dot", "tod", "dat", "dar"}, return
 null as there is no possible transformation from dog to cat.
 """
+
 from typing import List
+
 d0 = [
     "dot",
     "dop",
@@ -19,12 +21,7 @@ d0 = [
     "cat",
 ]
 
-d1 = [
-    "dot",
-    "tod",
-    "dat",
-    "dar"
-]
+d1 = ["dot", "tod", "dat", "dar"]
 
 
 def distance(w1: str, w2: str) -> int:
@@ -35,10 +32,8 @@ def distance(w1: str, w2: str) -> int:
 
 
 def solve(start: str, end: str, dictionary: List[str]):
-
     def dfs(current: str, path: List[str]) -> List[List[str]]:
-        options = [o for o in set(dictionary) - set(path)
-                   if distance(o, current) == 1]
+        options = [o for o in set(dictionary) - set(path) if distance(o, current) == 1]
         if not options:
             return [[]]
         elif end in options:
@@ -48,6 +43,7 @@ def solve(start: str, end: str, dictionary: List[str]):
             for o in options:
                 result += dfs(o, [*path, current])
             return result
+
     result = [r for r in dfs(start, []) if len(r) != 0]
     if len(result) == 0:
         return None

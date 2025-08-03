@@ -4,7 +4,7 @@ import random as rn
 def throw():
     x = rn.random()
     y = rn.random()
-    return (pow(x - 0.5, 2) + pow(y - 0.5, 2) < 0.25)
+    return pow(x - 0.5, 2) + pow(y - 0.5, 2) < 0.25
 
 
 def main():
@@ -16,6 +16,6 @@ def main():
     return 4 * counter / float(N)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     PI = main()
     print(PI)

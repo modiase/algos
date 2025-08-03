@@ -21,15 +21,15 @@ PD: 5
 ## Comments
 
 I don't know why I found this so hard. Even when I looked up the answer
-I still struggled to get an implementation. 
+I still struggled to get an implementation.
 
-I think eventually I slowed 
+I think eventually I slowed
 down and looked properly at what I was trying to do, but it was a comedy
 of errors until that point.
 
 EDIT: I then had to put in some more time to fix my solution. I made
 it more complicated than necessary by not paying attention to my limits.
-Eventually, I simplified it down. This is one I should return to because 
+Eventually, I simplified it down. This is one I should return to because
 it is fundamental and really shouldn't have taken this long.
 
 ## Workings
@@ -74,11 +74,13 @@ def merge_sorted_list(nums1: List[int], m: int, nums2: List[int], n: int):
 
 
 def make_test_case(a, b):
-    expected = sorted(a[:len(a)-len(b)] + b)
+    expected = sorted(a[: len(a) - len(b)] + b)
     acpy = a[:]
     bcpy = b[:]
-    merge_sorted_list(a, len(a)-len(b), b, len(b))
-    print(f'a: {acpy}, m: {len(a)-len(b)}, b: {bcpy}, n: {len(b)}, expected: {expected}, result: {a}')
+    merge_sorted_list(a, len(a) - len(b), b, len(b))
+    print(
+        f"a: {acpy}, m: {len(a) - len(b)}, b: {bcpy}, n: {len(b)}, expected: {expected}, result: {a}"
+    )
     assert a == expected
 
 

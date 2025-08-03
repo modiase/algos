@@ -14,12 +14,12 @@ What if, instead of being able to climb 1 or 2 steps at a time, you could climb
 any number from a set of positive integers X? For example, if X = {1, 3, 5}, you
 could climb 1, 3, or 5 steps at a time.
 """
+
 import itertools
 
 
 def ways(n, s):
-    perms = [x for i in range(1, n+1) for x in itertools.product(
-        s, repeat=i)]
+    perms = [x for i in range(1, n + 1) for x in itertools.product(s, repeat=i)]
     w = [p for p in perms if sum(p) == n]
     return w
 

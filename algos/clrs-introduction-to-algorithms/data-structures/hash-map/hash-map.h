@@ -9,22 +9,22 @@ const extern size_t HASH_MAP_DEFAULT_SIZE;
 const extern int HASH_MAP_NODE_SENTINEL_KEY;
 
 struct HashMapData {
-  int key;
-  int data;
+	int key;
+	int data;
 };
 struct HashMapNode {
-  struct HashMapData *data;
-  struct HashMapNode *next;
-  struct HashMapNode *prev;
+	struct HashMapData *data;
+	struct HashMapNode *next;
+	struct HashMapNode *prev;
 };
 struct HashMap {
-  struct HashMapNode **_slots;
-  size_t _current_size;
+	struct HashMapNode **_slots;
+	size_t _current_size;
 };
 
 struct HashMap2 {
-  struct HashMapData *_slotsHead;
-  size_t _current_size;
+	struct HashMapData *_slotsHead;
+	size_t _current_size;
 };
 
 struct HashMap2 *HashMap2();
@@ -44,7 +44,7 @@ void HashMapNode__del(struct HashMapNode *const n);
 void HashMapNode__show(const struct HashMapNode *const n);
 struct HashMapNode *HashMapNode__prepend(struct HashMapNode *const n);
 int HashMapNode__find(const struct HashMapNode *const n, int key,
-                      const struct HashMapData *d);
+		      const struct HashMapData *d);
 int HashMapNode__size(const struct HashMapNode *const n);
 struct HashMapNode *HashMapNode__remove(struct HashMapNode *n, int idx);
 
@@ -57,6 +57,6 @@ void HashMapData__show(const struct HashMapData *const d);
 void HashMapData__init(struct HashMapData *d);
 
 int HashMap__find(const struct HashMap *const hm, int key,
-                  const struct HashMapData *d);
+		  const struct HashMapData *d);
 
 #endif

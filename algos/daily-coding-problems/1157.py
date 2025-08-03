@@ -11,6 +11,7 @@ least 3 citations.
 
 Given a list of paper citations of a researcher, calculate their h-index.
 """
+
 from typing import Dict, List, Tuple
 from itertools import count
 
@@ -23,26 +24,25 @@ def compute_h_index(citations: List[int]) -> int:
         else:
             counts[citation] = counts[citation] + 1
 
-    sorted_counts: List[Tuple[int, int]] = list(
-        sorted(counts.items(), reverse=True))
+    sorted_counts: List[Tuple[int, int]] = list(sorted(counts.items(), reverse=True))
     cumulative_counts = [sorted_counts[0]]
 
     for citations, ct in sorted_counts[1:]:
-        cumulative_counts.append((citations, ct+cumulative_counts[-1][1]))
+        cumulative_counts.append((citations, ct + cumulative_counts[-1][1]))
 
     l = []
     N = len(cumulative_counts)
     for idx, value in enumerate(cumulative_counts, 0):
         citations, count = value
         l.append((citations, count))
-        if idx < N-1:
+        if idx < N - 1:
             a = 1
-            while citations - a > cumulative_counts[idx+1][0]:
-                l.append((citations-a, count))
+            while citations - a > cumulative_counts[idx + 1][0]:
+                l.append((citations - a, count))
                 a += 1
     smallest = cumulative_counts[-1]
     a = 1
-    while (current := smallest[0]-a) > 0:
+    while (current := smallest[0] - a) > 0:
         l.append((current, smallest[1]))
         a += 1
 
@@ -50,7 +50,7 @@ def compute_h_index(citations: List[int]) -> int:
         if citations <= count:
             return citations
 
-    raise Exception('absurd')
+    raise Exception("absurd")
 
 
 assert compute_h_index([4, 3, 0, 1, 5]) == 3

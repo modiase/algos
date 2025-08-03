@@ -6,31 +6,33 @@ from typing import Callable, Iterable, Iterator
 import matplotlib.pyplot as plt
 from more_itertools import ilen
 
+
 def random_uniform_generator() -> Iterator[float]:
     while 1:
         yield rn.random()
 
 
-def random_normal_generator(uniform_generator_factory: Callable[[], Iterable[float]] = random_uniform_generator) -> Iterator[float]:
+def random_normal_generator(
+    uniform_generator_factory: Callable[[], Iterable[float]] = random_uniform_generator,
+) -> Iterator[float]:
     _uniform_generator = iter(uniform_generator_factory())
     while 1:
         u1, u2 = islice(_uniform_generator, 2)
-        n1 = (-2*log(u1))**0.5 * sin(2 * pi * u2)
-        n2 = (-2*log(u1))**0.5 * cos(2 * pi * u2)
+        n1 = (-2 * log(u1)) ** 0.5 * sin(2 * pi * u2)
+        n2 = (-2 * log(u1)) ** 0.5 * cos(2 * pi * u2)
         yield n1
         yield n2
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     N = 100000
     bin_count = 100
 
     uniforms = tuple(islice(random_uniform_generator(), N))
-    normals = tuple(islice(random_normal_generator( lambda: uniforms), N))
+    normals = tuple(islice(random_normal_generator(lambda: uniforms), N))
 
-    for i in range(1,4):
-        print(f"P(-{i} < Z < {i}): ", ilen(filter(lambda v: abs(v) < i, normals))/N)
-
+    for i in range(1, 4):
+        print(f"P(-{i} < Z < {i}): ", ilen(filter(lambda v: abs(v) < i, normals)) / N)
 
     fig, (ax_n, ax_u) = plt.subplots(1, 2)
     ax_n.hist(normals, bin_count, density=True)

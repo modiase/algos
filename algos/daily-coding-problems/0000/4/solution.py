@@ -10,8 +10,8 @@ def lowest_missing_int(l: typing.List[int]):
     except StopIteration:
         return 3
     for n in l:
-        if (n <= 2):
+        if n <= 2:
             continue
-        elif (n < p):
+        elif n < p:
             p = n - 1
     return p

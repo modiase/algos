@@ -9,6 +9,7 @@ For example, for the input [1, 2, 3, 10], you should return 7.
 
 Do this in O(N) time.
 """
+
 import itertools
 
 
@@ -17,10 +18,11 @@ def flatten(l):
 
 
 def min_sum(l):
-    g = itertools.chain(((sum(t) for t in itertools.combinations(l, n)))
-                        for n in range(1, len(l)))
+    g = itertools.chain(
+        ((sum(t) for t in itertools.combinations(l, n))) for n in range(1, len(l))
+    )
     ss = [subitem for item in (i for i in g) for subitem in item]
-    return min([s + 1 for s in ss if (s+1) not in ss])
+    return min([s + 1 for s in ss if (s + 1) not in ss])
 
 
 print(min_sum([1, 2, 3, 10]))

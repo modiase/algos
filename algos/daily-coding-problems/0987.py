@@ -15,8 +15,11 @@ def d_to_l(a, i):
     sorted_i = [t[0] for t in xs].index(i)
     if sorted_i == len(a) - 1:
         return None
-    seq = [abs(xs[sorted_i][0] - xs[q][0])
-           for q in range(sorted_i+1, len(xs)) if xs[sorted_i][1] != xs[q][1]]
+    seq = [
+        abs(xs[sorted_i][0] - xs[q][0])
+        for q in range(sorted_i + 1, len(xs))
+        if xs[sorted_i][1] != xs[q][1]
+    ]
     if len(seq) == 0:
         return None
     return min(seq)

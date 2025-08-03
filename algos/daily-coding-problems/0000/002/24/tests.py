@@ -82,5 +82,5 @@ class Tests(unittest.TestCase):
         self.assertFalse(computed_result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

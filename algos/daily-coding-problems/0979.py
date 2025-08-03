@@ -13,13 +13,15 @@ You can represent a live cell with an asterisk (*) and a dead cell with a dot (.
 
 Solved: 32m (including ~ 10m playing with the solution)
 """
+
 import time
 
 
 def get_neighbours(cell, board):
     m = len(board)
-    neighbours = [(cell[0]+i, cell[1]+j)
-                  for i in range(-1, 2) for j in range(-1, 2)]
+    neighbours = [
+        (cell[0] + i, cell[1] + j) for i in range(-1, 2) for j in range(-1, 2)
+    ]
     neighbours = [n for n in neighbours if n != cell]
     for i, neighbour in enumerate(neighbours):
         if neighbour[0] < 0:
@@ -47,11 +49,13 @@ def is_alive(cell, board):
 
 def is_survivor(cell, board):
     neighbours = get_live_neighbours(cell, board)
-    return (is_alive(cell, board) and (neighbours == 2 or neighbours == 3)) or (not is_alive(cell, board) and neighbours == 3)
+    return (is_alive(cell, board) and (neighbours == 2 or neighbours == 3)) or (
+        not is_alive(cell, board) and neighbours == 3
+    )
 
 
 def init_board(m):
-    return [[False]*m for _ in range(m)]
+    return [[False] * m for _ in range(m)]
 
 
 def evolve_board(bn0):
@@ -66,15 +70,17 @@ def evolve_board(bn0):
 def print_board(board):
     print(chr(27) + "[2J")
     for i in range(len(board)):
-        print('| ', end='')
+        print("| ", end="")
         row = []
         for j in range(len(board)):
             if board[i][j]:
-                row.append('*')
+                row.append("*")
             else:
-                row.append('.')
-        print(' '.join(row), end='')
-        print(' |',)
+                row.append(".")
+        print(" ".join(row), end="")
+        print(
+            " |",
+        )
 
 
 M = 20

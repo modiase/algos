@@ -4,6 +4,7 @@ connect all its vertices with the smallest possible total edge weight. Given
 an undirected graph with weighted edges, compute the maximum weight spanning
 tree.
 """
+
 import itertools
 
 g1 = [
@@ -12,7 +13,7 @@ g1 = [
     [6, 3, 0, -1, 4, 12],
     [-1, 5, -1, 0, -1, 10],
     [9, -1, 4, -1, 0, 7],
-    [-1, -1, 12, 10, 7, 0]
+    [-1, -1, 12, 10, 7, 0],
 ]
 
 
@@ -56,24 +57,27 @@ def ecount(g):
 
 def is_acyclic(g):
     def _is_acyclic(g, v, visited):
-        neighbours = [neighbour for neighbour,
-                      weight in enumerate(g[v], 0) if weight not in [0, -1]]
+        neighbours = [
+            neighbour
+            for neighbour, weight in enumerate(g[v], 0)
+            if weight not in [0, -1]
+        ]
         if len(neighbours) == 0:
             return None
         for neighbour in neighbours:
             if neighbour in visited:
                 return [*visited, neighbour]
-        paths = [_is_acyclic(rm_edge(g, v, n), n, [
-                             *visited, v]) for n in neighbours]
+        paths = [_is_acyclic(rm_edge(g, v, n), n, [*visited, v]) for n in neighbours]
         for path in paths:
             if path is not None:
                 return path
+
     return _is_acyclic(g, 0, [])
 
 
 def is_connected(g):
     for vertex in g:
-        if (all([edge in [0, -1] for edge in vertex])):
+        if all([edge in [0, -1] for edge in vertex]):
             return False
     return True
 
@@ -90,7 +94,7 @@ maxg = None
 maxweight = 0
 
 ming = None
-minweight = float('inf')
+minweight = float("inf")
 
 for i in range(1, ecount(g1)):
     pairs = itertools.combinations(range(0, len(g1)), 2)

@@ -26,5 +26,5 @@ class SolutionTestCase(unittest.TestCase):
         self.assertEqual(expected_result, computed_result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

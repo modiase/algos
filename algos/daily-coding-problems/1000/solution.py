@@ -1,18 +1,16 @@
-
-
 def find_smallest(l):
     if list(sorted(l)) == l:
         return l[0]
     idx = len(l) - 2
     jmp = len(l) // 2
-    while not ((l[idx-1] > l[idx] and l[idx] < l[idx-1])):
-        print(l[idx-1])
+    while not (l[idx - 1] > l[idx] and l[idx] < l[idx - 1]):
+        print(l[idx - 1])
         print(l[idx])
-        print(l[idx+1])
+        print(l[idx + 1])
         idx = idx - jmp
         jmp = jmp // 2
         if jmp == 1:
-            return l[idx+1]
+            return l[idx + 1]
     return l[idx]
 
 

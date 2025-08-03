@@ -21,15 +21,21 @@ Keep a pointer to the previous node and the node before that. After
 accessing the next node, set the next pointer of the previous node
 to the node before it. Watch out for final pair of nodes.
 """
+
 from __future__ import annotations
 
 from typing import Generic, List, Optional, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class DoublyLinkedNode(Generic[T]):
-    def __init__(self, val: T, next: Optional[DoublyLinkedNode[T]] = None, prev: Optional[DoublyLinkedNode[T]] = None):
+    def __init__(
+        self,
+        val: T,
+        next: Optional[DoublyLinkedNode[T]] = None,
+        prev: Optional[DoublyLinkedNode[T]] = None,
+    ):
         self.val = val
         self.next = next
         self.prev = prev
@@ -37,7 +43,7 @@ class DoublyLinkedNode(Generic[T]):
     @classmethod
     def from_list(cls, l: List[T]) -> DoublyLinkedNode[T]:
         if len(l) == 0:
-            raise ValueError('List cannot be empty')
+            raise ValueError("List cannot be empty")
         head = cls(l[0])
         n0 = head
         for elem in l[1:]:

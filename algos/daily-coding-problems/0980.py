@@ -26,11 +26,12 @@ def attacks(M, bs):
     count = 0
     for i in range(len(bs)):
         b = bs[i]
-        attacking = [(b[0] + i, b[1] + i) for i in range(1, min(M-b[1], M-b[0]))] + \
-                    [(b[0] - i, b[1] - i) for i in range(1, min(b[1]+1, b[0]+1))] + \
-                    [(b[0] + i, b[1] - i) for i in range(1, min(b[1]+1, M-b[0]))] + \
-                    [(b[0] - i, b[1] + i)
-                     for i in range(1, min(b[0]+1, M-b[1]))]  # no-wrap
+        attacking = (
+            [(b[0] + i, b[1] + i) for i in range(1, min(M - b[1], M - b[0]))]
+            + [(b[0] - i, b[1] - i) for i in range(1, min(b[1] + 1, b[0] + 1))]
+            + [(b[0] + i, b[1] - i) for i in range(1, min(b[1] + 1, M - b[0]))]
+            + [(b[0] - i, b[1] + i) for i in range(1, min(b[0] + 1, M - b[1]))]
+        )  # no-wrap
         for ib in range(i, len(bs)):
             ob = bs[ib]
             if ob in attacking:

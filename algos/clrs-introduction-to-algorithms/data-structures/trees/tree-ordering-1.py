@@ -18,7 +18,7 @@ def zigzag(it: Iterable[int]) -> Iterator[int]:
     for n in it:
         if n < 0:
             raise ValueError(
-                f"Invalid value received '{n}'." " Value must be a natural number."
+                f"Invalid value received '{n}'. Value must be a natural number."
             )
         if n == 0:
             yield 0
@@ -51,8 +51,8 @@ class TreeNode(Generic[_T]):
 
     def __str__(self):
         return (
-            f"({self.value}, {getattr(self.left, "value", None)},"
-            f" {getattr(self.right, "value", None)})"
+            f"({self.value}, {getattr(self.left, 'value', None)},"
+            f" {getattr(self.right, 'value', None)})"
         )
 
     def __repr__(self):

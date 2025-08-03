@@ -18,13 +18,14 @@ Completed in 20m
 Notes
 ================
 Initially used bfs assuming I could exit early because I didn't
-read question properly. Initially implemented path length 
+read question properly. Initially implemented path length
 instead of path sum. Then realised that I had to consider all
 possible paths after all. Luckily this was simple enough to fix
 by removing early return. Overall, should have completed this much
 more quickly.
 
 """
+
 from __future__ import annotations
 
 from collections import deque
@@ -33,7 +34,9 @@ from typing import Deque, Optional, Tuple, List
 
 
 class Node:
-    def __init__(self, value: int, left: Optional[Node] = None, right: Optional[Node] = None):
+    def __init__(
+        self, value: int, left: Optional[Node] = None, right: Optional[Node] = None
+    ):
         self._value = value
         self._left = left
         self._right = right

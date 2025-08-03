@@ -3,6 +3,7 @@ Given an integer n, return the length of the longest consecutive run of 1s in it
 
 For example, given 156, you should return 3.
 """
+
 import math
 
 
@@ -20,15 +21,15 @@ def longest_run(l, c):
 
 
 def to_bin(n):
-    s = ''
+    s = ""
     i = 0
     while (p := math.pow(2, i)) < n:
         i += 1
         if int(p) & n:
-            s += '1'
+            s += "1"
         else:
-            s += '0'
-    return ''.join(reversed(s))
+            s += "0"
+    return "".join(reversed(s))
 
 
-assert to_bin(156), '1' == 3
+assert to_bin(156), "1" == 3

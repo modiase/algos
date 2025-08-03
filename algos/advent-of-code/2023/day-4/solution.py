@@ -49,13 +49,13 @@ Once all of the originals and copies have been processed, you end up with 1 inst
 
 Process all of the original and copied scratchcards until no more scratchcards are won. Including the original set of scratchcards, how many total scratchcards do you end up with?
 """
+
 import path
 import functools
 import re
 from typing import List, Tuple
 
-LINE_REGEX = re.compile(
-    r'Card\s*?(\d+):\s*((?:\d+\s+)+)\|\s*((?:\d+(\s)*)+)')
+LINE_REGEX = re.compile(r"Card\s*?(\d+):\s*((?:\d+\s+)+)\|\s*((?:\d+(\s)*)+)")
 
 
 @functools.lru_cache(maxsize=256)
@@ -68,13 +68,10 @@ def parse_line(line: str) -> Tuple[int, str, str]:
 
 def parse_card_value(line: str) -> int:
     _, w, s = parse_line(line)
-    winning_numbers = set((int(n)
-                           for n in re.findall(r'\d+', w)))
-    selected_numbers = (int(n)
-                        for n in re.findall(r'\d+', s))
+    winning_numbers = set((int(n) for n in re.findall(r"\d+", w)))
+    selected_numbers = (int(n) for n in re.findall(r"\d+", s))
 
-    selected_winning_numbers = [
-        n for n in selected_numbers if n in winning_numbers]
+    selected_winning_numbers = [n for n in selected_numbers if n in winning_numbers]
     if not selected_winning_numbers:
         return 0
 
@@ -86,15 +83,12 @@ def parse_card_value(line: str) -> int:
 
 def parse_card_count(line: str) -> Tuple[int, List[int]]:
     cardno, w, s = parse_line(line)
-    winning_numbers = set((int(n)
-                           for n in re.findall(r'\d+', w)))
-    selected_numbers = (int(n)
-                        for n in re.findall(r'\d+', s))
+    winning_numbers = set((int(n) for n in re.findall(r"\d+", w)))
+    selected_numbers = (int(n) for n in re.findall(r"\d+", s))
 
-    sum = len([
-        n for n in selected_numbers if n in winning_numbers])
+    sum = len([n for n in selected_numbers if n in winning_numbers])
 
-    return (cardno, list(range(cardno+1, cardno+sum+1)))
+    return (cardno, list(range(cardno + 1, cardno + sum + 1)))
 
 
 def part_one(lines: List[str]) -> int:
@@ -114,22 +108,23 @@ def part_two(lines: List[str]) -> int:
 
 
 def test_part_one():
-    lines = open(path.Path(__file__).abspath().parent /
-                 ('example.txt'), 'r').readlines()
+    lines = open(
+        path.Path(__file__).abspath().parent / ("example.txt"), "r"
+    ).readlines()
     assert part_one(lines) == 13
 
 
 def test_part_two():
-    lines = open(path.Path(__file__).abspath().parent /
-                 ('example.txt'), 'r').readlines()
+    lines = open(
+        path.Path(__file__).abspath().parent / ("example.txt"), "r"
+    ).readlines()
     assert part_two(lines) == 30
 
 
-if __name__ == '__main__':
-    lines = open(path.Path(__file__).abspath().parent /
-                 ('input.txt'), 'r').readlines()
-    print('1.', part_one(lines))
-    print('2.', part_two(lines))
+if __name__ == "__main__":
+    lines = open(path.Path(__file__).abspath().parent / ("input.txt"), "r").readlines()
+    print("1.", part_one(lines))
+    print("2.", part_two(lines))
 
 
 # 23756551 too low

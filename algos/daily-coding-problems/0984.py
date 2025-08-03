@@ -7,14 +7,13 @@ For example, given "(()", you could return "(())". Given "))()(", you could retu
 Completed: ~70m
 """
 
-
 from itertools import count, combinations
 
 
 def is_balanced(s):
     if len(s) == 0:
         return True
-    o = [1 if c == '(' else -1 for c in s]
+    o = [1 if c == "(" else -1 for c in s]
     if not (sum(o) == 0 and o[0] != -1 and o[-1] != 1):
         return False
     for i in range(1, len(s)):
@@ -34,13 +33,13 @@ def try_insertions(s):
             return None
         t = list(sorted(t))
         for i in t:
-            attempt = s1[:i] + ')' + s1[i:]
+            attempt = s1[:i] + ")" + s1[i:]
             reduced = [v for v in t if v != i]
             r = _try_insertions(attempt, reduced)
             if r is not None:
                 return r
 
-            attempt = s1[:i] + '(' + s1[i:]
+            attempt = s1[:i] + "(" + s1[i:]
             reduced = [v for v in t if v != i]
             r = _try_insertions(attempt, reduced)
             if r is not None:
@@ -60,4 +59,4 @@ def try_insertions(s):
     return result
 
 
-print(try_insertions(')))()((()('))
+print(try_insertions(")))()((()("))

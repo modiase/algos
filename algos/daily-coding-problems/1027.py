@@ -6,6 +6,7 @@ For example, given [100, 4, 200, 1, 3, 2], the longest consecutive element seque
 Your algorithm should run in O(n) complexity.
 Solved: ~30m
 """
+
 from typing import List
 
 
@@ -15,9 +16,9 @@ def solution(xs: List[int]) -> int:
     has_next = set()
 
     for x in xs:
-        if x-1 in s:
+        if x - 1 in s:
             has_prev.add(x)
-        if x+1 in s:
+        if x + 1 in s:
             has_next.add(x)
 
     seen = set()
@@ -43,6 +44,6 @@ def solution(xs: List[int]) -> int:
     return longest_seq
 
 
-assert(solution([100, 4, 200, 1, 3, 2]) == 4)
-assert(solution([100, 4, 200, 5, 10, 7, 6, 9, 1, 3, 2]) == 7)
-assert(solution([100, 4, 200, 5, 10, 7, 6, 9, 1, 3, 2, 8]) == 10)
+assert solution([100, 4, 200, 1, 3, 2]) == 4
+assert solution([100, 4, 200, 5, 10, 7, 6, 9, 1, 3, 2]) == 7
+assert solution([100, 4, 200, 5, 10, 7, 6, 9, 1, 3, 2, 8]) == 10

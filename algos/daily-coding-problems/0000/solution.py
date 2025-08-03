@@ -40,7 +40,7 @@ class BruteForceStrategy:
         return self.execute(list)
 
     def __repr__(self):
-        return '<BruteForceStrategy>'
+        return "<BruteForceStrategy>"
 
 
 def solve(l, prefered_strategy=None):
@@ -51,6 +51,6 @@ def solve(l, prefered_strategy=None):
     return strategy(l)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     l = [5, 1, 1, 5]
     solution = solve(l)

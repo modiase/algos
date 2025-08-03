@@ -15,7 +15,7 @@ def product_except_at_index(l):
     return result
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     t_array = [1, 2, 3, 4, 5]
     result = product_except_at_index(t_array)
     assert result == [120, 60, 40, 30, 24]

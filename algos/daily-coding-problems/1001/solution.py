@@ -14,8 +14,13 @@ class Tree:
 
 
 def is_valid_btree(tree: Tree):
-    return (tree.left is None or (tree.value > tree.left.value and is_valid_btree(tree.left))) \
-        and (tree.right is None or (tree.right.value > tree.value and is_valid_btree(tree.right)))
+    return (
+        tree.left is None
+        or (tree.value > tree.left.value and is_valid_btree(tree.left))
+    ) and (
+        tree.right is None
+        or (tree.right.value > tree.value and is_valid_btree(tree.right))
+    )
 
 
 t1 = Tree(5, Tree(10), Tree(20))

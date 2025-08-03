@@ -29,10 +29,12 @@ def inorder_traversal(node: TreeNode):
         if node is None:
             return []
         return _dfs(node.left) + [node.val] + _dfs(node.right)
+
     return _dfs(node)
 
 
 assert inorder_traversal(TreeNode(0)) == [0]
 assert inorder_traversal(TreeNode(2, TreeNode(1), TreeNode(3))) == [1, 2, 3]
-assert inorder_traversal(TreeNode(2, TreeNode(
-    1, TreeNode(0, TreeNode(-1))), TreeNode(3))) == [-1, 0, 1, 2, 3]
+assert inorder_traversal(
+    TreeNode(2, TreeNode(1, TreeNode(0, TreeNode(-1))), TreeNode(3))
+) == [-1, 0, 1, 2, 3]

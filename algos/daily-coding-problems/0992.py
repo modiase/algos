@@ -23,5 +23,5 @@ class Node:
 t0 = Node(5, Node(3, Node(2), None), None)
 t1 = Node(5, Node(3, Node(2, Node(1), Node(3)), None), None)
 
-assert(find_second_smallest(t0)) == 3
-assert(find_second_smallest(t1)) == 2
+assert (find_second_smallest(t0)) == 3
+assert (find_second_smallest(t1)) == 2

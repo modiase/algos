@@ -1,5 +1,5 @@
 """
-Given an array, find the majority element which is defined 
+Given an array, find the majority element which is defined
 as the element for which there are at least n/2 occurences.
 Can you do it in O(n) time and O(1) additional space?
 
@@ -13,6 +13,7 @@ PD: 5
 
 tags: in-place, arrays, statistics
 """
+
 from typing import List
 
 
@@ -22,7 +23,7 @@ def majority_element(nums: List[int]) -> int:
     i = nums[0]
     idx = 1
     while idx < N:
-        count += -1 + 2*int(nums[idx] == i)
+        count += -1 + 2 * int(nums[idx] == i)
         if count < 0:
             i = nums[idx]
             count = 1

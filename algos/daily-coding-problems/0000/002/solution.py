@@ -2,7 +2,7 @@ from typing import *
 
 
 class Node:
-    __slots__ = 'payload', 'next'
+    __slots__ = "payload", "next"
 
     def __init__(self, payload: Any = None, nxt=None):
         self.payload = payload
@@ -10,7 +10,7 @@ class Node:
 
 
 class LinkedList:
-    __slots__ = 'head'
+    __slots__ = "head"
 
     def __init__(self, head: Node):
         self.head = head
@@ -36,13 +36,12 @@ def reverse_linked_list(ll: LinkedList):
     return LinkedList(head)
 
 
-def read_args():
-    ...
+def read_args(): ...
 
 
 def main(args: Dict[str, Any]):
-    r1 = reverse_linked_list(args['l1'])
-    r2 = reverse_linked_list(args['l2'])
+    r1 = reverse_linked_list(args["l1"])
+    r2 = reverse_linked_list(args["l2"])
 
     ptr1 = r1.head
     ptr2 = r2.head
@@ -64,4 +63,4 @@ if __name__ == "__main__":
 
     l1 = LinkedList(n3)
     l2 = LinkedList(n99)
-    main({'l1': l1, 'l2': l2})
+    main({"l1": l1, "l2": l2})
