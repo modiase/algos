@@ -1,6 +1,6 @@
 #pragma once
 
-template <typename  T> 
+template <typename  T>
 using Vector = std::vector<T>;
 using Int = std::uint32_t;
 

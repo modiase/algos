@@ -13,11 +13,11 @@
  * for their value.
  */
 typedef struct Node {
-	int key;		// The data value for an element node.
-	int size;		// The size of the set (only used by the head node).
-	struct Node *next;	// Pointer to the next node in the circular list.
-	struct Node *prev;	// Pointer to the previous node in the circular list.
-	struct Node *representative;	// Pointer to the head node of the set.
+    int key;		// The data value for an element node.
+    int size;		// The size of the set (only used by the head node).
+    struct Node *next;	// Pointer to the next node in the circular list.
+    struct Node *prev;	// Pointer to the previous node in the circular list.
+    struct Node *representative;	// Pointer to the head node of the set.
 } Node;
 
 /**
@@ -32,31 +32,31 @@ typedef struct Node {
  */
 static inline Node *make_set(int x)
 {
-	Node *head_node = (Node *) malloc(sizeof(Node));
-	Node *data_node = (Node *) malloc(sizeof(Node));
+    Node *head_node = (Node *) malloc(sizeof(Node));
+    Node *data_node = (Node *) malloc(sizeof(Node));
 
-	if (head_node == NULL || data_node == NULL) {
-		fprintf(stderr,
-			"Error: Memory allocation failed in make_set.\n");
-		free(head_node);
-		free(data_node);
-		return NULL;
-	}
+    if (head_node == NULL || data_node == NULL) {
+        fprintf(stderr,
+                "Error: Memory allocation failed in make_set.\n");
+        free(head_node);
+        free(data_node);
+        return NULL;
+    }
 
-	head_node->size = 1;
-	head_node->representative = head_node;
-	head_node->key = -1;
+    head_node->size = 1;
+    head_node->representative = head_node;
+    head_node->key = -1;
 
-	data_node->key = x;
-	data_node->representative = head_node;
-	data_node->size = 0;
+    data_node->key = x;
+    data_node->representative = head_node;
+    data_node->size = 0;
 
-	head_node->next = data_node;
-	head_node->prev = data_node;
-	data_node->next = head_node;
-	data_node->prev = head_node;
+    head_node->next = data_node;
+    head_node->prev = data_node;
+    data_node->next = head_node;
+    data_node->prev = head_node;
 
-	return data_node;
+    return data_node;
 }
 
 /**
@@ -70,10 +70,10 @@ static inline Node *make_set(int x)
  */
 static inline Node *find_set(Node *x)
 {
-	if (x == NULL) {
-		return NULL;
-	}
-	return x->representative;
+    if (x == NULL) {
+        return NULL;
+    }
+    return x->representative;
 }
 
 /**
@@ -89,39 +89,39 @@ static inline Node *find_set(Node *x)
  */
 static inline Node *union_sets(Node *a, Node *b)
 {
-	Node *repA = find_set(a);
-	Node *repB = find_set(b);
+    Node *repA = find_set(a);
+    Node *repB = find_set(b);
 
-	if (repA == repB) {
-		return repA;
-	}
+    if (repA == repB) {
+        return repA;
+    }
 
-	if (repA->size < repB->size) {
-		Node *temp = repA;
-		repA = repB;
-		repB = temp;
-	}
+    if (repA->size < repB->size) {
+        Node *temp = repA;
+        repA = repB;
+        repB = temp;
+    }
 
-	Node *current = repB->next;
-	while (current != repB) {
-		current->representative = repA;
-		current = current->next;
-	}
+    Node *current = repB->next;
+    while (current != repB) {
+        current->representative = repA;
+        current = current->next;
+    }
 
-	Node *tailA = repA->prev;
-	Node *headB = repB->next;
-	Node *tailB = repB->prev;
+    Node *tailA = repA->prev;
+    Node *headB = repB->next;
+    Node *tailB = repB->prev;
 
-	tailA->next = headB;
-	headB->prev = tailA;
-	tailB->next = repA;
-	repA->prev = tailB;
+    tailA->next = headB;
+    headB->prev = tailA;
+    tailB->next = repA;
+    repA->prev = tailB;
 
-	repA->size += repB->size;
+    repA->size += repB->size;
 
-	free(repB);
+    free(repB);
 
-	return repA;
+    return repA;
 }
 
 /**
@@ -136,16 +136,16 @@ static inline Node *union_sets(Node *a, Node *b)
  */
 static inline void destroy_set(Node *representative)
 {
-	if (representative == NULL)
-		return;
+    if (representative == NULL)
+        return;
 
-	Node *current = representative->next;
-	while (current != representative) {
-		Node *to_free = current;
-		current = current->next;
-		free(to_free);
-	}
-	free(representative);
+    Node *current = representative->next;
+    while (current != representative) {
+        Node *to_free = current;
+        current = current->next;
+        free(to_free);
+    }
+    free(representative);
 }
 
 #endif				// DISJOINT_SET_H

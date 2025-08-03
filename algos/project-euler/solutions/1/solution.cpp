@@ -9,18 +9,15 @@ int main()
     std::vector<int> nums;
 
     // Loop through the numbers below 1000
-    for (int i = 0; i < 1000; i++)
-    {
-        if (i % 3 == 0 || i % 5 == 0)
-        {
+    for (int i = 0; i < 1000; i++) {
+        if (i % 3 == 0 || i % 5 == 0) {
             nums.push_back(i);
         }
     }
 
     // Loop through the vector to calculate the sum.
     int sum = 0;
-    for (const int &x : nums)
-    {
+    for (const int &x : nums) {
         sum += x;
     }
     std::cout << sum << std::endl;

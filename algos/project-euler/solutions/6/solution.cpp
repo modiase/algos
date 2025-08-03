@@ -7,15 +7,13 @@ using namespace std;
 int main()
 {
     vector<int> nums;
-    for (int i = 1; i <= 100; i++)
-    {
+    for (int i = 1; i <= 100; i++) {
         nums.push_back(i);
     }
     int sum_square = 0;
     int sum_of_squares = 0;
 
-    for (auto i : nums)
-    {
+    for (auto i : nums) {
         sum_of_squares += static_cast<int>(pow(i, 2));
         sum_square += i;
     }

@@ -7,10 +7,8 @@ bool isPrime(int x)
 {
     const int limit = floor(sqrt(x));
     int index = 2;
-    while (index <= limit)
-    {
-        if (x % index == 0)
-        {
+    while (index <= limit) {
+        if (x % index == 0) {
             return false;
         }
         index++;
@@ -24,10 +22,8 @@ int main()
     const int END = 6;
     int index = 2;
     vector<int> primes;
-    while (primes.size() < END)
-    {
-        if (isPrime(index))
-        {
+    while (primes.size() < END) {
+        if (isPrime(index)) {
             primes.push_back(index);
         }
         index++;

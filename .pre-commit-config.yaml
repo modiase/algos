@@ -20,14 +20,14 @@ repos:
           - -c
           - "nix-shell -p fd nixfmt-rfc-style --run 'fd -e nix -x nixfmt'"
       - id: format-c
-        name: format C files
+        name: format C/C++ files
         entry: bash
         language: system
-        files: \.(c|h)$
+        files: \.(c|cpp|cc|cxx|h|hpp|hh|hxx)$
         pass_filenames: false
         args:
           - -c
-          - "nix-shell -p indent fd --run 'fd -e c -e h -x sh -c \"indent -linux -o {} {}\"'"
+          - "nix-shell -p astyle fd --run 'fd -e c -e cpp -e cc -e cxx -e h -e hpp -e hh -e hxx -x astyle --style=linux --suffix=none'"
       - id: remove-trailing-whitespace
         name: remove trailing whitespace
         entry: bash

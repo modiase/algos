@@ -7,11 +7,10 @@ int main()
 {
 
     vector<int>
-        v;
+    v;
     v.push_back(1);
     v.push_back(2);
-    for (const auto &value : v)
-    {
+    for (const auto &value : v) {
         cout << value << endl;
     }
 }

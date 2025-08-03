@@ -5,10 +5,11 @@ using Int = std::uint32_t;
 template <typename T> using Vector = std::vector<T>;
 
 
-Int hIndex(Vector<Int>& citations) {
-	const Int N = citations.size();
+Int hIndex(Vector<Int>& citations)
+{
+    const Int N = citations.size();
     auto citationCount = Vector<Int>(N+1, 0);
-    for (auto c : citations){
+    for (auto c : citations) {
         if (c >= N) citationCount[N]++;
         else citationCount[c]++;
     }

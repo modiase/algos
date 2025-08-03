@@ -16,17 +16,13 @@ int main()
     primeFactors.push_back(vector<int>());
     primeFactors.push_back(vector<int>());
 
-    for (int i = 2; i <= N; i++)
-    {
+    for (int i = 2; i <= N; i++) {
         vector<int> v;
 
-        for (int j = 2; j <= i; j++)
-        {
-            if (i % j == 0 && isPrime(j))
-            {
+        for (int j = 2; j <= i; j++) {
+            if (i % j == 0 && isPrime(j)) {
                 int quot = i;
-                while (quot % j == 0)
-                {
+                while (quot % j == 0) {
                     v.push_back(j);
                     quot = static_cast<int>(floor(quot / j));
                 }
@@ -46,16 +42,12 @@ int main()
 
     vector<pair<int, int>> accumulator;
 
-    for (int i = 2; i < N; i++)
-    {
+    for (int i = 2; i < N; i++) {
         int max_count = 0;
-        for (int j = 2; j < N; j++)
-        {
+        for (int j = 2; j < N; j++) {
             int inner_count = 0;
-            for (auto x : primeFactors[j])
-            {
-                if (x == i)
-                {
+            for (auto x : primeFactors[j]) {
+                if (x == i) {
                     inner_count++;
                 }
             }
@@ -70,8 +62,7 @@ int main()
     // }
 
     int prod = 1;
-    for (auto x : accumulator)
-    {
+    for (auto x : accumulator) {
         prod *= static_cast<int>(pow(x.first, x.second));
     }
     cout << prod << endl;
@@ -80,10 +71,8 @@ int main()
 bool isPrime(int x)
 {
     const int limit = static_cast<int>(floor(sqrt(x)));
-    for (int i = 2; i <= limit; i++)
-    {
-        if (x % i == 0)
-        {
+    for (int i = 2; i <= limit; i++) {
+        if (x % i == 0) {
             return false;
         }
     }
