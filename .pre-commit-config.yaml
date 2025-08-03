@@ -1,0 +1,30 @@
+repos:
+  - repo: local
+    hooks:
+      - id: format-py
+        name: format Python files
+        entry: bash
+        language: system
+        files: \.py$
+        pass_filenames: false
+        args:
+          - -c
+          - "nix-shell -p ruff --run 'ruff format .'"
+      - id: format-nix
+        name: format Nix files
+        entry: bash
+        language: system
+        files: \.nix$
+        pass_filenames: false
+        args:
+          - -c
+          - "nix-shell -p fd nixfmt-rfc-style --run 'fd -e nix -x nixfmt'"
+      - id: remove-trailing-whitespace
+        name: remove trailing whitespace
+        entry: bash
+        language: system
+        files: .*
+        pass_filenames: false
+        args:
+          - -c
+          - 'nix-shell -p gnused --run ''git diff --cached --name-only --diff-filter d | xargs -r sed -i "s/[[:space:]]*$//"'''
