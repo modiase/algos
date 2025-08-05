@@ -2,6 +2,18 @@
 #define BINOMIAL_HEAP_H
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define CHECK_ALLOC_PANIC(ptr)                                                          \
+    do                                                                                  \
+    {                                                                                   \
+        if ((ptr) == NULL)                                                              \
+        {                                                                               \
+            fprintf(stderr, "Memory allocation failed at %s:%d\n", __FILE__, __LINE__); \
+            abort();                                                                    \
+        }                                                                               \
+    } while (0)
 
 /*
  * BINOMIAL HEAP PUBLIC INTERFACE

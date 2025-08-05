@@ -24,8 +24,7 @@ struct binomial_heap {
 struct binomial_node *binomial_node_create(int key)
 {
     struct binomial_node *node = malloc(sizeof(struct binomial_node));
-    if (!node)
-        return NULL;
+    CHECK_ALLOC_PANIC(node);
 
     node->key = key;
     node->degree = 0;
@@ -132,8 +131,7 @@ struct binomial_node *binomial_tree_merge(struct binomial_node *head1, struct bi
 struct binomial_heap *binomial_heap_create(void)
 {
     struct binomial_heap *heap = malloc(sizeof(struct binomial_heap));
-    if (!heap)
-        return NULL;
+    CHECK_ALLOC_PANIC(heap);
 
     heap->head = NULL;
     heap->size = 0;
@@ -190,23 +188,12 @@ bool binomial_heap_insert(struct binomial_heap *heap, int key)
         return false;
 
     struct binomial_node *new_node = binomial_node_create(key);
-    if (!new_node)
-        return false;
-
     struct binomial_heap *temp_heap = binomial_heap_create();
-    if (!temp_heap) {
-        free(new_node);
-        return false;
-    }
 
     temp_heap->head = new_node;
     temp_heap->size = 1;
 
     struct binomial_heap *result = binomial_heap_union(heap, temp_heap);
-    if (!result) {
-        binomial_heap_destroy(temp_heap);
-        return false;
-    }
 
     /* Update the original heap */
     heap->head = result->head;
@@ -298,18 +285,14 @@ int binomial_heap_extract_min(struct binomial_heap *heap)
     }
 
     struct binomial_heap *child_heap = binomial_heap_create();
-    if (child_heap) {
-        child_heap->head = new_head;
+    child_heap->head = new_head;
 
-        struct binomial_heap *result = binomial_heap_union(heap, child_heap);
-        if (result) {
-            heap->head = result->head;
-            heap->size = result->size - 1; /* Subtract 1 for the extracted node */
-            free(result);
-        }
+    struct binomial_heap *result = binomial_heap_union(heap, child_heap);
+    heap->head = result->head;
+    heap->size = result->size - 1; /* Subtract 1 for the extracted node */
+    free(result);
 
-        free(child_heap);
-    }
+    free(child_heap);
 
     free(min_node);
 
@@ -332,8 +315,6 @@ struct binomial_heap *binomial_heap_union(struct binomial_heap *heap1, struct bi
         return heap1;
 
     struct binomial_heap *result = binomial_heap_create();
-    if (!result)
-        return NULL;
 
     /* Merge the root lists */
     result->head = binomial_tree_merge(heap1->head, heap2->head);
