@@ -28,6 +28,15 @@ repos:
         args:
           - -c
           - "nix-shell -p astyle fd --run 'fd -e c -e cpp -e cc -e cxx -e h -e hpp -e hh -e hxx -x astyle --style=linux --suffix=none'"
+      - id: format-go
+        name: format Go files
+        entry: bash
+        language: system
+        files: \.go$
+        pass_filenames: false
+        args:
+          - -c
+          - "nix-shell -p go fd --run 'fd -e go -x gofmt -s -w'"
       - id: remove-trailing-whitespace
         name: remove trailing whitespace
         entry: bash
