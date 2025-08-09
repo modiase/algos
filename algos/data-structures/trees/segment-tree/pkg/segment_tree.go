@@ -20,7 +20,7 @@ func NewSegmentTree[T any](arr []T, combine Combine[T], identity T, empty T) *Se
 	st := &SegmentTree[T]{
 		n:        n,
 		arr:      append([]T(nil), arr...),
-		tree:     make([]T, 4*n),
+		tree:     make([]T, 2*(n+1)),
 		combine:  combine,
 		identity: identity,
 		empty:    empty,
