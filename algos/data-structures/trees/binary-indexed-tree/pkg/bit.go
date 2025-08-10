@@ -11,22 +11,20 @@ type Group[T any] struct {
 	identity T
 }
 
-// NewGroup constructs a Group with the provided combine, inverse, and identity functions/values.
-// The returned Group can be used from external packages without accessing unexported fields.
 func NewGroup[T any](combine Combine[T], inverse Inverse[T], identity T) Group[T] {
 	return Group[T]{
 		combine:  combine,
-		inverse:  inverse,
 		identity: identity,
+		inverse:  inverse,
 	}
 }
 
 type BinaryIndexedTree[T any] struct {
-	tree     []T
-	size     int
 	combine  Combine[T]
-	inverse  Inverse[T]
 	identity T
+	inverse  Inverse[T]
+	size     int
+	tree     []T
 }
 
 func New[T any](size int, g Group[T]) *BinaryIndexedTree[T] {
@@ -34,16 +32,16 @@ func New[T any](size int, g Group[T]) *BinaryIndexedTree[T] {
 		panic("BIT size must be positive")
 	}
 	return &BinaryIndexedTree[T]{
-		tree:     make([]T, size+1),
-		size:     size,
 		combine:  g.combine,
-		inverse:  g.inverse,
 		identity: g.identity,
+		inverse:  g.inverse,
+		size:     size,
+		tree:     make([]T, size+1),
 	}
 }
 
 func NewFromArray[T any](arr []T, g Group[T]) *BinaryIndexedTree[T] {
-	bit := New[T](len(arr), g)
+	bit := New(len(arr), g)
 	for i, v := range arr {
 		bit.Update(i+1, v)
 	}
