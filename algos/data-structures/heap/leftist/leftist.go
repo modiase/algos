@@ -36,6 +36,20 @@ func (h *Heap[T]) Insert(key, value T) {
 	h.root = h.Merge(h.root, NewNode(key, value))
 }
 
+func (h *Heap[T]) ExtractMin() (T, T, bool) {
+	if h.root == nil {
+		var zeroKey, zeroValue T
+		return zeroKey, zeroValue, false
+	}
+
+	key := h.root.Key
+	value := h.root.Value
+
+	h.root = h.Merge(h.root.Left, h.root.Right)
+
+	return key, value, true
+}
+
 func (h *Heap[T]) Merge(heap1, heap2 *Node[T]) *Node[T] {
 	if heap1 == nil {
 		return heap2

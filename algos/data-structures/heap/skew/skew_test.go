@@ -176,6 +176,109 @@ func TestHeapMergeComplex(t *testing.T) {
 	}
 }
 
+// TestHeapExtractMin tests the ExtractMin operation
+func TestHeapExtractMin(t *testing.T) {
+	less := func(a, b int) bool { return a < b }
+	heap := NewHeap(less)
+
+	_, _, ok := heap.ExtractMin()
+	if ok {
+		t.Error("Expected ExtractMin to return false for empty heap")
+	}
+
+	heap.Insert(5, 5)
+	heap.Insert(3, 3)
+	heap.Insert(7, 7)
+	heap.Insert(1, 1)
+	heap.Insert(9, 9)
+
+	expectedOrder := []int{1, 3, 5, 7, 9}
+	for i, expected := range expectedOrder {
+		key, _, ok := heap.ExtractMin()
+		if !ok {
+			t.Errorf("Expected ExtractMin to succeed at iteration %d", i)
+		}
+		if key != expected {
+			t.Errorf("Expected key %d, got %d at iteration %d", expected, key, i)
+		}
+	}
+
+	_, _, ok = heap.ExtractMin()
+	if ok {
+		t.Error("Expected ExtractMin to return false for empty heap after extraction")
+	}
+}
+
+// TestHeapExtractMinWithDuplicates tests ExtractMin with duplicate keys
+func TestHeapExtractMinWithDuplicates(t *testing.T) {
+	less := func(a, b int) bool { return a < b }
+	heap := NewHeap(less)
+
+	heap.Insert(3, 30)
+	heap.Insert(3, 31)
+	heap.Insert(1, 10)
+	heap.Insert(1, 11)
+	heap.Insert(2, 20)
+
+	extracted := make([]int, 0)
+	for {
+		key, _, ok := heap.ExtractMin()
+		if !ok {
+			break
+		}
+		extracted = append(extracted, key)
+	}
+
+	if len(extracted) != 5 {
+		t.Errorf("Expected 5 elements, got %d", len(extracted))
+	}
+
+	expectedOrder := []int{1, 1, 2, 3, 3}
+	for i, expected := range expectedOrder {
+		if extracted[i] != expected {
+			t.Errorf("Expected %d at position %d, got %d", expected, i, extracted[i])
+		}
+	}
+}
+
+// TestHeapExtractMinInterleaved tests interleaved insert and extract operations
+func TestHeapExtractMinInterleaved(t *testing.T) {
+	less := func(a, b int) bool { return a < b }
+	heap := NewHeap(less)
+
+	heap.Insert(5, 5)
+	heap.Insert(3, 3)
+
+	key, _, ok := heap.ExtractMin()
+	if !ok || key != 3 {
+		t.Errorf("Expected to extract 3, got %d", key)
+	}
+
+	heap.Insert(1, 1)
+	heap.Insert(7, 7)
+
+	key, _, ok = heap.ExtractMin()
+	if !ok || key != 1 {
+		t.Errorf("Expected to extract 1, got %d", key)
+	}
+
+	heap.Insert(2, 2)
+	key, _, ok = heap.ExtractMin()
+	if !ok || key != 2 {
+		t.Errorf("Expected to extract 2, got %d", key)
+	}
+
+	key, _, ok = heap.ExtractMin()
+	if !ok || key != 5 {
+		t.Errorf("Expected to extract 5, got %d", key)
+	}
+
+	_, _, ok = heap.ExtractMin()
+	if ok {
+		t.Error("Expected heap to be empty")
+	}
+}
+
 // BenchmarkHeapInsert1k benchmarks insertion of 1000 elements
 func BenchmarkHeapInsert1k(b *testing.B) {
 	benchmarkHeapInsert(b, 1000)
