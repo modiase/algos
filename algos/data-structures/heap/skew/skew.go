@@ -51,3 +51,55 @@ func (h *Heap[T]) Merge(heap1, heap2 *Node[T]) *Node[T] {
 
 	return heap1
 }
+
+func (h *Heap[T]) ExtractMin() T {
+	if h.root == nil {
+		var zero T
+		return zero
+	}
+
+	minValue := h.root.Value
+	h.root = h.Merge(h.root.Left, h.root.Right)
+	return minValue
+}
+
+func (h *Heap[T]) Size() int {
+	return h.countNodes(h.root)
+}
+
+func (h *Heap[T]) countNodes(node *Node[T]) int {
+	if node == nil {
+		return 0
+	}
+	return 1 + h.countNodes(node.Left) + h.countNodes(node.Right)
+}
+
+type NodeDepth[T any] struct {
+	Node  *Node[T]
+	Depth int
+}
+
+func (h *Heap[T]) Traverse() []NodeDepth[T] {
+	if h.root == nil {
+		return []NodeDepth[T]{}
+	}
+
+	var result []NodeDepth[T]
+	queue := []NodeDepth[T]{{Node: h.root, Depth: 0}}
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+
+		result = append(result, current)
+
+		if current.Node.Left != nil {
+			queue = append(queue, NodeDepth[T]{Node: current.Node.Left, Depth: current.Depth + 1})
+		}
+		if current.Node.Right != nil {
+			queue = append(queue, NodeDepth[T]{Node: current.Node.Right, Depth: current.Depth + 1})
+		}
+	}
+
+	return result
+}
