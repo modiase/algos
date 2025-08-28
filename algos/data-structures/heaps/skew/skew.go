@@ -1,11 +1,10 @@
-package leftist
+package skew
 
 type Node[T any] struct {
 	Key   T
 	Value T
 	Left  *Node[T]
 	Right *Node[T]
-	Rank  int
 }
 
 func NewNode[T any](key, value T) *Node[T] {
@@ -14,7 +13,6 @@ func NewNode[T any](key, value T) *Node[T] {
 		Value: value,
 		Left:  nil,
 		Right: nil,
-		Rank:  0,
 	}
 }
 
@@ -49,16 +47,7 @@ func (h *Heap[T]) Merge(heap1, heap2 *Node[T]) *Node[T] {
 	}
 
 	heap1.Right = h.Merge(heap1.Right, heap2)
-
-	if heap1.Left == nil || (heap1.Right != nil && heap1.Left.Rank < heap1.Right.Rank) {
-		heap1.Left, heap1.Right = heap1.Right, heap1.Left
-	}
-
-	if heap1.Right != nil {
-		heap1.Rank = heap1.Right.Rank + 1
-	} else {
-		heap1.Rank = 0
-	}
+	heap1.Left, heap1.Right = heap1.Right, heap1.Left
 
 	return heap1
 }
@@ -112,5 +101,14 @@ func (h *Heap[T]) Traverse() []NodeDepth[T] {
 		}
 	}
 
+	return result
+}
+
+func (h *Heap[T]) TraverseGeneric() []interface{} {
+	traversal := h.Traverse()
+	result := make([]interface{}, len(traversal))
+	for i, nd := range traversal {
+		result[i] = nd
+	}
 	return result
 }
