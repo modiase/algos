@@ -46,3 +46,22 @@ repos:
         args:
           - -c
           - 'nix-shell -p gnused --run ''git diff --cached --name-only --diff-filter d | xargs -r sed -i "s/[[:space:]]*$//"'''
+      - id: wip-commit-msg-check
+        name: Check @WIP requires WIP prefix
+        entry: bash
+        language: system
+        stages: [commit-msg]
+        always_run: true
+        pass_filenames: true
+        args:
+          - -c
+          - |
+            commit_msg_file="${@: -1}"
+            if git diff --cached 2>/dev/null | grep -q "@WIP" 2>/dev/null; then
+              commit_msg=$(head -n1 "$commit_msg_file")
+              if ! echo "$commit_msg" | grep -q "^WIP:"; then
+                echo "❌ ERROR: Found @WIP in staged changes."
+                echo "Either remove @WIP markers or prefix your commit message with WIP:"
+                exit 1
+              fi
+            fi
