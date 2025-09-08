@@ -11,7 +11,6 @@ class Node:
     def __init__(self, key: Hashable):
         self.key = key
         self.adjacency_list = set()
-        self._is_discovered = False
         self._start_time = None
         self._end_time = None
         self._predecessor = None
@@ -33,15 +32,6 @@ class Node:
     def end_time(self, time: int) -> None:
         logger.trace(f"Setting end time of {self.key} to {time}")
         self._end_time = time
-
-    @property
-    def is_discovered(self) -> bool:
-        return self._is_discovered
-
-    @is_discovered.setter
-    def is_discovered(self, state: bool):
-        logger.trace(f"Setting is_discovered of {self.key} to {state}")
-        self._is_discovered = state
 
     @property
     def predecessor(self) -> Node | None:
@@ -88,7 +78,6 @@ class Graph:
 
     def reset_nodes(self):
         for node in self.nodes.values():
-            node.is_discovered = False
             node.start_time = None
             node.end_time = None
             node.predecessor = None
@@ -108,15 +97,14 @@ def dfs(graph: Graph, start: Hashable):
     while stack:
         logger.trace(f"{time=}")
         node = stack.pop()
-        if node.is_discovered:
+        if node.start_time is not None:
             node.end_time = time
         else:
-            node.is_discovered = True
             node.start_time = time
             result.append(node)
             stack.append(node)
             for n in filter(
-                lambda n: not n.is_discovered and n.predecessor is None,
+                lambda n: n.start_time is None and n.predecessor is None,
                 node.adjacency_list,
             ):
                 n.predecessor = node
