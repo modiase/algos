@@ -11,7 +11,7 @@ class Node:
     def __init__(self, key: Hashable):
         self.key = key
         self.adjacency_list = set()
-        self._is_processed = False
+        self._is_discovered = False
         self._start_time = None
         self._end_time = None
         self._predecessor = None
@@ -35,13 +35,13 @@ class Node:
         self._end_time = time
 
     @property
-    def is_processed(self) -> bool:
-        return self._is_processed
+    def is_discovered(self) -> bool:
+        return self._is_discovered
 
-    @is_processed.setter
-    def is_processed(self, state: bool):
-        logger.trace(f"Setting is_processed of {self.key} to {state}")
-        self._is_processed = state
+    @is_discovered.setter
+    def is_discovered(self, state: bool):
+        logger.trace(f"Setting is_discovered of {self.key} to {state}")
+        self._is_discovered = state
 
     @property
     def predecessor(self) -> Node | None:
@@ -49,7 +49,9 @@ class Node:
 
     @predecessor.setter
     def predecessor(self, predecessor: Node) -> None:
-        logger.trace(f"Setting predecessor of {self.key} to {predecessor.key}")
+        logger.trace(
+            f"Setting predecessor of {self.key} to {predecessor.key if predecessor else None}"
+        )
         self._predecessor = predecessor
 
     def __eq__(self, other: object):
@@ -84,32 +86,37 @@ class Graph:
         u.add_neighbor(v)
         v.add_neighbor(u)
 
+    def reset_nodes(self):
+        for node in self.nodes.values():
+            node.is_discovered = False
+            node.start_time = None
+            node.end_time = None
+            node.predecessor = None
+
 
 def dfs(graph: Graph, start: Hashable):
     if start not in graph.nodes:
         return []
 
-    for node in graph.nodes.values():
-        node.is_processed = False
+    graph.reset_nodes()
 
     time = 0
     s = graph.nodes[start]
-    s.start_time = time
     stack = [s]
     result = []
 
     while stack:
         logger.trace(f"{time=}")
         node = stack.pop()
-        if node.is_processed:
+        if node.is_discovered:
             node.end_time = time
         else:
-            node.is_processed = True
+            node.is_discovered = True
             node.start_time = time
             result.append(node)
             stack.append(node)
             for n in filter(
-                lambda n: not n.is_processed and n.predecessor is None,
+                lambda n: not n.is_discovered and n.predecessor is None,
                 node.adjacency_list,
             ):
                 n.predecessor = node
