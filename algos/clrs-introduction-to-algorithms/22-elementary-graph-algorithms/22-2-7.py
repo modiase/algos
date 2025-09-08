@@ -12,7 +12,8 @@ Time: O(n + r)
 
 import sys
 from collections import deque
-from typing import Hashable, Iterable, Optional
+from collections.abc import Hashable, Iterable
+from typing import Optional
 
 import pytest
 
