@@ -1,16 +1,17 @@
-from collections import defaultdict
-from collections import deque
-from itertools import chain
-from typing import TypeVar
-from weakref import WeakSet
+#! /usr/bin/env nix-shell
+#! nix-shell -i python3 -p python313 -p python313Packages.pytest
+from collections import defaultdict, deque
 from collections.abc import (
     Iterable,
     Mapping,
     MutableMapping,
 )
+from itertools import chain
+from sys import argv
+from typing import TypeVar
+from weakref import WeakSet
 
 import pytest
-
 
 _T = TypeVar("_T")
 
@@ -117,3 +118,7 @@ def test_branching_and_cycle() -> None:
                 }
             )
         )
+
+
+if __name__ == "__main__":
+    pytest.main([__file__] + argv[1:])
