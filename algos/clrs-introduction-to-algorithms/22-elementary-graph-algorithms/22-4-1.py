@@ -18,13 +18,12 @@ H = TypeVar("H", bound=Hashable)
 def dfs_topological_sort(graph: Graph[H]) -> Sequence[Node[H]]:
     graph.reset_nodes()
     time = 0
-    start = next(iter(graph), None)
     result: list[Node[H]] = []
-    if start is None:
-        return result
     nodes = {n.key: n for n in graph}
     while nodes:
-        stack = [next(iter(nodes.values()))]
+        start = next(iter(nodes.values()))
+        start.predecessor = start
+        stack = [start]
         while stack:
             node = stack.pop()
             logger.trace(f"Popped node from stack: {node.key}")

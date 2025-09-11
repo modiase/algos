@@ -24,6 +24,7 @@ def count_paths(graph: Graph[H], start: H, end: H) -> int:
         end := graph.nodes.get(end, None)
     ) is None:
         return result
+    start.predecessor = start
     stack = [start]
     while stack:
         node = stack.pop()
@@ -88,4 +89,4 @@ def test_count_paths(test_dag: Graph[str], start: str, end: str, expected: int):
 
 
 if __name__ == "__main__":
-    pytest.main([__file__] + sys.argv[1:])
+    pytest.main([__file__, *sys.argv[1:]])

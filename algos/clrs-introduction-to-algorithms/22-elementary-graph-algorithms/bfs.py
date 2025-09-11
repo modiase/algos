@@ -21,7 +21,7 @@ def bfs(graph: Graph[H], start: H) -> list[Node[H]]:
     graph.reset_nodes()
 
     s = graph.nodes[start]
-    visited = {s}
+    s.predecessor = s
     queue = deque([s])
     result: list[Node[H]] = []
     time = 0
@@ -32,10 +32,9 @@ def bfs(graph: Graph[H], start: H) -> list[Node[H]]:
         result.append(node)
         node.end_time = time
         for n in node.adj:
-            if n not in visited:
+            if n.predecessor is None:
                 n.predecessor = node
                 n.start_time = time
-                visited.add(n)
                 queue.append(n)
         time += 1
     return result

@@ -21,10 +21,9 @@ from graph import Graph, H, Node
 
 def components(graph: Graph[H]) -> Collection[Sequence[Node[H]]]:
     result = sorted(dfs(graph), key=lambda node: node.end_time)
-
-    g_t = graph.transpose()
     return split_when(
-        dfs(g_t, rank=lambda node: result.index(node)), lambda n1, n2: n1.cc != n2.cc
+        dfs(graph.transpose(), rank=lambda node: result.index(node)),
+        lambda n1, n2: n1.cc != n2.cc,
     )
 
 
