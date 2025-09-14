@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import random as rn
 from collections.abc import Collection, Hashable, Iterator, Mapping
 from enum import IntEnum
-from typing import Generic, TypeVar
+from typing import Callable, Generic, TypeVar
 
 from loguru import logger
 
@@ -124,6 +125,9 @@ class Graph(Generic[H]):
         for k_u, k_v in edges or []:
             self.add_edge(k_u, k_v)
 
+    def add_node(self, key: H):
+        self.nodes[key] = self.node_class(key)
+
     def __getitem__(self, key: H) -> Node[H]:
         return self.nodes[key]
 
@@ -150,4 +154,41 @@ class Graph(Generic[H]):
         for node in self.nodes.values():
             for neighbor in node.adj:
                 graph.add_edge(neighbor.key, node.key)
+        return graph
+
+    @staticmethod
+    def ascii_namer(i: int) -> str:
+        t = i
+        digits = []
+        while True:
+            t, r = divmod(t, 26)
+            digits.append(r)
+            if t == 0:
+                break
+        return "".join(chr(ord("a") + d) for d in reversed(digits))
+
+    def __hash__(self) -> int:
+        vertices = tuple(sorted(self.nodes.keys()))
+        edges = set()
+        for node in self.nodes.values():
+            for neighbor in node.adj:
+                edges.add((node.key, neighbor.key))
+        edges_tuple = tuple(sorted(edges))
+        return hash((vertices, edges_tuple))
+
+    @classmethod
+    def random(
+        cls,
+        *,
+        n: int,
+        p: float,
+        seed: int = 42,
+        namer: Callable[[int], H] = lambda i: i,
+    ) -> Graph[H]:
+        rand = rn.Random(seed)
+        graph = cls(node_class=Node2)
+        for i in range(n):
+            for j in range(i + 1, n):
+                if rand.random() < p:
+                    graph.add_edge(namer(i), namer(j))
         return graph
