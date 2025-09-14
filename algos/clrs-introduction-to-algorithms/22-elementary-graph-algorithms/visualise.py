@@ -59,7 +59,8 @@ def visualize_graph(graph: Graph, output_filename: str) -> None:
 
 
 if __name__ == "__main__":
-    graph = Graph.random(n=10, p=0.4, namer=Graph.ascii_namer, seed=1)
+    graph = Graph.random(n=10, p=0.15, namer=Graph.ascii_namer, seed=42)
+    logger.trace(f"{graph=!r}")
     sccs = components(graph)
     node_to_scc_idx = {node: idx for idx, scc in enumerate(sccs) for node in scc}
     scc_forest = Graph()
@@ -71,6 +72,11 @@ if __name__ == "__main__":
 
     output_file = TMP_DIR / f"graph_visualization_{abs(hash(graph))}.html"
     visualize_graph(graph, str(output_file))
+    logger.success(f"Graph visualization available at: {output_file}")
+    subprocess.run(f"open {output_file}", shell=True)
+
+    output_file = TMP_DIR / f"graph_visualization_transpose_{abs(hash(graph))}.html"
+    visualize_graph(graph.transpose(), str(output_file))
     logger.success(f"Graph visualization available at: {output_file}")
     subprocess.run(f"open {output_file}", shell=True)
 

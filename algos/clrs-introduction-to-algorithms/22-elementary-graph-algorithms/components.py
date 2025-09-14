@@ -20,41 +20,110 @@ from graph import Graph, H, Node
 
 
 def components(graph: Graph[H]) -> Collection[Sequence[Node[H]]]:
-    result = sorted(dfs(graph), key=lambda node: node.end_time)
+    if len(graph) == 0:
+        return []
+    result = sorted(dfs(graph), key=lambda node: node.end_time, reverse=True)
     return split_when(
         dfs(graph.transpose(), rank=lambda node: result.index(node)),
         lambda n1, n2: n1.cc != n2.cc,
     )
 
 
-@pytest.fixture
-def graph() -> Graph[str]:
-    graph = Graph()
-    graph.add_edge("a", "b")
-    graph.add_edge("b", "c")
-    graph.add_edge("b", "e")
-    graph.add_edge("b", "f")
-    graph.add_edge("c", "d")
-    graph.add_edge("c", "g")
-    graph.add_edge("d", "c")
-    graph.add_edge("d", "h")
-    graph.add_edge("e", "a")
-    graph.add_edge("e", "f")
-    graph.add_edge("f", "g")
-    graph.add_edge("g", "f")
-    graph.add_edge("g", "h")
-    graph.add_edge("h", "h")
-
-    return graph
-
-
-def test_components(graph: Graph[str]) -> None:
-    assert set(
+@pytest.mark.parametrize(
+    "graph,expected_sccs",
+    [
+        (
+            Graph(
+                edges=[
+                    ("a", "b"),
+                    ("b", "c"),
+                    ("b", "e"),
+                    ("b", "f"),
+                    ("c", "d"),
+                    ("c", "g"),
+                    ("d", "c"),
+                    ("d", "h"),
+                    ("e", "a"),
+                    ("e", "f"),
+                    ("f", "g"),
+                    ("g", "f"),
+                    ("g", "h"),
+                    ("h", "h"),
+                ]
+            ),
+            {"abe", "cd", "fg", "h"},
+        ),
+        (
+            Graph(
+                edges=[
+                    ("a", "j"),
+                    ("a", "e"),
+                    ("a", "b"),
+                    ("b", "g"),
+                    ("b", "j"),
+                    ("b", "c"),
+                    ("e", "g"),
+                    ("e", "h"),
+                    ("e", "j"),
+                    ("e", "f"),
+                    ("c", "g"),
+                    ("c", "j"),
+                    ("c", "f"),
+                    ("g", "h"),
+                    ("f", "g"),
+                    ("d", "g"),
+                    ("d", "e"),
+                    ("d", "h"),
+                    ("h", "j"),
+                    ("h", "i"),
+                ]
+            ),
+            {"a", "b", "c", "d", "e", "f", "g", "h", "j", "i"},
+        ),
+        (
+            Graph(
+                edges=[
+                    ("a", "b"),
+                    ("b", "c"),
+                    ("c", "a"),
+                ]
+            ),
+            {"abc"},
+        ),
+        (
+            Graph(
+                edges=[
+                    ("a", "b"),
+                    ("b", "c"),
+                    ("b", "a"),
+                ]
+            ),
+            {"ab", "c"},
+        ),
+        (
+            Graph(
+                edges=[
+                    ("a", "b"),
+                    ("b", "c"),
+                    ("c", "d"),
+                    ("c", "a"),
+                    ("d", "e"),
+                    ("e", "f"),
+                    ("f", "d"),
+                ]
+            ),
+            {"abc", "def"},
+        ),
+    ],
+)
+def test_components(graph: Graph[str], expected_sccs: set[str]) -> None:
+    actual_sccs = set(
         map(
             lambda nodes: "".join(sorted([node.key for node in nodes])),
             components(graph),
         )
-    ) == {"abe", "cd", "fg", "h"}
+    )
+    assert actual_sccs == expected_sccs
 
 
 if __name__ == "__main__":

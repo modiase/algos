@@ -21,6 +21,12 @@ class Node(Generic[H]):
         def __iter__(self):
             return iter(sorted(self.nodes, key=lambda node: node.key, reverse=True))
 
+        def __repr__(self) -> str:
+            return f"AdjacencyList({', '.join(node.key for node in self.nodes)})"
+
+        def __str__(self) -> str:
+            return f"{', '.join(node.key for node in self.nodes)}"
+
     def __init__(self, key: H):
         self.key = key
         self.adj: Collection[Node[H]] = self.AdjacencyList()
@@ -83,10 +89,10 @@ class Node(Generic[H]):
         self.adj.add(neighbor)
 
     def __str__(self):
-        return str(self.key)
+        return f"Node({self.key})"
 
     def __repr__(self):
-        return f"Node({self.key})"
+        return f"Node({self.key}, adj=[{', '.join(node.key for node in self.adj)}])"
 
     def reset_node(self):
         self.start_time = None
@@ -117,16 +123,22 @@ class Node2(Node[H]):
 class Graph(Generic[H]):
     def __init__(
         self,
+        *,
+        nodes: Collection[H] | None = None,
         edges: Collection[tuple[H, H]] | None = None,
         node_class: type[Node[H]] = Node,
     ):
         self.nodes: Mapping[H, Node[H]] = {}
         self.node_class = node_class
+        if nodes is not None:
+            for node in nodes:
+                self.add_node(node)
         for k_u, k_v in edges or []:
             self.add_edge(k_u, k_v)
 
     def add_node(self, key: H):
-        self.nodes[key] = self.node_class(key)
+        if key not in self.nodes:
+            self.nodes[key] = self.node_class(key)
 
     def __getitem__(self, key: H) -> Node[H]:
         return self.nodes[key]
@@ -152,6 +164,7 @@ class Graph(Generic[H]):
     def transpose(self) -> Graph[H]:
         graph = Graph(node_class=self.node_class)
         for node in self.nodes.values():
+            graph.add_node(node.key)
             for neighbor in node.adj:
                 graph.add_edge(neighbor.key, node.key)
         return graph
@@ -191,4 +204,14 @@ class Graph(Generic[H]):
             for j in range(i + 1, n):
                 if rand.random() < p:
                     graph.add_edge(namer(i), namer(j))
+                if rand.random() < p:
+                    graph.add_edge(namer(j), namer(i))
         return graph
+
+    def __repr__(self) -> str:
+        return (
+            f"Graph({{nodes={', '.join(repr(node) for node in self.nodes.values())})}}"
+        )
+
+    def __len__(self) -> int:
+        return len(self.nodes)

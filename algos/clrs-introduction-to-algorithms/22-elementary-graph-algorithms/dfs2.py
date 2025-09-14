@@ -18,24 +18,23 @@ def dfs(
     preorder: bool = False,
     rank: Callable[[Node[H]], int] = lambda n: n.key,
 ) -> Collection[Sequence[Node[H]]]:
-    if start is None:
-        start = next(iter(graph.nodes.keys()))
-
-    if start not in graph.nodes:
-        return []
-
     graph.reset_nodes()
 
     time = 0
+    remaining_nodes = dict.fromkeys(sorted(graph.nodes.values(), key=rank))
+    if start is None:
+        start = next(iter(remaining_nodes.keys()))
+    else:
+        if start not in graph.nodes:
+            return []
     s = graph.nodes[start]
     cc = s
     stack = [s]
     result = []
-    remaining_nodes = set(graph.nodes.keys())
 
     def add_to_result(node: Node[H]):
         result.append(node)
-        remaining_nodes.remove(node.key)
+        remaining_nodes.pop(node.key)
         node.cc = cc
 
     while stack or remaining_nodes:
@@ -58,7 +57,7 @@ def dfs(
                 lambda n: n.start_time is None
                 and n.predecessor is None
                 and n.key in remaining_nodes,
-                node.adjacency_list if rank is None else sorted(node.adj, key=rank),
+                node.adj if rank is None else sorted(node.adj, key=rank),
             ):
                 n.predecessor = node
                 stack.append(n)
