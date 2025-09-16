@@ -1,3 +1,5 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i python3 -p python313Packages.more-itertools
 import random
 from collections.abc import Callable, Iterable
 from typing import TypeVar

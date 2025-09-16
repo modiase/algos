@@ -1,3 +1,5 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i python3 -p python313Packages.more-itertools python313Packages.matplotlib
 import random as rn
 from itertools import islice
 from math import cos, log, pi, sin

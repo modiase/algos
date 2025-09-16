@@ -1,3 +1,5 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i python3 -p python313Packages.numpy python313Packages.matplotlib
 from typing import Final
 
 import numpy as np
