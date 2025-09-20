@@ -10,6 +10,12 @@ repos:
         args:
           - -c
           - "nix-shell -p ruff --run 'ruff format .'"
+      - id: typecheck-py
+        name: typecheck Python files
+        entry: ./bin/typecheck.sh
+        language: system
+        files: \.py$
+        pass_filenames: true
       - id: format-nix
         name: format Nix files
         entry: bash
