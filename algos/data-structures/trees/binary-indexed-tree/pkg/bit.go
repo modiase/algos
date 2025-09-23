@@ -2,46 +2,32 @@ package bit
 
 import "fmt"
 
-type Combine[T any] func(a, b T) T
-type Inverse[T any] func(a T) T
-
-type Group[T any] struct {
-	combine  Combine[T]
-	inverse  Inverse[T]
-	identity T
-}
-
-func NewGroup[T any](combine Combine[T], inverse Inverse[T], identity T) Group[T] {
-	return Group[T]{
-		combine:  combine,
-		identity: identity,
-		inverse:  inverse,
-	}
+// Group represents an algebraic structure with an associative binary operation and inverse.
+type Group[T any] interface {
+	Combine(a, b T) T
+	Inverse(a T) T
+	Identity() T
 }
 
 type BinaryIndexedTree[T any] struct {
-	combine  Combine[T]
-	identity T
-	inverse  Inverse[T]
-	size     int
-	tree     []T
+	group Group[T]
+	size  int
+	tree  []T
 }
 
-func New[T any](size int, g Group[T]) *BinaryIndexedTree[T] {
+func New[T any](size int, group Group[T]) *BinaryIndexedTree[T] {
 	if size <= 0 {
 		panic("BIT size must be positive")
 	}
 	return &BinaryIndexedTree[T]{
-		combine:  g.combine,
-		identity: g.identity,
-		inverse:  g.inverse,
-		size:     size,
-		tree:     make([]T, size+1),
+		group: group,
+		size:  size,
+		tree:  make([]T, size+1),
 	}
 }
 
-func NewFromArray[T any](arr []T, g Group[T]) *BinaryIndexedTree[T] {
-	bit := New(len(arr), g)
+func NewFromArray[T any](arr []T, group Group[T]) *BinaryIndexedTree[T] {
+	bit := New(len(arr), group)
 	for i, v := range arr {
 		bit.Update(i+1, v)
 	}
@@ -55,21 +41,21 @@ func (b *BinaryIndexedTree[T]) Update(index int, delta T) {
 		panic(fmt.Sprintf("index %d out of bounds [1, %d]", index, b.size))
 	}
 	for index <= b.size {
-		b.tree[index] = b.combine(b.tree[index], delta)
+		b.tree[index] = b.group.Combine(b.tree[index], delta)
 		index += lsb(index)
 	}
 }
 
 func (b *BinaryIndexedTree[T]) PrefixSum(index int) T {
 	if index <= 0 {
-		return b.identity
+		return b.group.Identity()
 	}
 	if index > b.size {
 		index = b.size
 	}
-	res := b.identity
+	res := b.group.Identity()
 	for index > 0 {
-		res = b.combine(res, b.tree[index])
+		res = b.group.Combine(res, b.tree[index])
 		index -= lsb(index)
 	}
 	return res
@@ -77,9 +63,9 @@ func (b *BinaryIndexedTree[T]) PrefixSum(index int) T {
 
 func (b *BinaryIndexedTree[T]) RangeSum(l, r int) T {
 	if l > r {
-		return b.identity
+		return b.group.Identity()
 	}
-	return b.combine(b.PrefixSum(r), b.inverse(b.PrefixSum(l-1)))
+	return b.group.Combine(b.PrefixSum(r), b.group.Inverse(b.PrefixSum(l-1)))
 }
 
 func (b *BinaryIndexedTree[T]) Get(index int) T {
@@ -88,7 +74,7 @@ func (b *BinaryIndexedTree[T]) Get(index int) T {
 
 func (b *BinaryIndexedTree[T]) Set(index int, value T) {
 	cur := b.Get(index)
-	delta := b.combine(b.inverse(cur), value)
+	delta := b.group.Combine(b.group.Inverse(cur), value)
 	b.Update(index, delta)
 }
 
@@ -111,4 +97,27 @@ func (b *BinaryIndexedTree[T]) String() string {
 	}
 	res += "]"
 	return res
+}
+
+// NewGroup creates a concrete group implementation for a given type.
+func NewGroup[T any](combine func(a, b T) T, inverse func(a T) T, identity T) Group[T] {
+	return &groupImpl[T]{combine: combine, inverse: inverse, identity: identity}
+}
+
+type groupImpl[T any] struct {
+	combine  func(a, b T) T
+	inverse  func(a T) T
+	identity T
+}
+
+func (g *groupImpl[T]) Combine(a, b T) T {
+	return g.combine(a, b)
+}
+
+func (g *groupImpl[T]) Inverse(a T) T {
+	return g.inverse(a)
+}
+
+func (g *groupImpl[T]) Identity() T {
+	return g.identity
 }

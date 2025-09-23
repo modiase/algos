@@ -11,7 +11,8 @@ func sumInt(a, b int) int { return a + b }
 
 func TestSegmentTree_QueryBasic(t *testing.T) {
 	arr := []int{1, 3, 5, 7, 9, 11}
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	tests := []struct {
 		l, r int
@@ -35,7 +36,8 @@ func TestSegmentTree_QueryBasic(t *testing.T) {
 
 func TestSegmentTree_UpdateAndQuery(t *testing.T) {
 	arr := []int{1, 3, 5, 7, 9, 11}
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	// Update index 1 from 3 -> 10
 	st.Update(1, 10)
@@ -68,7 +70,8 @@ func TestSegmentTree_UpdateAndQuery(t *testing.T) {
 
 func TestSegmentTree_SingleElement(t *testing.T) {
 	arr := []int{42}
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	if got := st.Query(0, 0); got != 42 {
 		t.Fatalf("Query(0,0) = %d, want %d", got, 42)
@@ -82,7 +85,8 @@ func TestSegmentTree_SingleElement(t *testing.T) {
 
 func TestSegmentTree_EmptyArray(t *testing.T) {
 	var arr []int
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	if got := st.Query(0, 0); got != 0 {
 		t.Fatalf("Query on empty tree = %d, want %d", got, 0)
@@ -98,7 +102,8 @@ func TestSegmentTree_EmptyArray(t *testing.T) {
 
 func TestSegmentTree_OutOfBoundsClamping(t *testing.T) {
 	arr := []int{1, 3, 5, 7, 9, 11}
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	if got, want := st.Query(-5, 100), 36; got != want {
 		t.Fatalf("Query(-5,100) = %d, want %d", got, want)
@@ -113,7 +118,8 @@ func TestSegmentTree_OutOfBoundsClamping(t *testing.T) {
 
 func TestSegmentTree_QlGreaterThanQrEmpty(t *testing.T) {
 	arr := []int{1, 2, 3}
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	if got := st.Query(2, 1); got != 0 {
 		t.Fatalf("Query(2,1) = %d, want 0 (empty)", got)
@@ -125,7 +131,8 @@ func TestSegmentTree_QlGreaterThanQrEmpty(t *testing.T) {
 
 func TestSegmentTree_MultipleUpdates(t *testing.T) {
 	arr := []int{0, 0, 0, 0, 0, 0, 0}
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	cur := append([]int(nil), arr...)
 	set := func(i, v int) {
@@ -168,7 +175,8 @@ func TestSegmentTree_MultipleUpdates(t *testing.T) {
 
 func TestSegmentTree_PointQueriesAfterUpdates(t *testing.T) {
 	arr := []int{5, 4, 3, 2, 1}
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	st.Update(0, 9)
 	st.Update(4, -3)
@@ -192,7 +200,8 @@ func TestSegmentTree_PointQueriesAfterUpdates(t *testing.T) {
 
 func TestSegmentTree_ImmutabilityOfInput(t *testing.T) {
 	arr := []int{1, 2, 3}
-	st := segmenttree.NewSegmentTree[int](arr, sumInt, 0, 0)
+	monoid := segmenttree.NewMonoid(sumInt, 0)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	arr[0] = 999 // mutate caller slice after building
 	if got := st.Query(0, 0); got != 1 {
@@ -209,8 +218,9 @@ func minInt(a, b int) int {
 
 func TestSegmentTree_MinCombineExample(t *testing.T) {
 	arr := []int{5, 1, 9, 3, 7}
-	// identity and empty as MaxInt (neutral for min, and sentinel for empty)
-	st := segmenttree.NewSegmentTree[int](arr, minInt, math.MaxInt, math.MaxInt)
+	// empty as MaxInt (sentinel for empty)
+	monoid := segmenttree.NewMonoid(minInt, math.MaxInt)
+	st := segmenttree.NewSegmentTree(arr, monoid)
 
 	tests := []struct {
 		l, r int
