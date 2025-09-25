@@ -3,11 +3,10 @@
 """ """
 
 import sys
-from collections.abc import MutableSequence, Sequence
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 import pytest
-from loguru import logger
 
 
 def transpose_conv1d(
@@ -16,25 +15,18 @@ def transpose_conv1d(
     padding: int,
     stride: int,
 ) -> Sequence[float]:
-    """
-    x: input
-    h: kernel
-    """
     D, K = len(x), len(h)
-    output_size = D + (K - 1) * stride
-    logger.trace(f"output_size: {output_size}")
-    output: Sequence[MutableSequence[float]] = [[] for _ in range(output_size)]
+    full_output_size = D + (K - 1) * stride
+    result = [0.0] * (full_output_size - 2 * padding)
 
     for i in range(D):
         for k in range(K):
-            output[i + k * stride].append(x[i] * h[k])
+            if (i + k * stride) >= padding and (
+                i + k * stride
+            ) < full_output_size - padding:
+                result[(i + k * stride) - padding] += x[i] * h[k]
 
-    logger.trace(f"output: {output}")
-    return [
-        sum(o)
-        for idx, o in enumerate(output)
-        if idx >= padding and idx < output_size - padding
-    ]
+    return result
 
 
 @dataclass(frozen=True, kw_only=True)
