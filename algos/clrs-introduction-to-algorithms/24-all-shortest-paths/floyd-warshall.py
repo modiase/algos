@@ -7,8 +7,8 @@ It is a dynamic programming algorithm that runs in O(n^3) time.
 
 from __future__ import annotations
 
-import subprocess
 import sys
+import webbrowser
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
@@ -183,7 +183,7 @@ def example(vertices: int, probability: float, seed: int, output: str, open: boo
 
     if open:
         try:
-            subprocess.Popen(["open", output])
+            webbrowser.open(output)
             click.echo(f"Opening {output} in default browser...")
         except FileNotFoundError:
             click.echo(

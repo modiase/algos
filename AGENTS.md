@@ -5,6 +5,7 @@ This document provides guidelines for AI agents working on this algorithms repos
 ## Development Environment
 
 ### Nix Shebangs
+
 All Python scripts should use nix shebangs for dependency management:
 
 ```python
@@ -13,13 +14,16 @@ All Python scripts should use nix shebangs for dependency management:
 ```
 
 **Benefits:**
+
 - Reproducible builds across different systems
 - No need for virtual environments or pip installs
 - All dependencies are explicitly declared
 - Works seamlessly with the nix package manager
 
 ### Required Dependencies
+
 Standard dependencies for most scripts:
+
 - `python313` - Python 3.13 interpreter
 - `python313Packages.loguru` - Enhanced logging
 - `python313Packages.pytest` - Testing framework
@@ -30,6 +34,7 @@ Standard dependencies for most scripts:
 ## Code Structure
 
 ### Click CLI Framework
+
 All executable scripts should use Click for command-line interfaces:
 
 ```python
@@ -48,12 +53,14 @@ if __name__ == "__main__":
 ```
 
 **Benefits:**
+
 - Consistent CLI across all scripts
 - Built-in help generation
 - Type validation
 - Easy testing
 
 ### Inline Testing with Pytest
+
 Tests should be defined inline within the same file:
 
 ```python
@@ -74,11 +81,13 @@ def test():
 ```
 
 **Benefits:**
+
 - Tests stay close to implementation
 - No separate test files to maintain
 - Easy to run with `python script.py test`
 
 ### Main Functions
+
 Always include a `if __name__ == "__main__":` block:
 
 ```python
@@ -89,6 +98,7 @@ if __name__ == "__main__":
 ## Code Quality Standards
 
 ### Type Annotations
+
 Use abstract types from `collections.abc`:
 
 ```python
@@ -99,17 +109,20 @@ def function(data: Sequence[float]) -> Mapping[str, int]:
 ```
 
 **Prefer immutable types when possible:**
+
 - `Sequence` over `MutableSequence` for read-only data
 - `Mapping` over `dict` for read-only mappings
 - Only use `MutableSequence` when actually modifying collections
 
 ### Code Cleanup
+
 1. **Remove comments** - Code should be self-documenting
 2. **Inline once-used variables** - Reduce unnecessary variable assignments
 3. **Extract reusable functionality** - Create helper functions for repeated logic
 4. **Remove unused imports/variables** - Keep code lean
 
 ### Function Signatures
+
 Use modern Python 3.10+ union syntax:
 
 ```python
@@ -120,6 +133,7 @@ def function(param: str | Path) -> tuple[Sequence[float], Mapping[str, int]]:
 ## Execution Patterns
 
 ### Making Scripts Executable
+
 Before running scripts, make them executable:
 
 ```bash
@@ -128,6 +142,7 @@ chmod +x path/to/script.py
 ```
 
 ### Running Python Scripts
+
 **CRITICAL:** Always run scripts directly to trigger the nix shebang:
 
 ```bash
@@ -143,6 +158,7 @@ chmod +x script.py
 ```
 
 ### Testing
+
 Run tests using the built-in test command:
 
 ```bash
@@ -159,6 +175,7 @@ chmod +x script.py
 ## Visualization
 
 ### Pyvis Integration
+
 For graph/network visualizations, use the shared `viz.py` module:
 
 ```python
@@ -172,6 +189,7 @@ visualise_graph(
 ```
 
 **Features:**
+
 - Multi-graph visualization on same canvas
 - Automatic clustering of graph components
 - Edge weight labels
@@ -179,6 +197,7 @@ visualise_graph(
 - HTML output with custom styling
 
 ### Browser Integration
+
 Include `--open` flags for generated visualizations:
 
 ```python
@@ -186,17 +205,19 @@ Include `--open` flags for generated visualizations:
 def example(open: bool):
     # Generate visualization
     if open:
-        subprocess.Popen(["open", output])
+        webbrowser.open(output)
 ```
 
 ## File Organization
 
 ### Directory Structure
+
 - Keep related algorithms in subdirectories
 - Use descriptive filenames (e.g., `floyd-warshall.py`, `matrix-method.py`)
 - Share common utilities (e.g., `graph.py`, `viz.py`)
 
 ### Import Patterns
+
 ```python
 import sys
 from pathlib import Path
@@ -257,6 +278,7 @@ if __name__ == "__main__":
 ```
 
 **Usage:**
+
 ```bash
 # Make executable
 chmod +x script.py

@@ -68,7 +68,7 @@ class Node(Generic[H]):
         return self._predecessor
 
     @predecessor.setter
-    def predecessor(self, predecessor: Node[H]):
+    def predecessor(self, predecessor: Node[H] | None):
         logger.trace(
             f"Setting predecessor of {self.key} to {predecessor.key if predecessor else None}"
         )
@@ -79,7 +79,7 @@ class Node(Generic[H]):
         return self._start_time
 
     @start_time.setter
-    def start_time(self, time: int):
+    def start_time(self, time: int | None):
         logger.trace(f"Setting start time of {self.key} to {time}")
         self._start_time = time
 
@@ -88,7 +88,7 @@ class Node(Generic[H]):
         return self._end_time
 
     @end_time.setter
-    def end_time(self, time: int):
+    def end_time(self, time: int | None):
         logger.trace(f"Setting end time of {self.key} to {time}")
         self._end_time = time
 

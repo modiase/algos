@@ -10,8 +10,8 @@ which are themselves O(n^3) time (for naive matrix multiplication).
 from __future__ import annotations
 
 import math
-import subprocess
 import sys
+import webbrowser
 from collections.abc import Mapping, MutableSequence, Sequence
 from pathlib import Path
 
@@ -208,7 +208,7 @@ def example(vertices: int, probability: float, seed: int, output: str, open: boo
 
     if open:
         try:
-            subprocess.Popen(["open", output])
+            webbrowser.open(output)
             click.echo(f"Opening {output} in default browser...")
         except FileNotFoundError:
             click.echo(
