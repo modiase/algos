@@ -73,6 +73,10 @@ class Solution:
             return []
         result = []
         deq: deque[int] = deque([])
+
+        # Although this approach prima-facie seems O(k^2) it's actually O(k)
+        # worst case since each index can be at most inserted once and removed
+        # once.
         for i in range(k - 1):
             while deq and nums[deq[-1]] < nums[i]:
                 deq.pop()
