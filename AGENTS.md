@@ -130,6 +130,22 @@ def function(param: str | Path) -> tuple[Sequence[float], Mapping[str, int]]:
     # Implementation
 ```
 
+### Return Types
+
+Functions should return immutable interfaces (`Sequence`, `Mapping`, etc.) whenever possible. Only return mutable collections when callers need to mutate the result later.
+
+### Naming Collections
+
+Prefer the `thing_to_other` pattern for mappings (e.g. `node_to_index`) and plural nouns for sequences (e.g. `nodes`) unless a different name significantly improves clarity.
+
+### Local Validation
+
+After each round of changes, run `pre-commit run --all-files` (or the most relevant subset) so formatting, linting, and type checks stay green.
+
+### Pytest Conventions
+
+Annotate pytest `test_*` functions with an explicit `-> None` return type.
+
 ## Execution Patterns
 
 ### Making Scripts Executable
