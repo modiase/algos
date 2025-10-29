@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 
 def take_first(s: str) -> Tuple[str, str]:
@@ -41,7 +41,7 @@ def walk_tree(string: str, tree: Dict[str, Dict]) -> List[str]:
     def _walk_tree(sub_tree, index) -> Tuple[str, List[str]]:
         if index == len(string):
             return (string, return_endings(sub_tree))
-        if not string[index] in sub_tree.keys():
+        if string[index] not in sub_tree.keys():
             return (string, [])
         return _walk_tree(sub_tree[string[index]], index + 1)
 

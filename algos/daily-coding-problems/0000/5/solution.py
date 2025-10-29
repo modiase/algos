@@ -1,17 +1,15 @@
-from given import cons
-
 import typing
 
 
-def car(cons: typing.Callable):
+def car(cons_func: typing.Callable):
     def _exec(a, b):
         return (a, b)
 
-    return cons(_exec)[0]
+    return cons_func(_exec)[0]
 
 
-def cdr(cons: typing.Callable):
+def cdr(cons_func: typing.Callable):
     def _exec(a, b):
         return (a, b)
 
-    return cons(_exec)[-1]
+    return cons_func(_exec)[-1]

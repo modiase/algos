@@ -13,13 +13,13 @@ Do this in O(N) time.
 import itertools
 
 
-def flatten(l):
-    return [item for sublist in l for item in sublist]
+def flatten(seq):
+    return [item for sublist in seq for item in sublist]
 
 
-def min_sum(l):
+def min_sum(seq):
     g = itertools.chain(
-        ((sum(t) for t in itertools.combinations(l, n))) for n in range(1, len(l))
+        ((sum(t) for t in itertools.combinations(seq, n))) for n in range(1, len(seq))
     )
     ss = [subitem for item in (i for i in g) for subitem in item]
     return min([s + 1 for s in ss if (s + 1) not in ss])

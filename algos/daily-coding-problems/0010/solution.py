@@ -48,11 +48,6 @@ class JobQueue:
     def _update_internal_clock(self, t: datetime):
         self._internal_clock = t
 
-    def queue_task(self, f: Callable, n: int):
-        t = Task(f, n)
-        T = (datetime.now() + timedelta(milliseconds=n)).timestamp()
-        heapq.heappush(self._queue, (T, t))
-
     def queue_task(self, t: Task):
         T = t.get_time_due().timestamp()
         heapq.heappush(self._queue, (T, t))

@@ -104,7 +104,7 @@ def create_histograms(skew_stats, leftist_stats, output_prefix="heap_analysis"):
         # Add summary statistics
         if skew_data:
             skew_mean = np.mean(skew_data)
-            skew_std = np.std(skew_data)
+            _skew_std = np.std(skew_data)
             ax.axvline(
                 skew_mean,
                 color="blue",
@@ -114,7 +114,7 @@ def create_histograms(skew_stats, leftist_stats, output_prefix="heap_analysis"):
 
         if leftist_data:
             leftist_mean = np.mean(leftist_data)
-            leftist_std = np.std(leftist_data)
+            _leftist_std = np.std(leftist_data)
             ax.axvline(
                 leftist_mean,
                 color="red",

@@ -7,10 +7,10 @@ For example, given 156, you should return 3.
 import math
 
 
-def longest_run(l, c):
+def longest_run(seq, c):
     m = 0
     counter = 0
-    for c0 in l:
+    for c0 in seq:
         if c0 == c:
             counter += 1
         else:

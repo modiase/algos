@@ -10,6 +10,15 @@ repos:
         args:
           - -c
           - "nix-shell -p ruff --run 'ruff format .'"
+      - id: lint-py
+        name: lint Python files
+        entry: bash
+        language: system
+        files: \.py$
+        pass_filenames: false
+        args:
+          - -c
+          - "nix-shell -p ruff --run 'ruff check .'"
       - id: typecheck-py
         name: typecheck Python files
         entry: ./bin/typecheck.sh

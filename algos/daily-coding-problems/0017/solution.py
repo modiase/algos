@@ -1,6 +1,6 @@
 import re
 from sys import argv
-from typing import *
+from typing import List, Optional, Tuple
 
 REGEX = re.compile(r"((?:\\t)*)(.+?)(\\n)(.*)")
 
@@ -28,7 +28,7 @@ def deepest_paths(tokens: List[Tuple[int, str]]) -> List[str]:
         store.append(buffer)
     assert len(tokens) == 1
     res = []
-    store = [item for l in store for item in l]
+    store = [item for path_list in store for item in path_list]
     for item in store:
         res.append(tokens[0][1] + "/" + item)
     return res
@@ -50,17 +50,17 @@ def consume_next(s: str) -> Tuple[Optional[Tuple[int, str]], str]:
 
 
 def main(s):
-    l = []
+    tokens_list = []
     remainder = s
     while remainder:
         t = consume_next(remainder)
         if t[0]:
-            l.append(t[0])
+            tokens_list.append(t[0])
         remainder = t[1]
-    l2 = deepest_paths(l)
-    lens = [len(x) for x in l2]
+    paths = deepest_paths(tokens_list)
+    lens = [len(x) for x in paths]
     max_len = max(lens)
-    longest = l2[lens.index(max_len)]
+    longest = paths[lens.index(max_len)]
     return (longest, max_len)
 
 

@@ -19,16 +19,16 @@ def find_max_of_length(a: List[int], n: int, i: int) -> Tuple[int, int, int]:
         sum += a[j]
 
     msum = sum
-    l = 0
+    left = 0
     r = i - 1
 
     for j in range(0, n - i):
         sum = sum - a[j] + a[j + i]
         if sum > msum:
             msum = sum
-            l = j + 1
+            left = j + 1
             r = j + i
-    return (msum, l, r)
+    return (msum, left, r)
 
 
 def brute_force_max_subarray(a: List[int]) -> Tuple[int, int, int]:
@@ -38,9 +38,9 @@ def brute_force_max_subarray(a: List[int]) -> Tuple[int, int, int]:
     mr = -1
 
     for i in range(0, n + 1):
-        (sum, l, r) = find_max_of_length(a, n, i)
+        (sum, left, r) = find_max_of_length(a, n, i)
         if sum > msum:
-            ml = l
+            ml = left
             mr = r
             msum = sum
     return (int(msum), ml, mr)
@@ -51,7 +51,7 @@ def _max_crossing_subarray(
 ) -> Tuple[int, int, int]:
     if low == high:
         return (a[low], low, high)
-    l = r = mid
+    left = r = mid
     _l = mid - 1
     _r = mid + 1
     msum = a[mid]
@@ -61,11 +61,9 @@ def _max_crossing_subarray(
         while _l >= low:
             lsum += a[_l]
             if lsum > msum:
-                l = _l
+                left = _l
                 msum = lsum
             _l -= 1
-    else:
-        l = 0
 
     rsum = msum
     if _r < n:
@@ -78,7 +76,7 @@ def _max_crossing_subarray(
     else:
         r = n - 1
 
-    return (msum, l, r)
+    return (msum, left, r)
 
 
 def max_subarray(a: List[int]) -> Tuple[int, int, int]:

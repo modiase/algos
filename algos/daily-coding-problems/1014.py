@@ -48,7 +48,7 @@ def solve(start: str, end: str, dictionary: List[str]):
     if len(result) == 0:
         return None
     else:
-        return sorted(result, key=lambda l: len(l))[0]
+        return sorted(result, key=lambda path: len(path))[0]
 
 
 assert solve("dog", "cat", d0) == ["dog", "dot", "dat", "cat"]

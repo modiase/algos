@@ -4,8 +4,6 @@ Describe an algorithm to compute the longest increasing subsequence of an array 
 Solved: 24m
 """
 
-import itertools
-
 
 def is_subset(s, a):
     for offset in range(len(a) - len(s)):
@@ -16,9 +14,9 @@ def is_subset(s, a):
 
 def find_longest_increasing_subsequence(a):
     sa = list(sorted(a))
-    for l in range(len(a) - 2, 0, -1):
-        for offset in range(len(a) - l):
-            subset = sa[offset : offset + l + 1]
+    for length in range(len(a) - 2, 0, -1):
+        for offset in range(len(a) - length):
+            subset = sa[offset : offset + length + 1]
             if is_subset(subset, a):
                 return len(subset)
     return 1

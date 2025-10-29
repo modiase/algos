@@ -20,8 +20,8 @@ t0 = Tree(1, Tree(2), Tree(3, Tree(4), Tree(5)))
 
 
 def traverse_tree(t):
-    def head(l):
-        return [l[0]] if l else []
+    def head(seq):
+        return [seq[0]] if seq else []
 
     left = traverse_tree(t.left) if t.left is not None else []
     right = traverse_tree(t.right) if t.right is not None else []

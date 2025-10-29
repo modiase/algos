@@ -14,21 +14,21 @@ def fourSum(nums: list[int], target: int) -> list[list[int]]:
                 if j > i + 1 and nums[j - 1] == nums[j]:
                     continue
 
-                l = j + 1
+                left = j + 1
                 r = N - 1
-                while l < r:
-                    tot = sum(ss := itemgetter(i, j, l, r)(nums))
+                while left < r:
+                    tot = sum(ss := itemgetter(i, j, left, r)(nums))
                     if tot == target:
                         yield ss
 
                     if tot >= target:
                         r -= 1
-                        while r > l and nums[r + 1] == nums[r]:
+                        while r > left and nums[r + 1] == nums[r]:
                             r -= 1
                     if tot <= target:
-                        l += 1
-                        while l < r and nums[l - 1] == nums[l]:
-                            l += 1
+                        left += 1
+                        while left < r and nums[left - 1] == nums[left]:
+                            left += 1
 
     return list(list(t) for t in _it())
 

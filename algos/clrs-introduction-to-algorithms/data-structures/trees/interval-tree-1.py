@@ -38,7 +38,12 @@ def clip(value: float, minimum: float, maximum: float) -> float:
 intervals = tuple(
     (
         Interval(
-            *sorted(((l := rn.randint(L, U)), clip(l + rn.normalvariate(0, 1), L, U)))
+            *sorted(
+                (
+                    (start := rn.randint(L, U)),
+                    clip(start + rn.normalvariate(0, 1), L, U),
+                )
+            )
         )
         for _ in range(N)
     )
@@ -103,7 +108,7 @@ class Node:
 
     def yield_dfs(self) -> Iterator[Self]:
         stack: MutableSequence[Self] = []
-        current = self
+        current: Self | None = self
         last_visited = None
 
         while stack or current:
@@ -131,15 +136,15 @@ class Node:
     def partition(
         m: float, intervals: Collection[Interval]
     ) -> tuple[Collection[Interval], Collection[Interval], Collection[Interval]]:
-        l, c, r = [], [], []
+        left, c, r = [], [], []
         for interval in intervals:
             if interval.end < m:
-                l.append(interval)
+                left.append(interval)
             elif interval.start > m:
                 r.append(interval)
             else:
                 c.append(interval)
-        return l, c, r
+        return left, c, r
 
     @classmethod
     def of(cls, intervals: Collection[Interval]) -> Self | None:
@@ -147,9 +152,9 @@ class Node:
             return None
 
         mid = cls.compute_mid(intervals)
-        l, c, r = cls.partition(mid, intervals)
+        left, c, r = cls.partition(mid, intervals)
         return cls(
-            mid=mid, left=cls.of(l), right=cls.of(r), intervals=cls.Intervals.of(c)
+            mid=mid, left=cls.of(left), right=cls.of(r), intervals=cls.Intervals.of(c)
         )
 
     def __str__(self):

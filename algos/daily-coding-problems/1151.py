@@ -41,12 +41,12 @@ class DoublyLinkedNode(Generic[T]):
         self.prev = prev
 
     @classmethod
-    def from_list(cls, l: List[T]) -> DoublyLinkedNode[T]:
-        if len(l) == 0:
+    def from_list(cls, items: List[T]) -> DoublyLinkedNode[T]:
+        if len(items) == 0:
             raise ValueError("List cannot be empty")
-        head = cls(l[0])
+        head = cls(items[0])
         n0 = head
-        for elem in l[1:]:
+        for elem in items[1:]:
             n1 = cls(elem)
             n1.prev = n0
             n0.next = n1

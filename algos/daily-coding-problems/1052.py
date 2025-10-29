@@ -54,4 +54,4 @@ def is_consistent(team_map: Mapping[K, V]):
 
 
 assert sorted(solution(m0)) == sorted([{0, 1, 4, 5}, {2, 3}])
-assert solution(m1) == False
+assert not solution(m1)

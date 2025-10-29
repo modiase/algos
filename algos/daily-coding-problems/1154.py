@@ -43,7 +43,7 @@ class Node:
 
     @property
     def is_leaf(self) -> bool:
-        return self._left == None and self._right == None
+        return (self._left is None) and (self._right is None)
 
 
 def min_path_sum_to_leaf(root: Node) -> int:

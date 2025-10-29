@@ -4,10 +4,10 @@ from collections.abc import MutableSequence
 from statistics.sorting.memory import swap
 
 
-def partition(A: MutableSequence, i: int, l: int, r: int) -> int:
+def partition(A: MutableSequence, i: int, left: int, r: int) -> int:
     swap(A, i, r)
 
-    lp, rp = l, r - 1
+    lp, rp = left, r - 1
     while lp <= rp:
         if A[lp] > A[r]:
             swap(A, lp, rp)
@@ -19,9 +19,9 @@ def partition(A: MutableSequence, i: int, l: int, r: int) -> int:
 
 
 def test_partition():
-    I = 100
+    ITERS = 100
     N = 10
-    for _ in range(I):
+    for _ in range(ITERS):
         rn.seed(0)
         A = [rn.randint(-10, 10) for _ in range(N)]
         for i in range(N):

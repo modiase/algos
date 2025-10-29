@@ -93,7 +93,7 @@ def initialise_solution(m: Matrix) -> Matrix:
     """
     N = len(m)
     K = len(m[0])
-    n = [l := [0] * N for _ in range(0, K)]
+    n = [([0] * N) for _ in range(0, K)]
     for row in range(len(m)):
         n[m[row].index(min(*m[row]))][row] = 1.0
     return n
@@ -128,9 +128,13 @@ def lowest_solution(m: Matrix, t: Node) -> Node:
     solution is combined using mat_tot with m."""
     if not t.l and not t.r:
         return t
-    l = lowest_solution(m, t.l)
-    r = lowest_solution(m, t.r)
-    return l if mat_tot(*l.payload) < mat_tot(*r.payload) else r
+    left_node = lowest_solution(m, t.l)
+    right_node = lowest_solution(m, t.r)
+    return (
+        left_node
+        if mat_tot(*left_node.payload) < mat_tot(*right_node.payload)
+        else right_node
+    )
 
 
 def main(m: Matrix) -> Matrix:

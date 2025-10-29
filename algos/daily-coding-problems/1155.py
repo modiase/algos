@@ -41,10 +41,7 @@ def subarray_max(arr: List[int], k: int) -> List[int]:
     heapify(subarr)
     result = [-subarr[0][0]]
 
-    subarr_max_size = k
-
     for idx, elem in enumerate(arr[k:N], k):
-        subarr_max_size = max(k, len(subarr))
         heappush(subarr, (-elem, idx))
         max_item = subarr[0]
 

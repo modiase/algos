@@ -68,12 +68,12 @@ class Node(Generic[T]):
         return Node.Iterator(self)
 
     @classmethod
-    def from_list(cls, l: List[T]) -> Node[T]:
-        if len(l) == 0:
+    def from_list(cls, items: List[T]) -> Node[T]:
+        if len(items) == 0:
             raise ValueError("List must not be empty")
-        head = Node(l[0])
+        head = Node(items[0])
         node = head
-        for item in l[1:]:
+        for item in items[1:]:
             nxt = Node(item)
             node.next = nxt
             node = nxt
@@ -143,11 +143,11 @@ def sort_linked_list(head: Node[int]):
     return head
 
 
-l = [-16, -12, 0, 46, 96, -59, -72]
-assert list(sort_linked_list(Node.from_list(l))) == [-72, -59, -16, -12, 0, 46, 96]
+arr = [-16, -12, 0, 46, 96, -59, -72]
+assert list(sort_linked_list(Node.from_list(arr))) == [-72, -59, -16, -12, 0, 46, 96]
 
-l = [16, 62, 45, -56, 19, -97, 74, -22, 0, -17, 23, 31, 76, -59, 53, 57]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [16, 62, 45, -56, 19, -97, 74, -22, 0, -17, 23, 31, 76, -59, 53, 57]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -97,
     -59,
     -56,
@@ -166,11 +166,11 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     76,
 ]
 
-l = [94, -24]
-assert list(sort_linked_list(Node.from_list(l))) == [-24, 94]
+arr = [94, -24]
+assert list(sort_linked_list(Node.from_list(arr))) == [-24, 94]
 
-l = [34, -20, -77, 29, -57, 7, 24, 25, -22, -78, 49, -94]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [34, -20, -77, 29, -57, 7, 24, 25, -22, -78, 49, -94]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -94,
     -78,
     -77,
@@ -185,8 +185,8 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     49,
 ]
 
-l = [30, 91, 40, -89, -17, -93, 67, 47, 100, 51, -61, -49]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [30, 91, 40, -89, -17, -93, 67, 47, 100, 51, -61, -49]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -93,
     -89,
     -61,
@@ -201,8 +201,8 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     100,
 ]
 
-l = [98, 91, -100, -13, -89, -30, -25, 97]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [98, 91, -100, -13, -89, -30, -25, 97]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -100,
     -89,
     -30,
@@ -213,8 +213,8 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     98,
 ]
 
-l = [-9, -48, 99, -5, 7, -91, -65, 7, -7, 66, -16, -54, 49, -18]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [-9, -48, 99, -5, 7, -91, -65, 7, -7, 66, -16, -54, 49, -18]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -91,
     -65,
     -54,
@@ -231,8 +231,8 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     99,
 ]
 
-l = [-37, 52, 86, -26, 9, 41, 42, 42, -70]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [-37, 52, 86, -26, 9, 41, 42, 42, -70]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -70,
     -37,
     -26,
@@ -244,8 +244,8 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     86,
 ]
 
-l = [67, -13, 23, 90, -95, -55, 4, 81, -36, 72, -1, 26, 11, -96, -40]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [67, -13, 23, 90, -95, -55, 4, 81, -36, 72, -1, 26, 11, -96, -40]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -96,
     -95,
     -55,
@@ -263,8 +263,8 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     90,
 ]
 
-l = [97, 14, -34, -1, -39, -74, 88, 95, -86]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [97, 14, -34, -1, -39, -74, 88, 95, -86]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -86,
     -74,
     -39,
@@ -276,13 +276,13 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     97,
 ]
 
-l = [-61, 54, -26, 34, 28, 90, -94]
-assert list(sort_linked_list(Node.from_list(l))) == [-94, -61, -26, 28, 34, 54, 90]
+arr = [-61, 54, -26, 34, 28, 90, -94]
+assert list(sort_linked_list(Node.from_list(arr))) == [-94, -61, -26, 28, 34, 54, 90]
 
-l = [79, -98, 2, -65, 62, 8, -19]
-assert list(sort_linked_list(Node.from_list(l))) == [-98, -65, -19, 2, 8, 62, 79]
+arr = [79, -98, 2, -65, 62, 8, -19]
+assert list(sort_linked_list(Node.from_list(arr))) == [-98, -65, -19, 2, 8, 62, 79]
 
-l = [
+arr = [
     -14,
     -18,
     -18,
@@ -304,7 +304,7 @@ l = [
     -56,
     98,
 ]
-assert list(sort_linked_list(Node.from_list(l))) == [
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -86,
     -58,
     -56,
@@ -327,8 +327,8 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     98,
 ]
 
-l = [-61, 2, -99, 69, -87, 24, 29, 34, -38, 93]
-assert list(sort_linked_list(Node.from_list(l))) == [
+arr = [-61, 2, -99, 69, -87, 24, 29, 34, -38, 93]
+assert list(sort_linked_list(Node.from_list(arr))) == [
     -99,
     -87,
     -61,
@@ -341,8 +341,8 @@ assert list(sort_linked_list(Node.from_list(l))) == [
     93,
 ]
 
-l = [54, 5]
-assert list(sort_linked_list(Node.from_list(l))) == [5, 54]
+arr = [54, 5]
+assert list(sort_linked_list(Node.from_list(arr))) == [5, 54]
 
-l = [54]
-assert list(sort_linked_list(Node.from_list(l))) == [54]
+arr = [54]
+assert list(sort_linked_list(Node.from_list(arr))) == [54]

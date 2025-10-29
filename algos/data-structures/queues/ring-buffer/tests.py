@@ -84,12 +84,15 @@ def test_different_types(buffer, value):
     buffer.enqueue(value)
     result = buffer.dequeue()
     assert result == value
-    assert type(result) == type(value)
+    assert isinstance(result, type(value))
 
 
 def test_callable_objects(buffer):
     """Test storing and retrieving callable objects."""
-    test_func = lambda x: x * 2
+
+    def test_func(x):
+        return x * 2
+
     buffer.enqueue(test_func)
     result = buffer.dequeue()
     assert callable(result)
@@ -326,7 +329,7 @@ def test_stress_operations(small_buffer):
 
     random.seed(42)  # Reproducible test
 
-    items = []
+    items: list[str] = []
 
     for _ in range(1000):
         if small_buffer.size() == 0 or random.choice([True, False]):

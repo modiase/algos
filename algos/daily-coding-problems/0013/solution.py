@@ -8,9 +8,9 @@ def count_distinct_letters(s: str) -> int:
 
 def all_of_len(s: str) -> Iterator[str]:
     """Returns all the strings of length k in the string s"""
-    l = len(s)
-    for k in range(l, 0, -1):
-        for j in range(0, l - k + 1):
+    str_len = len(s)
+    for k in range(str_len, 0, -1):
+        for j in range(0, str_len - k + 1):
             yield (s[j : j + k])
 
 

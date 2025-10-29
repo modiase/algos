@@ -1,7 +1,8 @@
 class Node:
-    def __init__(self, payload, l=None, r=None):
+    def __init__(self, payload, left=None, r=None):
         self.payload = payload
-        self.l = l
+        # Keep attribute names `.l` and `.r` for compatibility elsewhere
+        self.l = left
         self.r = r
 
     def __str__(self):

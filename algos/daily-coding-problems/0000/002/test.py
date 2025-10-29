@@ -1,4 +1,4 @@
-from solution import main, Node, LinkedList, reverse_linked_list
+from solution import main, Node, LinkedList
 
 
 def test_solution():

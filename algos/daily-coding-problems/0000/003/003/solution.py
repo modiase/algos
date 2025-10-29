@@ -27,7 +27,7 @@ from typing import Tuple, Optional
 def main(args: Arguments):
     conversion_rates = args.rates
     for start_currency in conversion_rates.currencies:
-        trades = detect_arbitrage(conversion_rates, start_currency)
+        detect_arbitrage(conversion_rates, start_currency)
 
 
 def detect_arbitrage(

@@ -42,8 +42,8 @@ def remove_duplicates(nums: List[int]) -> int:
     return b
 
 
-def make_test_case(l, k):
-    l0 = l[:]
+def make_test_case(arr, k):
+    l0 = arr[:]
     k0 = remove_duplicates(l0)
     assert k0 == k
     assert l0[:k0] == list(sorted(l0[:k0]))

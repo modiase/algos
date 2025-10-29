@@ -51,7 +51,7 @@ class Solution:
         jump_indices = []
         while p < N - 1:
             jump_indices.append(p)
-            l = [
+            candidates = [
                 (i, x + i)
                 for (i, x) in enumerate(
                     [nums[i] for i in range(p + 1, min(p + nums[p] + 1, N))], 1
@@ -59,7 +59,7 @@ class Solution:
             ]
             max_v = 0
             next_idx = p
-            for i, v in l:
+            for i, v in candidates:
                 if p + i == N - 1:
                     return len(jump_indices)
                 elif max_v <= v:

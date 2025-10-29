@@ -21,7 +21,7 @@ brute_force_max_subarray = ex414.brute_force_max_subarray
 
 def linear_max_subarray(a: List[int]) -> Tuple[int, int, int]:
     sum = a[0]
-    l = 0
+    left = 0
     r = 0
     n = len(a)
 
@@ -32,10 +32,10 @@ def linear_max_subarray(a: List[int]) -> Tuple[int, int, int]:
             r = i
             sum = rolling_sum
         if a[i] > sum:
-            l = r = i
+            left = r = i
             sum = rolling_sum = a[i]
 
-    return (sum, l, r)
+    return (sum, left, r)
 
 
 def test_one():

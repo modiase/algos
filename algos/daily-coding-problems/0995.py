@@ -9,11 +9,11 @@ Follow-up: what if you can't use division?
 """
 
 
-def prod_except(l):
+def prod_except(arr):
     result = []
-    for i, _ in enumerate(l, 0):
+    for i, _ in enumerate(arr, 0):
         s = 1
-        for j, v2 in enumerate(l, 0):
+        for j, v2 in enumerate(arr, 0):
             if i == j:
                 continue
             s *= v2

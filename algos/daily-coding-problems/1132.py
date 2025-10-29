@@ -21,9 +21,9 @@ def solution(xs: List[int], k: int) -> List[int]:
         return xs
 
     n = len(xs)
-    l = n // k
+    chunks = n // k
 
-    for a in range(0, l):
+    for a in range(0, chunks):
         for i in range(0, k):
             j = n - a * k - i - 1
             swap(xs, k - i - 1, j)

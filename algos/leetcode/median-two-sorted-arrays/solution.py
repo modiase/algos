@@ -1,5 +1,4 @@
 import math
-import json
 import sys
 from pathlib import Path
 from typing import List
@@ -63,11 +62,11 @@ def find_median_sorted_arrays(nums1: List[int], nums2: List[int]) -> float:
             else:
                 if not a:
                     if nn == 1:  # => pn == 0
-                        l = N[0]
+                        left_val = N[0]
                         if pm != 0:
-                            l = max(N[0], M[pm - 1])
+                            left_val = max(N[0], M[pm - 1])
 
-                        lower_median = min(l, M[pm])
+                        lower_median = min(left_val, M[pm])
                         if lower_median == M[pm]:
                             upper_median = N[0]
                             if pm < m - 1:
@@ -82,9 +81,9 @@ def find_median_sorted_arrays(nums1: List[int], nums2: List[int]) -> float:
                     nn = max(nn - step, 1)
                 elif not b:
                     if nn == n:
-                        l = max(N[pn], M[pm - 1])
+                        left_val = max(N[pn], M[pm - 1])
 
-                        lower_median = min(l, M[pm])
+                        lower_median = min(left_val, M[pm])
                         if lower_median == M[pm]:
                             upper_median = min(M[pm + 1], N[n - 1])
                         else:
@@ -104,15 +103,15 @@ def find_median_sorted_arrays(nums1: List[int], nums2: List[int]) -> float:
 
 
 def make_test_case(arr1: List[int], arr2: List[int]):
-    l = list(sorted(arr1 + arr2))
-    N = len(l)
+    merged = list(sorted(arr1 + arr2))
+    N = len(merged)
     m = N // 2
     if N == 0:
         expected = 0.0
     elif N % 2 == 0:
-        expected = (l[m] + l[m - 1]) / 2
+        expected = (merged[m] + merged[m - 1]) / 2
     else:
-        expected = float(l[m])
+        expected = float(merged[m])
 
     result = find_median_sorted_arrays(arr1, arr2)
     message = f"arr1: {arr1}, arr2: {arr2}, expected: {expected}, result: {result}"

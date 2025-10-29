@@ -9,9 +9,9 @@ For example, given [1, 2, 1, 1, 3, 4, 0], return 1.
 import itertools
 
 
-def maj(l):
+def maj(seq):
     return sorted(
-        [(k, len(list(g))) for k, g in itertools.groupby(l, key=lambda x: x)],
+        [(k, len(list(g))) for k, g in itertools.groupby(seq, key=lambda x: x)],
         key=lambda t: t[0],
         reverse=True,
     )[0][1]

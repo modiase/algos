@@ -1,17 +1,14 @@
-from functools import reduce
-
-
-def reducer(l, index):
+def reducer(arr, index):
     prod = 1
-    for i in range(0, len(l)):
+    for i in range(0, len(arr)):
         if index == i:
             continue
-        prod *= l[i]
+        prod *= arr[i]
     return prod
 
 
-def product_except_at_index(l):
-    result = [reducer(l, i) for i in range(0, len(l))]
+def product_except_at_index(arr):
+    result = [reducer(arr, i) for i in range(0, len(arr))]
     return result
 
 

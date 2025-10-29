@@ -3,8 +3,8 @@ from collections.abc import MutableSequence
 from statistics.sorting.memory import swap
 
 
-def insert(A: MutableSequence, l: int, r: int) -> None:
-    idx = l
+def insert(A: MutableSequence, left: int, r: int) -> None:
+    idx = left
     while idx < r and A[idx] < A[r]:
         idx += 1
 

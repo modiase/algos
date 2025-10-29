@@ -2,7 +2,7 @@ from unittest import TestCase
 import unittest
 
 from given import Node
-from solution import serialize, deserialize, node_regex
+from solution import serialize, deserialize
 
 
 class Test(TestCase):
@@ -17,12 +17,11 @@ class Test(TestCase):
     @unittest.skip("Would have to implement a __eq__ method on Node.")
     def test_deserialize(self):
         """Test the deserialization method"""
-        node = Node(
+        Node(
             "val3",
             Node("left", left=None, right="left.right"),
             Node("right", Node("right.left"), Node("right.right")),
         )
-        node_str = "[(val3),[(left),(),(left.right)],[(right),[(right.left),(),()],[(right.right),(),()]]]"
         raise NotImplementedError("Node requires __eq__ method.")
 
     def test_solution(self):

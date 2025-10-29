@@ -1,4 +1,4 @@
-from solution import main, all_of_len, count_distinct_letters
+from solution import main, count_distinct_letters
 
 
 def test_count_distinct_letters():

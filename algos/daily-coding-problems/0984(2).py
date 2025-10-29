@@ -5,8 +5,6 @@ For example, given "(()", you could return "(())". Given "))()(", you could retu
 
 """
 
-from itertools import count, permutations
-
 
 def is_balanced(s):
     xs = [1 if x == "(" else -1 for x in s]

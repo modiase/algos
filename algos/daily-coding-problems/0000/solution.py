@@ -1,11 +1,8 @@
-import collections
-
-
 class BruteForceStrategy:
     def __init__(self):
         pass
 
-    def all_ways(self, l: list) -> list:
+    def all_ways(self, arr: list) -> list:
         def _all_ways(_l):
             if len(_l) == 0:
                 return []
@@ -14,7 +11,7 @@ class BruteForceStrategy:
             if len(_l) == 2:
                 return [[1, 0], [0, 1]]
             res = []
-            rec = self.all_ways(l[2:])
+            rec = self.all_ways(arr[2:])
             for r in rec:
                 if r[0] == 0:
                     res.append([0, 1] + r)
@@ -23,16 +20,16 @@ class BruteForceStrategy:
                     res.append([1, 0] + r)
             return res
 
-        return _all_ways(l)
+        return _all_ways(arr)
 
     def execute(self, list):
         max_sum_found = -1
         res = []
         ptr_arrays = self.all_ways(list)
-        for l in ptr_arrays:
-            s = sum([a * b for (a, b) in zip(list, l)])
+        for arr in ptr_arrays:
+            s = sum([a * b for (a, b) in zip(list, arr)])
             if s > max_sum_found:
-                res = l
+                res = arr
                 max_sum_found = s
         return (max_sum_found, res)
 
@@ -43,14 +40,14 @@ class BruteForceStrategy:
         return "<BruteForceStrategy>"
 
 
-def solve(l, prefered_strategy=None):
+def solve(arr, prefered_strategy=None):
     if not prefered_strategy:
         strategy = BruteForceStrategy()
     else:
         strategy = prefered_strategy
-    return strategy(l)
+    return strategy(arr)
 
 
 if __name__ == "__main__":
-    l = [5, 1, 1, 5]
-    solution = solve(l)
+    arr = [5, 1, 1, 5]
+    solution = solve(arr)

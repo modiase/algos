@@ -8,13 +8,14 @@ such that no two adjacent vertices share the same color using at most k colors.
 """
 
 import itertools
+from collections.abc import Sequence
 
 
-def solve(m, k):
-    c = [k[0] for _ in range(0, len(m))]
-    h = []
+def solve(m: Sequence[Sequence[int]], k: Sequence[str]):
+    c: list[str] = [k[0] for _ in range(0, len(m))]
+    h: list[list[str]] = []
 
-    def _solve(m, c):
+    def _solve(m: Sequence[Sequence[int]], c: list[str]):
         nonlocal h
         for self_idx, node in enumerate(m, 0):
             for idx, _ in enumerate(node, 0):
@@ -43,7 +44,7 @@ def can_color(m, k):
 
 
 m1 = [[1, 1, 0, 0], [1, 1, 1, 1], [0, 1, 1, 1], [0, 1, 1, 1]]
-cs = ([f"c{n}" for n in range(1, l)] for l in itertools.count(start=2))
+cs = ([f"c{n}" for n in range(1, length)] for length in itertools.count(start=2))
 
 result = None
 while not can_color(m1, c := next(cs)):

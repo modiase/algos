@@ -1,3 +1,3 @@
-from .LinkedList import LinkedList
+from .LinkedList import LinkedList as LinkedList
 
-from .Node import Node
+from .Node import Node as Node

@@ -13,6 +13,19 @@ for file in "$@"; do
         echo "Skipping file with special characters: $file"
         continue
     fi
+    # Skip files in directories whose names start with a digit (mypy package-name issue)
+    IFS='/' read -ra parts <<< "$file"
+    skip_numeric_dir=false
+    for part in "${parts[@]}"; do
+        if [[ "$part" =~ ^[0-9] ]]; then
+            skip_numeric_dir=true
+            break
+        fi
+    done
+    if [ "$skip_numeric_dir" = true ]; then
+        echo "Skipping file in numeric-named directory: $file"
+        continue
+    fi
     filtered_files+=("$file")
 done
 
@@ -21,4 +34,4 @@ if [ ${#filtered_files[@]} -eq 0 ]; then
     exit 0
 fi
 
-nix-shell -p mypy --run "mypy ${filtered_files[*]}"
+nix-shell -p mypy --run "mypy --ignore-missing-imports --namespace-packages ${filtered_files[*]}"

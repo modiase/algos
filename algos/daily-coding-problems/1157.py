@@ -13,7 +13,6 @@ Given a list of paper citations of a researcher, calculate their h-index.
 """
 
 from typing import Dict, List, Tuple
-from itertools import count
 
 
 def compute_h_index(citations: List[int]) -> int:
@@ -27,28 +26,28 @@ def compute_h_index(citations: List[int]) -> int:
     sorted_counts: List[Tuple[int, int]] = list(sorted(counts.items(), reverse=True))
     cumulative_counts = [sorted_counts[0]]
 
-    for citations, ct in sorted_counts[1:]:
-        cumulative_counts.append((citations, ct + cumulative_counts[-1][1]))
+    for _citations, ct in sorted_counts[1:]:
+        cumulative_counts.append((_citations, ct + cumulative_counts[-1][1]))
 
-    l = []
+    pairs: List[Tuple[int, int]] = []
     N = len(cumulative_counts)
     for idx, value in enumerate(cumulative_counts, 0):
-        citations, count = value
-        l.append((citations, count))
+        _citations, ct = value
+        pairs.append((_citations, ct))
         if idx < N - 1:
             a = 1
-            while citations - a > cumulative_counts[idx + 1][0]:
-                l.append((citations - a, count))
+            while _citations - a > cumulative_counts[idx + 1][0]:
+                pairs.append((_citations - a, ct))
                 a += 1
     smallest = cumulative_counts[-1]
     a = 1
     while (current := smallest[0] - a) > 0:
-        l.append((current, smallest[1]))
+        pairs.append((current, smallest[1]))
         a += 1
 
-    for citations, count in l:
-        if citations <= count:
-            return citations
+    for _citations, ct in pairs:
+        if _citations <= ct:
+            return _citations
 
     raise Exception("absurd")
 
