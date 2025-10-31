@@ -140,7 +140,7 @@ Prefer the `thing_to_other` pattern for mappings (e.g. `node_to_index`) and plur
 
 ### Local Validation
 
-After each round of changes, run `pre-commit run --all-files` (or the most relevant subset) so formatting, linting, and type checks stay green.
+After each round of changes, run the specific pre-commit hook that applies to your edits using `pre-commit run <hook-id> --files <paths>` so only the touched files are linted. For example, after modifying Python files run `pre-commit run lint-py --files path/to/file.py`; use other language-specific hooks when they exist and skip this step when no hook covers that file type.
 
 ### Pytest Conventions
 
