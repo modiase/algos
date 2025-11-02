@@ -72,8 +72,8 @@ def search(text: str, pattern: str) -> None:
     )
 
 
-@cli.command()
-def test() -> None:
+@cli.command("test")
+def run_tests() -> None:
     pytest.main([__file__])
 
 

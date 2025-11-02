@@ -216,8 +216,8 @@ def example(vertices: int, probability: float, seed: int, output: str, open: boo
             )
 
 
-@cli.command()
-def test():
+@cli.command("test")
+def run_tests():
     """Run the test suite."""
     pytest.main([__file__])
 

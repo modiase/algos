@@ -98,8 +98,8 @@ def compute(value: int, prime: int) -> None:
     click.echo(mod_mersenne(value, prime))
 
 
-@cli.command()
-def test() -> None:
+@cli.command("test")
+def run_tests() -> None:
     pytest.main([__file__])
 
 

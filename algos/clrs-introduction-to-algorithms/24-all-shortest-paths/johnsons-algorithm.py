@@ -295,8 +295,8 @@ def example(
             )
 
 
-@cli.command()
-def test():
+@cli.command("test")
+def run_tests():
     pytest.main([__file__])
 
 

@@ -75,8 +75,8 @@ def test_function(input, expected):
     result = function(input)
     assert result == expected
 
-@cli.command()
-def test():
+@cli.command("test")
+def run_tests():
     pytest.main([__file__])
 ```
 
@@ -285,8 +285,8 @@ def example(param: int):
     result = algorithm(range(param))
     click.echo(f"Result: {result}")
 
-@cli.command()
-def test():
+@cli.command("test")
+def run_tests():
     pytest.main([__file__])
 
 if __name__ == "__main__":
