@@ -1,3 +1,7 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -p python313 -p python313Packages.pytest -i python
+from __future__ import annotations
+
 from collections import defaultdict
 from collections.abc import Collection
 
@@ -5,7 +9,7 @@ import pytest
 
 
 class Trie:
-    SENTINEL = -1
+    WORD_BOUNDARY = object()
 
     class Node:
         def __init__(self):
@@ -22,7 +26,7 @@ class Trie:
         for c in word:
             next_node = current._edges[c]
             current = next_node
-        next_node = current._edges[Trie.SENTINEL]
+        next_node = current._edges[Trie.WORD_BOUNDARY]
 
     def _search(self, word: str) -> Node | None:
         current = self._root
@@ -34,14 +38,14 @@ class Trie:
 
     def search(self, word: str) -> bool:
         return ((node := self._search(word)) is not None) and (
-            node._edges.get(Trie.SENTINEL) is not None
+            node._edges.get(Trie.WORD_BOUNDARY) is not None
         )
 
     def prefix(self, prefix: str) -> bool:
         return self._search(prefix) is not None
 
     @classmethod
-    def of(cls, words: Collection[str]) -> "Trie":
+    def of(cls, words: Collection[str]) -> Trie:
         t = cls()
         for word in words:
             t.insert(word)
