@@ -58,9 +58,7 @@ def test_rabin_karp(text: str, pattern: str, expected: Sequence[int]) -> None:
     assert rabin_karp(text, pattern) == expected
 
 
-@click.group()
-def cli() -> None:
-    pass
+cli = click.Group()
 
 
 @cli.command()

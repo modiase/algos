@@ -1,16 +1,16 @@
 import math
 import random
-from collections.abc import Collection, Iterable
+from collections.abc import Iterable
 from functools import reduce
 from itertools import chain
 from typing import TypeVar
 
-from tabulate import tabulate
+from tabulate import tabulate  # pyright: ignore[reportMissingModuleSource]
 
 T = TypeVar("T")
 
 
-def sample(ts: Iterable[T], k: int) -> Collection[T]:
+def sample(ts: Iterable[T], k: int) -> list[T]:
     return reduce(
         lambda acc, tup: acc + [tup[1]]
         if len(acc) < k

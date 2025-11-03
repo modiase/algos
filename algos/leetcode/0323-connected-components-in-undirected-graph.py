@@ -106,9 +106,7 @@ def test_union_find(
     assert results == expected
 
 
-@click.group()
-def cli() -> None:
-    pass
+cli = click.Group()
 
 
 @cli.command()

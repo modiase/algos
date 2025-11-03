@@ -5,7 +5,7 @@ from itertools import combinations
 import numpy as np
 from more_itertools import first
 
-Vector = np.ndarray
+type Vector = np.ndarray
 
 
 def gram_schmidt(vs: Sequence[Vector]) -> Sequence[Vector]:

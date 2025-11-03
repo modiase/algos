@@ -34,7 +34,7 @@ def combinations(it: Iterable[T], k: int) -> Iterator[Tuple[T, ...]]:
 
 
 def nCr(n: int, r: int) -> int:
-    return math.factorial(n) / (math.factorial(r) * math.factorial(n - r))
+    return math.factorial(n) // (math.factorial(r) * math.factorial(n - r))
 
 
 if __name__ == "__main__":

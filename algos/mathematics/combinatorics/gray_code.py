@@ -1,6 +1,6 @@
 import itertools
 from collections.abc import Iterable, Iterator
-from typing import Final, TypeVar
+from typing import Final, TypeVar, cast
 
 from tabulate import tabulate
 
@@ -16,13 +16,20 @@ def pairwise(iterable: Iterable[T]) -> zip:
     return zip(iterable, itertools.islice(iterable, 1, None))
 
 
+def to_bitarray(it: Iterable[int]) -> BitArray:
+    tup = tuple(it)
+    if len(tup) != 5 or not all(isinstance(elem, int) for elem in tup):
+        raise ValueError
+    return cast(BitArray, tup)
+
+
 def int_to_bitarray(n: int) -> BitArray:
     """
     Converts an integer into a big-endian bitarray.
     """
     if n > MAX_INT:
         raise ValueError(f"{MAX_INT=} exceeded")
-    return tuple(n >> i & 1 for i in range(MAX_BITS - 1, -1, -1))
+    return to_bitarray(n >> i & 1 for i in range(MAX_BITS - 1, -1, -1))
 
 
 def bin_to_gray(bitarray: BitArray) -> BitArray:
@@ -30,7 +37,7 @@ def bin_to_gray(bitarray: BitArray) -> BitArray:
     Converts a binary bitarray into a gray code bitarray.
     """
     return (
-        tuple([*bitarray[:msb], 1, *(i ^ j for i, j in pairwise(bitarray[msb:]))])
+        to_bitarray([*bitarray[:msb], 1, *(i ^ j for i, j in pairwise(bitarray[msb:]))])
         if (msb := next((i for i, bit in enumerate(bitarray) if bit == 1), None))
         is not None
         else bitarray
@@ -41,7 +48,7 @@ def gray_to_bin(bitarray: BitArray) -> BitArray:
     """
     Converts a gray code bitarray into a binary bitarray.
     """
-    return tuple([bitarray[0], *(i ^ j for i, j in pairwise(bitarray))])
+    return to_bitarray(([bitarray[0], *(i ^ j for i, j in pairwise(bitarray))]))
 
 
 def bitarray_to_str(bitarray: BitArray) -> str:
@@ -58,7 +65,7 @@ def bitarray_to_int(bitarray: BitArray) -> int:
     return int("".join(str(i) for i in bitarray), 2)
 
 
-def gray_code_generator(n: int) -> Iterator[int, None, None]:
+def gray_code_generator(n: int) -> Iterator[int]:
     current = 0
     for _ in range(1 << n):
         yield current

@@ -74,10 +74,9 @@ def compute_phi_coefficient(cohort):
     )
 
 
-@click.group()
-def cli():
-    """Phi coefficient generator and calculator for binary categorical data."""
-    pass
+cli = click.Group(
+    help="Phi coefficient generator and calculator for binary categorical data."
+)
 
 
 @cli.command()

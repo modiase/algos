@@ -1,19 +1,14 @@
 from collections.abc import Sequence
-from typing import Protocol, Self, TypeVar
+from typing import TypeVar
 
-
-class SupportsLessThan(Protocol):
-    def __lt__(self, other: Self) -> bool: ...
-
-
-S = TypeVar("S", bound=SupportsLessThan)
+S = TypeVar("S")
 
 
 def binary_search(xs: Sequence[S], x: S) -> int:
     lo, hi = 0, len(xs) - 1
     while lo < hi:
         mid = (lo + hi) // 2
-        if xs[mid] < x:
+        if xs[mid] < x:  # pyright: ignore[reportOperatorIssue]
             lo = mid + 1
         else:
             hi = mid
@@ -21,6 +16,8 @@ def binary_search(xs: Sequence[S], x: S) -> int:
 
 
 if __name__ == "__main__":
-    assert binary_search([1, 2, 3, 4, 5], 3) == 2
-    assert binary_search([1, 2, 3, 4, 5], 1) == 0
-    assert binary_search([], 5) == -1
+    test_list: Sequence[int] = [1, 2, 3, 4, 5]
+    empty_list: Sequence[int] = []
+    assert binary_search(test_list, 3) == 2
+    assert binary_search(test_list, 1) == 0
+    assert binary_search(empty_list, 5) == -1

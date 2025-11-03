@@ -186,7 +186,7 @@ def visualize_tree(root: Node, filename: str = "tree") -> None:
     dot.render(filename, view=True, format="pdf")
 
 
-def calculate_height(root: Node) -> int:
+def calculate_height(root: Node | None) -> int:
     """Calculate the height of the tree."""
     if not root:
         return 0

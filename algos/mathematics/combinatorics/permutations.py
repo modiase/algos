@@ -16,7 +16,7 @@ def all_permutations(n: int, k: int) -> Iterator[Tuple[int, ...]]:
     if k > n:
         return
 
-    stack = [((), list(range(n)))]
+    stack: list[tuple[tuple[int, ...], list[int]]] = [((), list(range(n)))]
 
     while stack:
         prefix, remaining = stack.pop()

@@ -10,6 +10,7 @@ def iterative_factorial(n: int) -> int:
     if n < 0:
         raise ValueError("Factorial is not defined for negative numbers")
     stack = [(1, 0)]
+    result = 1
     while stack:
         result, i = stack.pop()
         if i != n:

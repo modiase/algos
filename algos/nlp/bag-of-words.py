@@ -23,9 +23,9 @@ class SuffixTree:
     @dataclass(slots=True)
     class Node:
         count: int = 0
-        children: dict = None
+        children: dict | None = None
 
-        def __post_init__(self):
+        def __post_init__(self) -> None:
             if self.children is None:
                 self.children = {}
 
@@ -66,7 +66,8 @@ class SuffixTree:
         completions = self.completions(sequence)
         key, next_key = jax.random.split(key)
         if not completions:
-            return vocab[jax.random.choice(key, jnp.arange(len(vocab)))], next_key
+            idx = int(jax.random.choice(key, jnp.arange(len(vocab))))
+            return vocab[idx], next_key
 
         probabilities = softmax(
             jnp.array(

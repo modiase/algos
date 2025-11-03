@@ -86,9 +86,7 @@ def test_mod_mersenne_matches_builtin_random() -> None:
         assert mod_mersenne(value, prime) == value % prime
 
 
-@click.group()
-def cli() -> None:
-    pass
+cli = click.Group()
 
 
 @cli.command()

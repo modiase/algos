@@ -1,10 +1,10 @@
 from collections.abc import Mapping, Sequence
-from typing import Final, TypeAlias
+from typing import Final
 
 
 VERY_LARGE_INT: Final = (2**100) ** 100
 
-Index: TypeAlias = tuple[int, int]
+type Index = tuple[int, int]
 
 
 def bottom_up(
