@@ -34,3 +34,6 @@ packages = ["algos"]
 nlp = [
     "nltk>=3.9.1",
 ]
+
+[tool.pyright]
+reportMissingImports = false

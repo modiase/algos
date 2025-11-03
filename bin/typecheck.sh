@@ -34,4 +34,4 @@ if [ ${#filtered_files[@]} -eq 0 ]; then
     exit 0
 fi
 
-nix-shell -p mypy --run "mypy --ignore-missing-imports --namespace-packages ${filtered_files[*]}"
+nix-shell -p pyright --run "pyright ${filtered_files[*]}"
