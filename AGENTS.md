@@ -38,9 +38,7 @@ Standard dependencies for most scripts:
 All executable scripts should use Click for command-line interfaces:
 
 ```python
-@click.group()
-def cli():
-    pass
+cli = click.Group()
 
 @cli.command()
 @click.option("--param", "-p", default=value, help="Description")
@@ -275,9 +273,7 @@ def algorithm(input_data: Sequence[float]) -> Sequence[float]:
 def test_algorithm(input, expected):
     assert algorithm(input) == expected
 
-@click.group()
-def cli():
-    pass
+cli = click.Group()
 
 @cli.command()
 @click.option("--param", default=5, help="Parameter description")
