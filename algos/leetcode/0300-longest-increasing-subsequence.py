@@ -13,6 +13,13 @@ class Solution:
 
         dp: list[int] = []
         for num in nums:
+            # At each index, the array dp contains the longest subsequence
+            # ending at that index. It works by appending the number if it is
+            # larger than anything seen before; otherwise, it opportunistically
+            # reduces the value at the position the current number would occupy
+            # if it can (if the current number is less than the number at that
+            # position). This maximises the opportunity for extending the
+            # sequence.
             left = bisect_left(dp, num)
             if left == len(dp):
                 dp.append(num)
