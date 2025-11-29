@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive FFT Recursion Tree</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const add = (a, b) => ({ re: a.re + b.re, im: a.im + b.im });
+    const sub = (a, b) => ({ re: a.re - b.re, im: a.im - b.im });
+    const mul = (a, b) => ({ re: a.re * b.re - a.im * b.im, im: a.re * b.im + a.im * b.re });
+
+    const fmt = (c, precision = 2) => {
+      const r = Math.abs(c.re) < 1e-10 ? 0 : c.re;
+      const i = Math.abs(c.im) < 1e-10 ? 0 : c.im;
+      if (i === 0) return `${r.toFixed(precision)}`;
+      if (r === 0) return `${i.toFixed(precision)}i`;
+      return `${r.toFixed(precision)}${i >= 0 ? '+' : ''}${i.toFixed(precision)}i`;
+    };
+
+    const omega = (k, n) => ({
+      re: Math.cos(2 * Math.PI * k / n),
+      im: Math.sin(2 * Math.PI * k / n)
+    });
+
+    function buildFFTTree(coeffs, indices, depth = 0) {
+      const n = coeffs.length;
+
+      const node = {
+        n,
+        indices,
+        coeffs: coeffs.map(c => ({ ...c })),
+        depth,
+        children: null,
+        yEven: null,
+        yOdd: null,
+        result: null,
+        butterflies: []
+      };
+
+      if (n === 1) {
+        node.result = [{ ...coeffs[0] }];
+        return node;
+      }
+
+      const even = [], odd = [];
+      const evenIdx = [], oddIdx = [];
+      for (let i = 0; i < n; i++) {
+        if (i % 2 === 0) {
+          even.push(coeffs[i]);
+          evenIdx.push(indices[i]);
+        } else {
+          odd.push(coeffs[i]);
+          oddIdx.push(indices[i]);
+        }
+      }
+
+      const leftChild = buildFFTTree(even, evenIdx, depth + 1);
+      const rightChild = buildFFTTree(odd, oddIdx, depth + 1);
+
+      node.children = [leftChild, rightChild];
+      node.yEven = leftChild.result;
+      node.yOdd = rightChild.result;
+
+      const y = new Array(n);
+      for (let k = 0; k < n / 2; k++) {
+        const w = omega(k, n);
+        const t = mul(w, node.yOdd[k]);
+        y[k] = add(node.yEven[k], t);
+        y[k + n/2] = sub(node.yEven[k], t);
+
+        node.butterflies.push({
+          k,
+          omega: w,
+          yEvenK: node.yEven[k],
+          yOddK: node.yOdd[k],
+          twiddle: t,
+          resultK: y[k],
+          resultKPlusHalf: y[k + n/2]
+        });
+      }
+
+      node.result = y;
+      return node;
+    }
+
+    function TreeNode({ node, selectedNode, setSelectedNode, x, y, width }) {
+      const isSelected = selectedNode === node;
+      const nodeWidth = Math.max(60, width * 0.8);
+      const nodeHeight = 40;
+
+      const childWidth = width / 2;
+      const verticalGap = 80;
+
+      return (
+        <g>
+          {node.children && node.children.map((child, i) => {
+            const childX = x + (i - 0.5) * childWidth;
+            const childY = y + verticalGap;
+            return (
+              <g key={i}>
+                <line
+                  x1={x}
+                  y1={y + nodeHeight / 2}
+                  x2={childX}
+                  y2={childY - nodeHeight / 2}
+                  stroke="#666"
+                  strokeWidth={2}
+                />
+                <TreeNode
+                  node={child}
+                  selectedNode={selectedNode}
+                  setSelectedNode={setSelectedNode}
+                  x={childX}
+                  y={childY}
+                  width={childWidth}
+                />
+              </g>
+            );
+          })}
+
+          <rect
+            x={x - nodeWidth / 2}
+            y={y - nodeHeight / 2}
+            width={nodeWidth}
+            height={nodeHeight}
+            rx={5}
+            fill={isSelected ? '#3b82f6' : '#1e293b'}
+            stroke={isSelected ? '#60a5fa' : '#475569'}
+            strokeWidth={2}
+            style={{ cursor: 'pointer' }}
+            onClick={() => setSelectedNode(node)}
+          />
+          <text
+            x={x}
+            y={y + 5}
+            textAnchor="middle"
+            fill="white"
+            fontSize={12}
+            style={{ pointerEvents: 'none' }}
+          >
+            [{node.indices.join(',')}]
+          </text>
+        </g>
+      );
+    }
+
+    function NodeDetails({ node }) {
+      if (!node) {
+        return (
+          <div className="text-gray-400 text-center py-8">
+            Click a node in the tree to see details
+          </div>
+        );
+      }
+
+      return (
+        <div className="space-y-4 text-sm">
+          <div className="bg-slate-800 rounded p-3">
+            <div className="text-blue-400 font-semibold mb-2">Size-{node.n} DFT</div>
+            <div className="text-gray-300">
+              <span className="text-gray-500">Indices:</span> [{node.indices.join(', ')}]
+            </div>
+            <div className="text-gray-300">
+              <span className="text-gray-500">Coefficients:</span> [{node.coeffs.map(c => fmt(c)).join(', ')}]
+            </div>
+          </div>
+
+          {node.n === 1 ? (
+            <div className="bg-green-900/30 border border-green-700 rounded p-3">
+              <div className="text-green-400 font-semibold">BASE CASE</div>
+              <div className="text-gray-300 mt-1">
+                Return coefficient directly: {fmt(node.result[0])}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="bg-slate-800 rounded p-3">
+                <div className="text-purple-400 font-semibold mb-2">Split</div>
+                <div className="text-gray-300">
+                  <span className="text-gray-500">Even indices:</span> [{node.children[0].indices.join(', ')}]
+                </div>
+                <div className="text-gray-300">
+                  <span className="text-gray-500">Odd indices:</span> [{node.children[1].indices.join(', ')}]
+                </div>
+              </div>
+
+              <div className="bg-slate-800 rounded p-3">
+                <div className="text-yellow-400 font-semibold mb-2">Recursive Results</div>
+                <div className="text-gray-300">
+                  <span className="text-gray-500">y_even:</span> [{node.yEven.map(c => fmt(c)).join(', ')}]
+                </div>
+                <div className="text-gray-300">
+                  <span className="text-gray-500">y_odd:</span> [{node.yOdd.map(c => fmt(c)).join(', ')}]
+                </div>
+              </div>
+
+              <div className="bg-slate-800 rounded p-3">
+                <div className="text-orange-400 font-semibold mb-2">
+                  Butterfly Combine (ω_{node.n} = e^(2πi/{node.n}))
+                </div>
+                {node.butterflies.map((b, i) => (
+                  <div key={i} className="border-t border-slate-700 pt-2 mt-2 first:border-0 first:pt-0 first:mt-0">
+                    <div className="text-gray-400 text-xs mb-1">k = {b.k}, ω^{b.k} = {fmt(b.omega)}</div>
+                    <div className="text-gray-300 font-mono text-xs">
+                      y[{b.k}] = {fmt(b.yEvenK)} + {fmt(b.omega)}·{fmt(b.yOddK)} = <span className="text-green-400">{fmt(b.resultK)}</span>
+                    </div>
+                    <div className="text-gray-300 font-mono text-xs">
+                      y[{b.k + node.n/2}] = {fmt(b.yEvenK)} − {fmt(b.omega)}·{fmt(b.yOddK)} = <span className="text-green-400">{fmt(b.resultKPlusHalf)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="bg-green-900/30 border border-green-700 rounded p-3">
+            <div className="text-green-400 font-semibold">Result</div>
+            <div className="text-gray-300 mt-1">
+              [{node.result.map(c => fmt(c)).join(', ')}]
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function FFTVisualization() {
+      const [coefficients, setCoefficients] = useState([0, 1, 2, 3, 4, 5, 6, 7]);
+      const [selectedNode, setSelectedNode] = useState(null);
+      const [inputValue, setInputValue] = useState('0, 1, 2, 3, 4, 5, 6, 7');
+
+      const tree = useMemo(() => {
+        const complexCoeffs = coefficients.map(x => ({ re: x, im: 0 }));
+        const indices = coefficients.map((_, i) => i);
+        return buildFFTTree(complexCoeffs, indices);
+      }, [coefficients]);
+
+      const handleInputChange = (value) => {
+        setInputValue(value);
+        const nums = value.split(',').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+        const len = nums.length;
+        const pow2 = Math.pow(2, Math.ceil(Math.log2(len || 1)));
+        while (nums.length < pow2) nums.push(0);
+        if (nums.length > 0 && nums.length <= 16) {
+          setCoefficients(nums.slice(0, pow2));
+          setSelectedNode(null);
+        }
+      };
+
+      const treeDepth = Math.log2(coefficients.length) + 1;
+      const svgHeight = treeDepth * 80 + 40;
+      const svgWidth = Math.max(600, coefficients.length * 80);
+
+      return (
+        <div className="min-h-screen bg-slate-900 text-white p-4">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="text-2xl font-bold mb-4">Interactive FFT Recursion Tree</h1>
+
+            <div className="mb-4">
+              <label className="block text-gray-400 mb-1">Coefficients (comma-separated, will pad to power of 2):</label>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => handleInputChange(e.target.value)}
+                className="w-full bg-slate-800 border border-slate-600 rounded px-3 py-2 text-white"
+                placeholder="e.g., 0, 1, 2, 3, 4, 5, 6, 7"
+              />
+              <div className="text-gray-500 text-sm mt-1">
+                Polynomial: {coefficients.map((c, i) => `${c}x^${i}`).join(' + ')}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="bg-slate-800 rounded-lg p-4 overflow-auto">
+                <h2 className="text-lg font-semibold mb-3 text-gray-300">Recursion Tree</h2>
+                <svg width={svgWidth} height={svgHeight} className="mx-auto">
+                  <TreeNode
+                    node={tree}
+                    selectedNode={selectedNode}
+                    setSelectedNode={setSelectedNode}
+                    x={svgWidth / 2}
+                    y={40}
+                    width={svgWidth}
+                  />
+                </svg>
+              </div>
+
+              <div className="bg-slate-800 rounded-lg p-4 overflow-auto max-h-[600px]">
+                <h2 className="text-lg font-semibold mb-3 text-gray-300">Node Details</h2>
+                <NodeDetails node={selectedNode} />
+              </div>
+            </div>
+
+            <div className="mt-4 bg-slate-800 rounded-lg p-4">
+              <h2 className="text-lg font-semibold mb-3 text-gray-300">Final DFT Result</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {tree.result.map((val, k) => (
+                  <div key={k} className="bg-slate-700 rounded p-2 text-center">
+                    <div className="text-gray-400 text-xs">A(ω^{k})</div>
+                    <div className="text-green-400 font-mono">{fmt(val)}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<FFTVisualization />);
+  </script>
+</body>
+</html>
