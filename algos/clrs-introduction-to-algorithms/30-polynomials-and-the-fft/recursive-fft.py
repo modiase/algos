@@ -35,8 +35,7 @@ def recursive_fft(coefficients: jax.Array) -> jax.Array:
     even = recursive_fft(coefficients[0::2])
     odd = recursive_fft(coefficients[1::2])
 
-    omega = jnp.exp(2j * jnp.pi * jnp.arange(n // 2) / n)
-    t = omega * odd
+    t = jnp.exp(2j * jnp.pi * jnp.arange(n // 2) / n) * odd
 
     return jnp.concatenate([even + t, even - t])
 

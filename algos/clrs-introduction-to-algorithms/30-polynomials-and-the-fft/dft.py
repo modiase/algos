@@ -26,16 +26,15 @@ def dft(coefficients: jax.Array, degree_bound: int) -> jax.Array:
     """
     Evaluate polynomial at the nth roots of unity, converting from coefficient
     representation to point-value representation for FFT-based multiplication.
-    Time complexity: O(n²) for naive DFT (O(n log n) for FFT variant).
+    Time complexity: O(n²) for naive DFT.
     """
     padded_coeffs = jnp.pad(
         coefficients,
         (0, max(0, degree_bound - len(coefficients))),
         constant_values=0,
     )
-    roots = compute_roots_of_unity(degree_bound)
     results = jnp.zeros(degree_bound, dtype=jnp.complex128)
-    for i, omega in enumerate(roots):
+    for i, omega in enumerate(compute_roots_of_unity(degree_bound)):
         result = padded_coeffs[-1]
         for j in range(len(padded_coeffs) - 2, -1, -1):
             result = result * omega + padded_coeffs[j]

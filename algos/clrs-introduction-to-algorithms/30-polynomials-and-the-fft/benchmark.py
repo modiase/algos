@@ -34,7 +34,7 @@ def load_module(module_name: str, file_path: Path):
 
 parent_dir = Path(__file__).parent
 dft = load_module("dft", parent_dir / "dft.py")
-fft = load_module("fft", parent_dir / "fft.py")
+iterative_fft = load_module("fft", parent_dir / "iterative-fft.py")
 recursive_fft = load_module("recursive_fft", parent_dir / "recursive-fft.py")
 
 
@@ -58,7 +58,7 @@ def benchmark_single_run(args):
         return {"n": n, "Algorithm": algorithm, "Time (s)": elapsed}
     elif algorithm == "Iterative FFT":
         start = time.perf_counter()
-        _ = fft.fft(coeffs_np, n)
+        _ = iterative_fft.fft(coeffs_np, n)
         elapsed = time.perf_counter() - start
         return {"n": n, "Algorithm": algorithm, "Time (s)": elapsed}
     return None
