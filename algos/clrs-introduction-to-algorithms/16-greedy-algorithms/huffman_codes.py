@@ -1,3 +1,7 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i python3 -p python313 -p python313Packages.click -p python313Packages.graphviz -p python313Packages.numpy -p python313Packages.loguru -p python313Packages.more-itertools
+from __future__ import annotations
+
 import json
 from collections import Counter
 from collections.abc import Iterator
@@ -28,18 +32,18 @@ class HuffmanNode:
     ):
         self.symbol = symbol
         self.frequency = frequency
-        self.left = None
-        self.right = None
+        self.left: HuffmanNode | None = None
+        self.right: HuffmanNode | None = None
 
-    def __lt__(self, other: "HuffmanNode"):
+    def __lt__(self, other: HuffmanNode) -> bool:
         return self.frequency < other.frequency
 
 
-def visualize_huffman_tree(root: HuffmanNode):
+def visualize_huffman_tree(root: HuffmanNode) -> None:
     dot = graphviz.Digraph()
     dot.attr(rankdir="TB", size="24,20")
 
-    def add_nodes(node):
+    def add_nodes(node: HuffmanNode | None) -> None:
         if node:
             node_id = str(id(node))
             label = str(node.frequency)
@@ -68,21 +72,20 @@ def visualize_huffman_tree(root: HuffmanNode):
 
     add_nodes(root)
 
-    # Render the graph
     dot.render("huffman_tree", format="png", cleanup=True)
     dot.view()
 
 
 @click.group()
-def cli(): ...
+def cli() -> None: ...
 
 
 @cli.command()
-def compress():
+def compress() -> None:
     input_path = Path(__file__).parent.joinpath("huffman_codes.txt")
 
     input_symbols = Counter(it_file_chars(input_path))
-    nodes = [
+    nodes: list[HuffmanNode] = [
         HuffmanNode(symbol=symbol, frequency=frequency)
         for symbol, frequency in input_symbols.items()
     ]
@@ -96,8 +99,8 @@ def compress():
         merged.right = right
         heappush(nodes, merged)
 
-    stack = [("", nodes[0])]
-    symbol_to_code = dict()
+    stack: list[tuple[str, HuffmanNode]] = [("", nodes[0])]
+    symbol_to_code: dict[str, str] = {}
     while stack:
         prefix, node = stack.pop()
         if node.symbol:
@@ -121,13 +124,13 @@ def compress():
 
 
 @cli.command()
-def decompress():
+def decompress() -> None:
     input_path = Path(__file__).parent.joinpath("huffman_codes_coded.txt")
     packed = np.array(list(input_path.read_bytes()), dtype=np.uint8)
     code_path = Path(__file__).parent.joinpath("huffman_codes_code.txt")
     code_to_symbol = {v: k for k, v in json.loads(code_path.read_text()).items()}
     buffer = ""
-    raw_output_seq = []
+    raw_output_seq: list[str] = []
     for bit in np.unpackbits(packed):
         buffer += str(bit)
         if buffer in code_to_symbol:
@@ -137,10 +140,10 @@ def decompress():
 
 
 @cli.command()
-def visualize():
+def visualize() -> None:
     input_path = Path(__file__).parent.joinpath("huffman_codes.txt")
     input_symbols = Counter(it_file_chars(input_path))
-    nodes = [
+    nodes: list[HuffmanNode] = [
         HuffmanNode(symbol=symbol, frequency=frequency)
         for symbol, frequency in input_symbols.items()
     ]

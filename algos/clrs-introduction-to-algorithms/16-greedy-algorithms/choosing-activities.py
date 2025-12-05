@@ -1,8 +1,12 @@
+"""
+The dp solution to choosing activities provides the basis from which we can
+reason that a greedy solution exists.
+"""
+
 import bisect
 import os
 import random as rn
-from collections.abc import Collection
-from typing import NamedTuple, NewType, Sequence
+from typing import NamedTuple
 
 
 class Activity(NamedTuple):
@@ -10,11 +14,8 @@ class Activity(NamedTuple):
     end: int
 
 
-ActivitiesByEnd = NewType("ActivitiesByEnd", Sequence[Activity])
-
-
-def choose_activities_dp(activities: Collection[Activity]) -> ActivitiesByEnd:
-    def _insort(activities: ActivitiesByEnd, activity: Activity) -> ActivitiesByEnd:
+def choose_activities_dp(activities: list[Activity]) -> list[Activity]:
+    def _insort(activities: list[Activity], activity: Activity) -> list[Activity]:
         cpy = activities[:]
         bisect.insort(cpy, activity, key=lambda a: a.start)
         return cpy
@@ -43,7 +44,7 @@ def choose_activities_dp(activities: Collection[Activity]) -> ActivitiesByEnd:
     return c[c.index(max(c, key=len))]
 
 
-def choose_activities(activities: Collection[Activity]) -> ActivitiesByEnd:
+def choose_activities_greedy(activities: list[Activity]) -> list[Activity]:
     if not activities:
         return []
     activities.sort(key=lambda a: a.end)
@@ -67,6 +68,9 @@ if __name__ == "__main__":
         )
         for _ in range(10)
     ]
-    print(f"{activities=}")
-    print(f"{choose_activities(activities)=}")
-    print(f"{choose_activities_dp(activities)=}")
+    greedy_activities = choose_activities_greedy(activities)
+    dp_activities = choose_activities_dp(activities)
+
+    print(f"{'Algo':<10}{'Activities':<200}{'Length':<10}")
+    print(f"{'Greedy':<10}{str(greedy_activities):<200}{len(greedy_activities):<10}")
+    print(f"{'DP':<10}{str(dp_activities):<200}{len(dp_activities):<10}")

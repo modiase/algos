@@ -8,12 +8,14 @@ solution into a suboptimal grouping.
 from __future__ import annotations
 
 import heapq
-from collections.abc import Collection, Mapping, Sequence
-from collections.abc import Set as AbstractSet
+from collections.abc import Mapping, Sequence
 from typing import NamedTuple
 
 
 class Activity(NamedTuple):
+    start: int
+    end: int
+
     def __hash__(self) -> int:
         return hash((self.start, self.end)) + id(self)
 
@@ -22,22 +24,17 @@ class Activity(NamedTuple):
             return Activity(min(self.start, other.start), max(self.end, other.end))
         return None
 
-    start: int
-    end: int
-
 
 def find_overlapping_activities(
     activities: Sequence[Activity],
-) -> Mapping[Activity, AbstractSet[Activity]]:
+) -> Mapping[Activity, set[Activity]]:
     if not activities:
         return {}
 
-    # Find the min and max of the range
     min_time = min(activity.start for activity in activities)
     max_time = max(activity.end for activity in activities)
     range_size = max_time - min_time + 1
 
-    # Initialize result dictionary
     overlaps = {activity: set() for activity in activities}
 
     # Special case: if range is too large relative to n, fall back to O(n^2) to
@@ -50,15 +47,12 @@ def find_overlapping_activities(
                     overlaps[a2].add(a1)
         return overlaps
 
-    # Create buckets
     buckets = [[] for _ in range(range_size)]
 
-    # Add activities to their buckets
     for activity in activities:
         for t in range(activity.start - min_time, activity.end - min_time):
             buckets[t].append(activity)
 
-    # Find overlaps from buckets
     for bucket in buckets:
         if len(bucket) > 1:
             for i, a1 in enumerate(bucket):
@@ -70,9 +64,7 @@ def find_overlapping_activities(
 
 
 class PriorityQueue:
-    def __init__(
-        self, activities_with_overlaps: Mapping[Activity, AbstractSet[Activity]]
-    ):
+    def __init__(self, activities_with_overlaps: Mapping[Activity, set[Activity]]):
         self._heap = [
             (-len(value), (key, value))
             for key, value in activities_with_overlaps.items()
@@ -105,22 +97,22 @@ class PriorityQueue:
         self._sift_down(activity)
 
     def _sift_down(self, activity: Activity) -> None:
-        while (
-            self.lchild(self._index[activity]) is not None
-            and self._heap[self._index[activity]][0]
-            > self._heap[self.lchild(self._index[activity])][0]
-        ) or (
-            self.rchild(self._index[activity]) is not None
-            and self._heap[self._index[activity]][0]
-            > self._heap[self.rchild(self._index[activity])][0]
-        ):
-            if (
-                self._heap[self._index[activity]][0]
-                > self._heap[self.lchild(self._index[activity])][0]
-            ):
-                self._swap(self._index[activity], self.lchild(self._index[activity]))
-            else:
-                self._swap(self._index[activity], self.rchild(self._index[activity]))
+        idx = self._index[activity]
+        while True:
+            left = self.lchild(idx)
+            right = self.rchild(idx)
+            smallest = idx
+
+            if left is not None and self._heap[left][0] < self._heap[smallest][0]:
+                smallest = left
+            if right is not None and self._heap[right][0] < self._heap[smallest][0]:
+                smallest = right
+
+            if smallest == idx:
+                break
+
+            self._swap(idx, smallest)
+            idx = smallest
 
     def pop(self) -> Activity | None:
         if not self._heap:
@@ -136,14 +128,16 @@ class PriorityQueue:
 
 
 def group_activities(
-    activities: Collection[Activity],
-) -> Collection[Collection[Activity]]:
+    activities: Sequence[Activity],
+) -> list[list[Activity]]:
     queue = PriorityQueue(find_overlapping_activities(activities))
-    groups = []
+    groups: list[list[Activity]] = []
     while queue._heap:
         activity = queue.pop()
+        if activity is None:
+            break
         for group in groups:
-            if any(activity | group_activity for group_activity in group):
+            if any((activity | group_activity) is not None for group_activity in group):
                 continue
             group.append(activity)
             break
