@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 from loguru import logger
 
-sys.path.append(Path(__file__).parent)
+sys.path.append(str(Path(__file__).parent))
 from graph import Graph, H, Node
 
 

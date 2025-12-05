@@ -1,4 +1,13 @@
-from collections.abc import Collection
+"""
+The 1-0 knapsack problem is a classic example of a problem that CANNOT be
+solved by a greedy algorthm. The greedy property does not hold because taking
+the most valuable object at each step may preclude choices which lead to a
+globally optimal solution. This contrasts with the fractional knapsack problem
+where we can always take as much of the most valuable item (in terms of value
+density) as possible to greedily find the best solution.
+"""
+
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 from itertools import chain, combinations
 from typing import NamedTuple
@@ -10,7 +19,7 @@ class Item:
     weight: int
 
 
-def knapsack(items: Collection[Item], W: int) -> int:
+def knapsack(items: Sequence[Item], W: int) -> int:
     N = len(items)
     if N == 0 or W == 0:
         return 0
@@ -39,7 +48,7 @@ def brute_force_knapsack(items: Collection[Item], W: int) -> Collection[Item]:
 
 class TestCase(NamedTuple):
     description: str
-    items: Collection[Item]
+    items: Sequence[Item]
     W: int
 
 
