@@ -10,8 +10,8 @@ repos:
         args:
           - -c
           - "nix-shell -p ruff --run 'ruff format .'"
-      - id: lint-py
-        name: lint Python files
+      - id: ruff-lint-py
+        name: ruff lint Python files
         entry: bash
         language: system
         files: \.py$
@@ -19,8 +19,8 @@ repos:
         args:
           - -c
           - "nix-shell -p ruff --run 'ruff check .'"
-      - id: typecheck-py
-        name: typecheck Python files
+      - id: pyright-typecheck-and-lint-py
+        name: pyright typecheck and lint Python files
         entry: ./bin/typecheck.sh
         language: system
         files: \.py$
