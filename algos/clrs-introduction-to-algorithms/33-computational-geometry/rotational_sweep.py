@@ -41,11 +41,17 @@ def polar_angle(centroid: Point2D, point: Point2D) -> float:
     relative = point - centroid
     reference = Point2D(1, 0)
 
-    angle = math.atan2(
-        reference.x * relative.y - reference.y * relative.x,
-        reference.x * relative.x + reference.y * relative.y,
+    return (
+        angle
+        if (
+            angle := math.atan2(
+                reference.x * relative.y - reference.y * relative.x,
+                reference.x * relative.x + reference.y * relative.y,
+            )
+        )
+        >= 0
+        else angle + 2 * math.pi
     )
-    return angle if angle >= 0 else angle + 2 * math.pi
 
 
 @click.command()
@@ -65,14 +71,8 @@ def main(num_points: int, seed: int, output: str) -> None:
         sum(p.y for p in points) / len(points),
     )
 
-    max_distance = max(
-        math.sqrt((p.x - centroid.x) ** 2 + (p.y - centroid.y) ** 2) for p in points
-    )
-    pole = Point2D(centroid.x + max_distance, centroid.y)
-
     points_with_angles = [(p, polar_angle(centroid, p)) for p in points]
     points_with_angles.sort(key=lambda x: x[1])
-    point_ranks = {p: rank + 1 for rank, (p, _) in enumerate(points_with_angles)}
 
     _, ax = plt.subplots(figsize=(12, 12))
 
@@ -87,7 +87,14 @@ def main(num_points: int, seed: int, output: str) -> None:
     )
 
     ax.plot(
-        [centroid.x, pole.x],
+        [
+            centroid.x,
+            centroid.x
+            + max(
+                math.sqrt((p.x - centroid.x) ** 2 + (p.y - centroid.y) ** 2)
+                for p in points
+            ),
+        ],
         [centroid.y, centroid.y],
         "k--",
         linewidth=1,
@@ -98,12 +105,13 @@ def main(num_points: int, seed: int, output: str) -> None:
         ax.plot([centroid.x, p.x], [centroid.y, p.y], "k-", linewidth=0.5, alpha=0.4)
         ax.plot(p.x, p.y, "ko", markersize=6)
 
-        angle = polar_angle(centroid, p)
-        rank = point_ranks[p]
-        rel = p - centroid
-        label = f"#{rank} ({rel.x:.1f},{rel.y:.1f})\n∠{angle:.2f}"
         ax.annotate(
-            label, (p.x, p.y), xytext=(5, 5), textcoords="offset points", fontsize=7
+            f"#{next((rank + 1 for rank, (point, _) in enumerate(points_with_angles) if point == p))} "
+            f"({(p - centroid).x:.1f},{(p - centroid).y:.1f})\n∠{polar_angle(centroid, p):.2f}",
+            (p.x, p.y),
+            xytext=(5, 5),
+            textcoords="offset points",
+            fontsize=7,
         )
 
     ax.set_aspect("equal")
