@@ -23,12 +23,10 @@ void max_subarray(const Vector<Int> &vec, const Int window)
     while (i < vec.size()) {
         if (q.empty()) q.push_back({i, vec[i]});
         else  {
-            while(!q.empty() && i >= window && std::get<0>(q[0]) <= i - window)  // Added i >= window to avoid rollover problem (see top)
-            {
+            while(!q.empty() && i >= window && std::get<0>(q[0]) <= i - window) { // Added i >= window to avoid rollover problem (see top)
                 q.pop_front();
             }
-            if (!q.empty() && std::get<1>(q[0]) < vec[i])
-            {
+            if (!q.empty() && std::get<1>(q[0]) < vec[i]) {
                 q.clear();
             }
             q.push_back({i, vec[i]});
