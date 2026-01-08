@@ -34,4 +34,5 @@ if [ ${#filtered_files[@]} -eq 0 ]; then
     exit 0
 fi
 
-nix-shell -p pyright --run "pyright ${filtered_files[*]}"
+# For pyright to type check a library, it must be included here
+nix-shell -p pyright python313Packages.numpy --run "pyright ${filtered_files[*]}"

@@ -9,7 +9,7 @@ data/
 .venv/
 
 # Python bytecode and cache
-**/*.pyc 
+**/*.pyc
 **/__pycache__/
 .pytest_cache
 *.egg-info
@@ -22,8 +22,10 @@ main
 
 # Development and scratch files
 scratch/
+CLAUDE.md
 
 # Local and temporary files
 *.local*
 .bin/
 .tmp/
+
