@@ -36,4 +36,7 @@ nlp = [
 ]
 
 [tool.pyright]
-reportMissingImports = false
+reportUnusedVariable = "error"
+reportUnusedImport = "error"
+
+typeCheckingMode = "strict"
