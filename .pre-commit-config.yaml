@@ -1,82 +1,23 @@
 repos:
   - repo: local
     hooks:
-      - id: format-py
-        name: format Python files
-        entry: bash
+      - id: pre-commit
+        name: just pre-commit
+        entry: just pre-commit
         language: system
-        files: \.py$
+        always_run: true
         pass_filenames: false
-        args:
-          - -c
-          - "nix-shell -p ruff --run 'ruff format .'"
-      - id: ruff-lint-py
-        name: ruff lint Python files
-        entry: bash
-        language: system
-        files: \.py$
-        pass_filenames: false
-        args:
-          - -c
-          - "nix-shell -p ruff --run 'ruff check .'"
-      - id: pyright-typecheck-and-lint-py
-        name: pyright typecheck and lint Python files
-        entry: ./bin/typecheck.sh
-        language: system
-        files: \.py$
-        pass_filenames: true
-      - id: format-nix
-        name: format Nix files
-        entry: bash
-        language: system
-        files: \.nix$
-        pass_filenames: false
-        args:
-          - -c
-          - "nix-shell -p fd nixfmt-rfc-style --run 'fd -e nix -x nixfmt'"
-      - id: format-c
-        name: format C/C++ files
-        entry: bash
-        language: system
-        files: \.(c|cpp|cc|cxx|h|hpp|hh|hxx)$
-        pass_filenames: false
-        args:
-          - -c
-          - "nix-shell -p astyle fd --run 'fd -e c -e cpp -e cc -e cxx -e h -e hpp -e hh -e hxx -x astyle --style=linux --suffix=none'"
-      - id: format-go
-        name: format Go files
-        entry: bash
-        language: system
-        files: \.go$
-        pass_filenames: false
-        args:
-          - -c
-          - "nix-shell -p go fd --run 'fd -e go -x gofmt -s -w'"
-      - id: remove-trailing-whitespace
-        name: remove trailing whitespace
-        entry: bash
-        language: system
-        files: .*
-        pass_filenames: false
-        args:
-          - -c
-          - 'nix-shell -p gnused --run ''git diff --cached --name-only --diff-filter d | xargs -r sed -i "s/[[:space:]]*$//"'''
       - id: wip-commit-msg-check
         name: Check @WIP requires WIP prefix
-        entry: bash
+        entry: just pre-commit-wip
         language: system
         stages: [commit-msg]
         always_run: true
         pass_filenames: true
-        args:
-          - -c
-          - |
-            commit_msg_file="${@: -1}"
-            if git diff --cached 2>/dev/null | grep -q "@WIP" 2>/dev/null; then
-              commit_msg=$(head -n1 "$commit_msg_file")
-              if ! echo "$commit_msg" | grep -q "^WIP:"; then
-                echo "❌ ERROR: Found @WIP in staged changes."
-                echo "Either remove @WIP markers or prefix your commit message with WIP:"
-                exit 1
-              fi
-            fi
+      - id: post-checkout
+        name: post-checkout cleanup
+        entry: just post-checkout
+        language: system
+        always_run: true
+        pass_filenames: false
+        stages: [post-checkout]

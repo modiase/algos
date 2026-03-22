@@ -83,6 +83,7 @@
           packages = [
             python
             setupVenv
+            pkgs.just
             pkgs.pre-commit
           ];
 
