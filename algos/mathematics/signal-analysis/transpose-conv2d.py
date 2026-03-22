@@ -102,7 +102,9 @@ class TConv2dTestCase:
             x=[[5]], h=[[1, 2], [3, 4]], padding=(1, 1), stride=(1, 1), expected=[]
         ),
     ],
-    ids=lambda test_case: f"x{len(test_case.x)}x{len(test_case.x[0])}_h{len(test_case.h)}x{len(test_case.h[0])}_p{test_case.padding}_s{test_case.stride}",
+    ids=lambda test_case: (
+        f"x{len(test_case.x)}x{len(test_case.x[0])}_h{len(test_case.h)}x{len(test_case.h[0])}_p{test_case.padding}_s{test_case.stride}"
+    ),
 )
 def test_transpose_conv2d(test_case: TConv2dTestCase):
     result = transpose_conv2d(**test_case.as_dict())

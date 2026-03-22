@@ -72,7 +72,9 @@ class TConv1dTestCase:
             x=[1, 2, 3], h=[1, 1], padding=0, stride=3, expected=[1, 2, 3, 1, 2, 3]
         ),
     ],
-    ids=lambda test_case: f"{test_case.x=}, {test_case.h=}, {test_case.padding=}, {test_case.stride=}",
+    ids=lambda test_case: (
+        f"{test_case.x=}, {test_case.h=}, {test_case.padding=}, {test_case.stride=}"
+    ),
 )
 def test_reverse_conv1d(test_case: TConv1dTestCase):
     assert transpose_conv1d(**test_case.as_dict()) == test_case.expected

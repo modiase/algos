@@ -71,20 +71,22 @@ def newton_implicit(
     d2f_dx2 = jax.grad(df_dx)
 
     return reduce(
-        lambda acc, _: acc
-        + [
-            reduce(
-                lambda x_inner, _: (
-                    fx := f(x_inner),
-                    dfx := df_dx(x_inner),
-                    g_x := x_inner - acc[-1] + (eta * fx / dfx),
-                    dg_dx := 1 + eta * (dfx**2 - fx * d2f_dx2(x_inner)) / (dfx**2),
-                    x_inner - (g_x / dg_dx),
-                )[-1],
-                range(inner_iterations),
-                acc[-1],
-            )
-        ],
+        lambda acc, _: (
+            acc
+            + [
+                reduce(
+                    lambda x_inner, _: (
+                        fx := f(x_inner),
+                        dfx := df_dx(x_inner),
+                        g_x := x_inner - acc[-1] + (eta * fx / dfx),
+                        dg_dx := 1 + eta * (dfx**2 - fx * d2f_dx2(x_inner)) / (dfx**2),
+                        x_inner - (g_x / dg_dx),
+                    )[-1],
+                    range(inner_iterations),
+                    acc[-1],
+                )
+            ]
+        ),
         range(iterations),
         [x0],
     )

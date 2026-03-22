@@ -12,11 +12,13 @@ T = TypeVar("T")
 
 def sample(ts: Iterable[T], k: int) -> list[T]:
     return reduce(
-        lambda acc, tup: acc + [tup[1]]
-        if len(acc) < k
-        else acc[:rn] + [tup[1]] + acc[rn + 1 :]
-        if (rn := random.randint(0, tup[0] - 1)) < k
-        else acc,
+        lambda acc, tup: (
+            acc + [tup[1]]
+            if len(acc) < k
+            else acc[:rn] + [tup[1]] + acc[rn + 1 :]
+            if (rn := random.randint(0, tup[0] - 1)) < k
+            else acc
+        ),
         enumerate(ts, 1),
         [],
     )

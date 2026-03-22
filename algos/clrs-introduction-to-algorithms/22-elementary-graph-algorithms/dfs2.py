@@ -54,9 +54,11 @@ def dfs(
             node.start_time = time
             stack.append(node)
             for n in filter(
-                lambda n: n.start_time is None
-                and n.predecessor is None
-                and n.key in remaining_nodes,
+                lambda n: (
+                    n.start_time is None
+                    and n.predecessor is None
+                    and n.key in remaining_nodes
+                ),
                 node.adj if rank is None else sorted(node.adj, key=rank),
             ):
                 n.predecessor = node
